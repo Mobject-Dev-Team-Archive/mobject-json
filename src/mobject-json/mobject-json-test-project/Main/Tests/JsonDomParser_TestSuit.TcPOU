@@ -1,0 +1,400 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4024.12">
+  <POU Name="JsonDomParser_TestSuit" Id="{04424176-653a-49ad-adf2-0c9b2705b8ed}" SpecialFunc="None">
+    <Declaration><![CDATA[FUNCTION_BLOCK JsonDomParser_TestSuit EXTENDS TcUnit.FB_TestSuite
+VAR
+	jsonParser : JsonDomParser;
+END_VAR
+]]></Declaration>
+    <Implementation>
+      <ST><![CDATA[ReadBoolArrayMemberFromJsonString();
+ReadDIntArrayMemberFromJsonString();
+ReadDIntPropertyFromJsonString();
+ReadFalseBoolPropertyFromJsonString();
+ReadIntArrayMemberFromJsonString();
+ReadIntPropertyFromJsonString();
+ReadLRealArrayMemberFromJsonString();
+ReadLRealPropertyFromJsonString();
+ReadRealArrayMemberFromJsonString();
+ReadRealPropertyFromJsonString();
+ReadStringPropertyFromJsonString();
+ReadTrueBoolPropertyFromJsonString();
+ReadUDIntArrayMemberFromJsonString();
+ReadUDIntPropertyFromJsonString();
+ReadValueFromChainedProperties();
+]]></ST>
+    </Implementation>
+    <Method Name="ReadBoolArrayMemberFromJsonString" Id="{03ef375a-e98e-0372-0f9d-1b689aebffa7}">
+      <Declaration><![CDATA[METHOD PUBLIC ReadBoolArrayMemberFromJsonString
+VAR_INPUT
+END_VAR
+VAR
+	jsonTestString : T_MAXSTRING := '{"myArray" : [false, true, false]}';
+	result : BOOL;
+	readResult : BOOL;
+END_VAR]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[TEST('ReadBoolArrayMemberFromJsonString');
+
+// @TEST-RUN
+jsonParser.ParseDocument(jsonTestString);
+readResult := jsonParser.TryRead('.myArray[1]',result);
+jsonParser.NewDocument();
+
+// @TEST-ASSERT
+AssertTrue(Condition := result, Message := 'Did not read the correct value');
+AssertTrue(Condition := readResult, Message := 'Did not report a read was successful');
+
+TEST_FINISHED();]]></ST>
+      </Implementation>
+    </Method>
+    <Method Name="ReadDIntArrayMemberFromJsonString" Id="{004b6cc7-9d17-0d98-2760-1ad6a517bcb8}">
+      <Declaration><![CDATA[METHOD PUBLIC ReadDIntArrayMemberFromJsonString
+VAR_INPUT
+END_VAR
+VAR
+	jsonTestString : T_MAXSTRING := '{"myArray" : [123,456,789]}';
+	actual : DINT;
+	expected : DINT := 456;
+	readResult : BOOL;
+END_VAR]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[TEST('ReadDIntArrayMemberFromJsonString');
+
+// @TEST-RUN
+jsonParser.ParseDocument(jsonTestString);
+readResult := jsonParser.TryRead('.myArray[1]',Actual);
+jsonParser.NewDocument();
+
+// @TEST-ASSERT
+AssertEquals(Expected := expected, Actual := actual, Message := 'Did not read the correct value');
+AssertTrue(Condition := readResult, Message := 'Did not report a read was successful');
+
+TEST_FINISHED();]]></ST>
+      </Implementation>
+    </Method>
+    <Method Name="ReadDIntPropertyFromJsonString" Id="{ef862b32-3de6-4123-b06f-eaf63d40148b}">
+      <Declaration><![CDATA[METHOD PUBLIC ReadDIntPropertyFromJsonString
+VAR_INPUT
+END_VAR
+VAR
+	jsonTestString : T_MAXSTRING := '{"myDInt" : 123}';
+	actual : DINT;
+	expected : DINT := 123;
+	readResult : BOOL;
+END_VAR]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[TEST('ReadDIntPropertyFromJsonString');
+
+// @TEST-RUN
+jsonParser.ParseDocument(jsonTestString);
+readResult := jsonParser.TryRead('.myDInt',Actual);
+jsonParser.NewDocument();
+
+// @TEST-ASSERT
+AssertEquals(Expected := expected, Actual := actual, Message := 'Did not read the correct value');
+AssertTrue(Condition := readResult, Message := 'Did not report a read was successful');
+
+TEST_FINISHED();]]></ST>
+      </Implementation>
+    </Method>
+    <Method Name="ReadFalseBoolPropertyFromJsonString" Id="{20f1d02c-153b-0532-1589-59c2edd5b146}">
+      <Declaration><![CDATA[METHOD PUBLIC ReadFalseBoolPropertyFromJsonString
+VAR_INPUT
+END_VAR
+VAR
+	jsonTestString : T_MAXSTRING := '{"myTrueBool" : true, "myFalseBool" : false}';
+	result : BOOL;
+	readResult : BOOL;
+END_VAR]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[TEST('ReadFalseBoolPropertyFromJsonString');
+
+// @TEST-RUN
+jsonParser.ParseDocument(jsonTestString);
+readResult := jsonParser.TryRead('.myFalseBool',result);
+jsonParser.NewDocument();
+
+// @TEST-ASSERT
+AssertFalse(Condition := result, Message := 'Did not read the correct value');
+AssertTrue(Condition := readResult, Message := 'Did not report a read was successful');
+
+TEST_FINISHED();]]></ST>
+      </Implementation>
+    </Method>
+    <Method Name="ReadIntArrayMemberFromJsonString" Id="{09d25eab-5de1-07ca-37ab-fabdbada5068}">
+      <Declaration><![CDATA[METHOD PUBLIC ReadIntArrayMemberFromJsonString
+VAR_INPUT
+END_VAR
+VAR
+	jsonTestString : T_MAXSTRING := '{"myArray" : [123,456,789]}';
+	actual : INT;
+	expected : INT := 456;
+	readResult : BOOL;
+END_VAR]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[TEST('ReadIntArrayMemberFromJsonString');
+
+// @TEST-RUN
+jsonParser.ParseDocument(jsonTestString);
+readResult := jsonParser.TryRead('.myArray[1]',actual);
+jsonParser.NewDocument();
+
+// @TEST-ASSERT
+AssertEquals(Expected := expected, Actual := actual, Message := 'Did not read the correct value');
+AssertTrue(Condition := readResult, Message := 'Did not report a read was successful');
+
+TEST_FINISHED();]]></ST>
+      </Implementation>
+    </Method>
+    <Method Name="ReadIntPropertyFromJsonString" Id="{8bfc6c12-3d1b-4c83-891e-dd6a08fedb33}">
+      <Declaration><![CDATA[METHOD PUBLIC ReadIntPropertyFromJsonString
+VAR_INPUT
+END_VAR
+VAR
+	jsonTestString : T_MAXSTRING := '{"myInt" : 123}';
+	actual : INT;
+	expected : INT := 123;
+	readResult : BOOL;
+END_VAR]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[TEST('ReadIntPropertyFromJsonString');
+
+// @TEST-RUN
+jsonParser.ParseDocument(jsonTestString);
+readResult := jsonParser.TryRead('.myInt',actual);
+jsonParser.NewDocument();
+
+// @TEST-ASSERT
+AssertEquals(Expected := expected, Actual := actual, Message := 'Did not read the correct value');
+AssertTrue(Condition := readResult, Message := 'Did not report a read was successful');
+
+TEST_FINISHED();]]></ST>
+      </Implementation>
+    </Method>
+    <Method Name="ReadLRealArrayMemberFromJsonString" Id="{bfb2db06-4f69-0757-2b87-7080d4b48fd8}">
+      <Declaration><![CDATA[METHOD PUBLIC ReadLRealArrayMemberFromJsonString
+VAR_INPUT
+END_VAR
+VAR
+	jsonTestString : T_MAXSTRING := '{"myArray" : [-123.1,-456.2]}';
+	actual : LREAL;
+	expected : LREAL := -456.2;
+	readResult : BOOL;
+END_VAR]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[TEST('ReadLRealArrayMemberFromJsonString');
+
+// @TEST-RUN
+jsonParser.ParseDocument(jsonTestString);
+readResult := jsonParser.TryRead('.myArray[1]',actual);
+jsonParser.NewDocument();
+
+// @TEST-ASSERT
+AssertEquals(Expected := expected, Actual := actual, Message := 'Did not read the correct value');
+AssertTrue(Condition := readResult, Message := 'Did not report a read was successful');
+
+TEST_FINISHED();]]></ST>
+      </Implementation>
+    </Method>
+    <Method Name="ReadLRealPropertyFromJsonString" Id="{d8133b9f-fcd2-490f-8c01-91418b9b23f5}">
+      <Declaration><![CDATA[METHOD PUBLIC ReadLRealPropertyFromJsonString
+VAR_INPUT
+END_VAR
+VAR
+	jsonTestString : T_MAXSTRING := '{"myLReal" : -123.1}';
+	actual : LREAL;
+	expected : LREAL := -123.1;
+	readResult : BOOL;
+END_VAR]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[TEST('ReadLRealPropertyFromJsonString');
+
+// @TEST-RUN
+jsonParser.ParseDocument(jsonTestString);
+readResult := jsonParser.TryRead('.myLReal',actual);
+jsonParser.NewDocument();
+
+// @TEST-ASSERT
+AssertEquals(Expected := expected, Actual := actual, Message := 'Did not read the correct value');
+AssertTrue(Condition := readResult, Message := 'Did not report a read was successful');
+
+TEST_FINISHED();]]></ST>
+      </Implementation>
+    </Method>
+    <Method Name="ReadRealArrayMemberFromJsonString" Id="{ef0b1797-04a9-04ac-3a49-2c7386f99b65}">
+      <Declaration><![CDATA[METHOD PUBLIC ReadRealArrayMemberFromJsonString
+VAR_INPUT
+END_VAR
+VAR
+	jsonTestString : T_MAXSTRING := '{"myArray" : [123.1,456.2,789.3]}';
+	actual : REAL;
+	expected : REAL := 456.2;
+	readResult : BOOL;
+END_VAR]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[TEST('ReadRealArrayMemberFromJsonString');
+
+// @TEST-RUN
+jsonParser.ParseDocument(jsonTestString);
+readResult := jsonParser.TryRead('.myArray[1]',actual);
+jsonParser.NewDocument();
+
+// @TEST-ASSERT
+AssertEquals(Expected := expected, Actual := actual, Message := 'Did not read the correct value');
+AssertTrue(Condition := readResult, Message := 'Did not report a read was successful');
+
+TEST_FINISHED();]]></ST>
+      </Implementation>
+    </Method>
+    <Method Name="ReadRealPropertyFromJsonString" Id="{c94634bc-9e1f-4ae5-ac8b-e9b816d73595}">
+      <Declaration><![CDATA[METHOD PUBLIC ReadRealPropertyFromJsonString
+VAR_INPUT
+END_VAR
+VAR
+	jsonTestString : T_MAXSTRING := '{"myReal" : 123.1}';
+	actual : REAL;
+	expected : REAL := 123.1;
+	readResult : BOOL;
+END_VAR]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[TEST('ReadRealPropertyFromJsonString');
+
+// @TEST-RUN
+jsonParser.ParseDocument(jsonTestString);
+readResult := jsonParser.TryRead('.myReal',actual);
+jsonParser.NewDocument();
+
+// @TEST-ASSERT
+AssertEquals(Expected := expected, Actual := actual, Message := 'Did not read the correct value');
+AssertTrue(Condition := readResult, Message := 'Did not report a read was successful');
+
+TEST_FINISHED();]]></ST>
+      </Implementation>
+    </Method>
+    <Method Name="ReadStringPropertyFromJsonString" Id="{692da5c1-cb3e-4010-8a82-90cfc54afac4}">
+      <Declaration><![CDATA[METHOD PUBLIC ReadStringPropertyFromJsonString
+VAR_INPUT
+END_VAR
+VAR
+	jsonTestString : T_MAXSTRING := '{"myString" : "test"}';
+	actual : T_MAXSTRING;
+	expected : T_MAXSTRING := 'test';
+	readResult : BOOL;
+END_VAR]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[TEST('ReadStringPropertyFromJsonString');
+
+// @TEST-RUN
+jsonParser.ParseDocument(jsonTestString);
+readResult := jsonParser.TryRead('.myString',actual);
+jsonParser.NewDocument();
+
+// @TEST-ASSERT
+AssertEquals(Expected := expected, Actual := actual, Message := 'Did not read the correct value');
+AssertTrue(Condition := readResult, Message := 'Did not report a read was successful');
+
+TEST_FINISHED();]]></ST>
+      </Implementation>
+    </Method>
+    <Method Name="ReadTrueBoolPropertyFromJsonString" Id="{946cfb3a-f7c9-4db6-b45e-2637ca053545}">
+      <Declaration><![CDATA[METHOD PUBLIC ReadTrueBoolPropertyFromJsonString
+VAR_INPUT
+END_VAR
+VAR
+	jsonTestString : T_MAXSTRING := '{"myTrueBool" : true, "myFalseBool" : false}';
+	result : BOOL;
+	readResult : BOOL;
+END_VAR]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[TEST('ReadTrueBoolPropertyFromJsonString');
+
+// @TEST-RUN
+jsonParser.ParseDocument(jsonTestString);
+readResult := jsonParser.TryRead('.myTrueBool',result);
+jsonParser.NewDocument();
+
+// @TEST-ASSERT
+AssertTrue(Condition := result, Message := 'Did not read the correct value');
+AssertTrue(Condition := readResult, Message := 'Did not report a read was successful');
+
+TEST_FINISHED();]]></ST>
+      </Implementation>
+    </Method>
+    <Method Name="ReadUDIntArrayMemberFromJsonString" Id="{c1a2b68f-1a07-056c-2b9e-c03a4c8f19c2}">
+      <Declaration><![CDATA[METHOD PUBLIC ReadUDIntArrayMemberFromJsonString
+VAR_INPUT
+END_VAR
+VAR
+	jsonTestString : T_MAXSTRING := '{"myArray" : [123,456,789]}';
+	actual : UDINT;
+	expected : UDINT := 456;
+	readResult : BOOL;
+END_VAR]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[TEST('ReadUDIntArrayMemberFromJsonString');
+
+// @TEST-RUN
+jsonParser.ParseDocument(jsonTestString);
+readResult := jsonParser.TryRead('.myArray[1]',actual);
+jsonParser.NewDocument();
+
+// @TEST-ASSERT
+AssertEquals(Expected := expected, Actual := actual, Message := 'Did not read the correct value');
+AssertTrue(Condition := readResult, Message := 'Did not report a read was successful');
+
+TEST_FINISHED();]]></ST>
+      </Implementation>
+    </Method>
+    <Method Name="ReadUDIntPropertyFromJsonString" Id="{799b7e0e-6ce9-4326-ae4e-eafbcfd38fca}">
+      <Declaration><![CDATA[METHOD PUBLIC ReadUDIntPropertyFromJsonString
+VAR_INPUT
+END_VAR
+VAR
+	jsonTestString : T_MAXSTRING := '{"myUDInt" : 123}';
+	actual : UDINT;
+	expected : UDINT := 123;
+	readResult : BOOL;
+END_VAR]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[TEST('ReadUDIntPropertyFromJsonString');
+
+// @TEST-RUN
+jsonParser.ParseDocument(jsonTestString);
+readResult := jsonParser.TryRead('.myUDInt',actual);
+jsonParser.NewDocument();
+
+// @TEST-ASSERT
+AssertEquals(Expected := expected, Actual := actual, Message := 'Did not read the correct value');
+AssertTrue(Condition := readResult, Message := 'Did not report a read was successful');
+
+TEST_FINISHED();]]></ST>
+      </Implementation>
+    </Method>
+    <Method Name="ReadValueFromChainedProperties" Id="{1a348435-203b-04d2-2833-1cf17f931f93}">
+      <Declaration><![CDATA[METHOD PUBLIC ReadValueFromChainedProperties
+VAR_INPUT
+END_VAR
+VAR
+	jsonTestString : T_MAXSTRING := '{"level1" : {"level2" : {"level3" : {"level4" : 123}}}}';
+	actual : DINT;
+	expected : DINT := 123;
+	readResult : BOOL;
+END_VAR]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[TEST('ReadValueFromChainedProperties');
+
+// @TEST-RUN
+jsonParser.ParseDocument(jsonTestString);
+readResult := jsonParser.TryRead('.level1.level2.level3.level4',actual);
+jsonParser.NewDocument();
+
+// @TEST-ASSERT
+AssertEquals(Expected := expected, Actual := actual, Message := 'Did not read the correct value');
+AssertTrue(Condition := readResult, Message := 'Did not report a read was successful');
+
+TEST_FINISHED();]]></ST>
+      </Implementation>
+    </Method>
+  </POU>
+</TcPlcObject>
