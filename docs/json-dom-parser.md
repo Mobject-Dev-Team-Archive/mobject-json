@@ -21,7 +21,7 @@ VAR
   jsonParser : JsonDomParser;
   json : T_MAXSTRING := '{"level1" : {"level2" : {"level3" : {"level4" : 123, "myArray" : ["a","b","c"]}}}}';
   result : DINT;
-  newString : STRING := "d";
+  newString : STRING := 'd';
   successful : BOOL;
 END_VAR
 ```
