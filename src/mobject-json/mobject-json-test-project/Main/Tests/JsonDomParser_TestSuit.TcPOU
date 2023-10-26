@@ -7,7 +7,22 @@ VAR
 END_VAR
 ]]></Declaration>
     <Implementation>
-      <ST><![CDATA[ReadBoolArrayMemberFromJsonString();
+      <ST><![CDATA[ModifyBoolArrayMemberFromJsonString();
+ModifyDIntArrayMemberFromJsonString();
+ModifyDIntPropertyFromJsonString();
+ModifyFalseBoolPropertyFromJsonString();
+ModifyIntArrayMemberFromJsonString();
+ModifyIntPropertyFromJsonString();
+ModifyLRealArrayMemberFromJsonString();
+ModifyLRealPropertyFromJsonString();
+ModifyRealArrayMemberFromJsonString();
+ModifyRealPropertyFromJsonString();
+ModifyStringPropertyFromJsonString();
+ModifyTrueBoolPropertyFromJsonString();
+ModifyUDIntArrayMemberFromJsonString();
+ModifyUDIntPropertyFromJsonString();
+ModifyValueFromChainedProperty();
+ReadBoolArrayMemberFromJsonString();
 ReadDIntArrayMemberFromJsonString();
 ReadDIntPropertyFromJsonString();
 ReadFalseBoolPropertyFromJsonString();
@@ -24,6 +39,423 @@ ReadUDIntPropertyFromJsonString();
 ReadValueFromChainedProperties();
 ]]></ST>
     </Implementation>
+    <Method Name="ModifyBoolArrayMemberFromJsonString" Id="{ea3d6e63-a114-47ac-8ed8-933bb714da06}">
+      <Declaration><![CDATA[METHOD PUBLIC ModifyBoolArrayMemberFromJsonString
+VAR_INPUT
+END_VAR
+VAR
+	jsonTestString : T_MAXSTRING := '{"myArray" : [false, false, false]}';
+	newValue : BOOL := TRUE;
+	modifyResult : BOOL;
+	result : BOOL;
+	readResult : BOOL;
+END_VAR]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[TEST('ModifyBoolArrayMemberFromJsonString');
+
+// @TEST-RUN
+jsonParser.ParseDocument(jsonTestString);
+modifyResult := jsonParser.TryModify('.myArray[1]',newValue);
+readResult := jsonParser.TryRead('.myArray[1]',result);
+jsonParser.NewDocument();
+
+// @TEST-ASSERT
+AssertTrue(Condition := result, Message := 'Did not modify to the correct value');
+AssertTrue(Condition := readResult, Message := 'Did not report a modify was successful');
+
+TEST_FINISHED();]]></ST>
+      </Implementation>
+    </Method>
+    <Method Name="ModifyDIntArrayMemberFromJsonString" Id="{4644a57b-1e4d-4ebd-b6fe-f02149f06ba2}">
+      <Declaration><![CDATA[METHOD PUBLIC ModifyDIntArrayMemberFromJsonString
+VAR_INPUT
+END_VAR
+VAR
+	jsonTestString : T_MAXSTRING := '{"myArray" : [123,456,789]}';
+	newValue : DINT := 654;
+	modifyResult : BOOL;
+	actual : DINT;
+	expected : DINT := 654;
+	readResult : BOOL;
+END_VAR]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[TEST('ModifyDIntArrayMemberFromJsonString');
+
+// @TEST-RUN
+jsonParser.ParseDocument(jsonTestString);
+modifyResult := jsonParser.TryModify('.myArray[1]',newValue);
+readResult := jsonParser.TryRead('.myArray[1]',actual);
+jsonParser.NewDocument();
+
+// @TEST-ASSERT
+AssertEquals(Expected := expected, Actual := actual, Message := 'Did not modify to the correct value');
+AssertTrue(Condition := modifyResult, Message := 'Did not report a modify was successful');
+
+TEST_FINISHED();]]></ST>
+      </Implementation>
+    </Method>
+    <Method Name="ModifyDIntPropertyFromJsonString" Id="{87860ab8-c64f-46b6-8267-971527c4d130}">
+      <Declaration><![CDATA[METHOD PUBLIC ModifyDIntPropertyFromJsonString
+VAR_INPUT
+END_VAR
+VAR
+	jsonTestString : T_MAXSTRING := '{"myDInt" : 123}';
+	newValue : DINT := 456;
+	modifyResult : BOOL;
+	actual : DINT;
+	expected : DINT := 456;
+	readResult : BOOL;
+END_VAR]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[TEST('ModifyDIntPropertyFromJsonString');
+
+// @TEST-RUN
+jsonParser.ParseDocument(jsonTestString);
+modifyResult := jsonParser.TryModify('.myDInt',newValue);
+readResult := jsonParser.TryRead('.myDInt',actual);
+jsonParser.NewDocument();
+
+// @TEST-ASSERT
+AssertEquals(Expected := expected, Actual := actual, Message := 'Did not modify to the correct value');
+AssertTrue(Condition := modifyResult, Message := 'Did not report a modify was successful');
+
+TEST_FINISHED();]]></ST>
+      </Implementation>
+    </Method>
+    <Method Name="ModifyFalseBoolPropertyFromJsonString" Id="{9209b5b3-01fb-4801-ac18-cbafc9ee198e}">
+      <Declaration><![CDATA[METHOD PUBLIC ModifyFalseBoolPropertyFromJsonString
+VAR_INPUT
+END_VAR
+VAR
+	jsonTestString : T_MAXSTRING := '{"myTrueBool" : true, "myFalseBool" : false}';
+	newValue : BOOL := TRUE;
+	modifyResult : BOOL;
+	result : BOOL;
+	readResult : BOOL;
+END_VAR]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[TEST('ModifyFalseBoolPropertyFromJsonString');
+
+// @TEST-RUN
+jsonParser.ParseDocument(jsonTestString);
+modifyResult := jsonParser.TryModify('.myFalseBool',newValue);
+readResult := jsonParser.TryRead('.myFalseBool',result);
+jsonParser.NewDocument();
+
+// @TEST-ASSERT
+AssertTrue(Condition := result, Message := 'Did not modify to the correct value');
+AssertTrue(Condition := modifyResult, Message := 'Did not report a modify was successful');
+
+TEST_FINISHED();]]></ST>
+      </Implementation>
+    </Method>
+    <Method Name="ModifyIntArrayMemberFromJsonString" Id="{e9dffa10-f70a-4a98-a80b-9fed18b263e1}">
+      <Declaration><![CDATA[METHOD PUBLIC ModifyIntArrayMemberFromJsonString
+VAR_INPUT
+END_VAR
+VAR
+	jsonTestString : T_MAXSTRING := '{"myArray" : [123,456,789]}';
+	newValue : INT := 654;
+	modifyResult : BOOL;
+	actual : INT;
+	expected : INT := 654;
+	readResult : BOOL;
+END_VAR]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[TEST('ModifyIntArrayMemberFromJsonString');
+
+// @TEST-RUN
+jsonParser.ParseDocument(jsonTestString);
+modifyResult := jsonParser.TryModify('.myArray[1]',newValue);
+readResult := jsonParser.TryRead('.myArray[1]',actual);
+jsonParser.NewDocument();
+
+// @TEST-ASSERT
+AssertEquals(Expected := expected, Actual := actual, Message := 'Did not modify to the correct value');
+AssertTrue(Condition := modifyResult, Message := 'Did not report a modify was successful');
+
+TEST_FINISHED();]]></ST>
+      </Implementation>
+    </Method>
+    <Method Name="ModifyIntPropertyFromJsonString" Id="{e7db5f86-945a-4a7e-bda3-3a1eb01906b2}">
+      <Declaration><![CDATA[METHOD PUBLIC ModifyIntPropertyFromJsonString
+VAR_INPUT
+END_VAR
+VAR
+	jsonTestString : T_MAXSTRING := '{"myInt" : 123}';
+	newValue : INT := 456;
+	modifyResult : BOOL;
+	actual : INT;
+	expected : INT := 456;
+	readResult : BOOL;
+END_VAR]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[TEST('ModifyIntPropertyFromJsonString');
+
+// @TEST-RUN
+jsonParser.ParseDocument(jsonTestString);
+modifyResult := jsonParser.TryModify('.myInt',newValue);
+readResult := jsonParser.TryRead('.myInt',actual);
+jsonParser.NewDocument();
+
+// @TEST-ASSERT
+AssertEquals(Expected := expected, Actual := actual, Message := 'Did not modify to the correct value');
+AssertTrue(Condition := modifyResult, Message := 'Did not report a modify was successful');
+
+TEST_FINISHED();]]></ST>
+      </Implementation>
+    </Method>
+    <Method Name="ModifyLRealArrayMemberFromJsonString" Id="{d9d168c4-78e0-4cc5-9aaf-03d9c4b3336e}">
+      <Declaration><![CDATA[METHOD PUBLIC ModifyLRealArrayMemberFromJsonString
+VAR_INPUT
+END_VAR
+VAR
+	jsonTestString : T_MAXSTRING := '{"myArray" : [123.1,456.2,789.3]}';
+	newValue : LREAL := 678.4;
+	modifyResult : BOOL;
+	actual : LREAL;
+	expected : LREAL := 678.4;
+	readResult : BOOL;
+END_VAR]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[TEST('ModifyLRealArrayMemberFromJsonString');
+
+// @TEST-RUN
+jsonParser.ParseDocument(jsonTestString);
+modifyResult := jsonParser.TryModify('.myArray[1]',newValue);
+readResult := jsonParser.TryRead('.myArray[1]',actual);
+jsonParser.NewDocument();
+
+// @TEST-ASSERT
+AssertEquals(Expected := expected, Actual := actual, Message := 'Did not modify to the correct value');
+AssertTrue(Condition := modifyResult, Message := 'Did not report a modify was successful');
+
+TEST_FINISHED();]]></ST>
+      </Implementation>
+    </Method>
+    <Method Name="ModifyLRealPropertyFromJsonString" Id="{57a7facb-d1b9-4cca-9070-527252862e20}">
+      <Declaration><![CDATA[METHOD PUBLIC ModifyLRealPropertyFromJsonString
+VAR_INPUT
+END_VAR
+VAR
+	jsonTestString : T_MAXSTRING := '{"myLReal" : 123.4}';
+	newValue : LREAL := 456.5;
+	modifyResult : BOOL;
+	actual : LREAL;
+	expected : LREAL := 456.5;
+	readResult : BOOL;
+END_VAR]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[TEST('ModifyLRealPropertyFromJsonString');
+
+// @TEST-RUN
+jsonParser.ParseDocument(jsonTestString);
+modifyResult := jsonParser.TryModify('.myLReal',newValue);
+readResult := jsonParser.TryRead('.myLReal',actual);
+jsonParser.NewDocument();
+
+// @TEST-ASSERT
+AssertEquals(Expected := expected, Actual := actual, Message := 'Did not modify to the correct value');
+AssertTrue(Condition := modifyResult, Message := 'Did not report a modify was successful');
+
+TEST_FINISHED();]]></ST>
+      </Implementation>
+    </Method>
+    <Method Name="ModifyRealArrayMemberFromJsonString" Id="{28964a0c-4ab4-4baa-b4a3-d317d5994231}">
+      <Declaration><![CDATA[METHOD PUBLIC ModifyRealArrayMemberFromJsonString
+VAR_INPUT
+END_VAR
+VAR
+	jsonTestString : T_MAXSTRING := '{"myArray" : [123.1,456.2,789.3]}';
+	newValue : REAL := 678.4;
+	modifyResult : BOOL;
+	actual : REAL;
+	expected : REAL := 678.4;
+	readResult : BOOL;
+END_VAR]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[TEST('ModifyRealArrayMemberFromJsonString');
+
+// @TEST-RUN
+jsonParser.ParseDocument(jsonTestString);
+modifyResult := jsonParser.TryModify('.myArray[1]',newValue);
+readResult := jsonParser.TryRead('.myArray[1]',actual);
+jsonParser.NewDocument();
+
+// @TEST-ASSERT
+AssertEquals(Expected := expected, Actual := actual, Message := 'Did not modify to the correct value');
+AssertTrue(Condition := modifyResult, Message := 'Did not report a modify was successful');
+
+TEST_FINISHED();]]></ST>
+      </Implementation>
+    </Method>
+    <Method Name="ModifyRealPropertyFromJsonString" Id="{71df7d9e-9a59-4a3b-83f0-2c45e6d7199b}">
+      <Declaration><![CDATA[METHOD PUBLIC ModifyRealPropertyFromJsonString
+VAR_INPUT
+END_VAR
+VAR
+	jsonTestString : T_MAXSTRING := '{"myReal" : 123.4}';
+	newValue : REAL := 456.5;
+	modifyResult : BOOL;
+	actual : REAL;
+	expected : REAL := 456.5;
+	readResult : BOOL;
+END_VAR]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[TEST('ModifyRealPropertyFromJsonString');
+
+// @TEST-RUN
+jsonParser.ParseDocument(jsonTestString);
+modifyResult := jsonParser.TryModify('.myReal',newValue);
+readResult := jsonParser.TryRead('.myReal',actual);
+jsonParser.NewDocument();
+
+// @TEST-ASSERT
+AssertEquals(Expected := expected, Actual := actual, Message := 'Did not modify to the correct value');
+AssertTrue(Condition := modifyResult, Message := 'Did not report a modify was successful');
+
+TEST_FINISHED();]]></ST>
+      </Implementation>
+    </Method>
+    <Method Name="ModifyStringPropertyFromJsonString" Id="{b7f769be-5229-4a70-8f4f-577bf2a2df37}">
+      <Declaration><![CDATA[METHOD PUBLIC ModifyStringPropertyFromJsonString
+VAR_INPUT
+END_VAR
+VAR
+	jsonTestString : T_MAXSTRING := '{"myString" : "test"}';
+	newValue : T_MAXSTRING := 'foobar';
+	modifyResult : BOOL;
+	actual : T_MAXSTRING;
+	expected : T_MAXSTRING := 'foobar';
+	readResult : BOOL;
+END_VAR]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[TEST('ModifyStringPropertyFromJsonString');
+
+// @TEST-RUN
+jsonParser.ParseDocument(jsonTestString);
+modifyResult := jsonParser.TryModify('.myString',newValue);
+readResult := jsonParser.TryRead('.myString',actual);
+jsonParser.NewDocument();
+
+// @TEST-ASSERT
+AssertEquals(Expected := expected, Actual := actual, Message := 'Did not modify to the correct value');
+AssertTrue(Condition := modifyResult, Message := 'Did not report a modify was successful');
+
+TEST_FINISHED();]]></ST>
+      </Implementation>
+    </Method>
+    <Method Name="ModifyTrueBoolPropertyFromJsonString" Id="{bb1f42f9-5b7c-4258-9b42-77c63ba516c5}">
+      <Declaration><![CDATA[METHOD PUBLIC ModifyTrueBoolPropertyFromJsonString
+VAR_INPUT
+END_VAR
+VAR
+	jsonTestString : T_MAXSTRING := '{"myTrueBool" : true, "myFalseBool" : false}';
+	newValue : BOOL := FALSE;
+	modifyResult : BOOL;
+	result : BOOL;
+	readResult : BOOL;
+END_VAR]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[TEST('ModifyTrueBoolPropertyFromJsonString');
+
+// @TEST-RUN
+jsonParser.ParseDocument(jsonTestString);
+modifyResult := jsonParser.TryModify('.myTrueBool', newValue);
+readResult := jsonParser.TryRead('.myTrueBool', result);
+jsonParser.NewDocument();
+
+// @TEST-ASSERT
+AssertTrue(Condition := (result = newValue), Message := 'Did not modify to the correct value');
+AssertTrue(Condition := modifyResult, Message := 'Did not report a modify was successful');
+
+TEST_FINISHED();]]></ST>
+      </Implementation>
+    </Method>
+    <Method Name="ModifyUDIntArrayMemberFromJsonString" Id="{4921f0ec-f7ce-488c-bf84-e4906702e30f}">
+      <Declaration><![CDATA[METHOD PUBLIC ModifyUDIntArrayMemberFromJsonString
+VAR_INPUT
+END_VAR
+VAR
+	jsonTestString : T_MAXSTRING := '{"myArray" : [123,456,789]}';
+	newValue : UINT := 654;
+	modifyResult : BOOL;
+	actual : UINT;
+	expected : UINT := 654;
+	readResult : BOOL;
+END_VAR]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[TEST('ModifyUDIntArrayMemberFromJsonString');
+
+// @TEST-RUN
+jsonParser.ParseDocument(jsonTestString);
+modifyResult := jsonParser.TryModify('.myArray[1]',newValue);
+readResult := jsonParser.TryRead('.myArray[1]',actual);
+jsonParser.NewDocument();
+
+// @TEST-ASSERT
+AssertEquals(Expected := expected, Actual := actual, Message := 'Did not modify to the correct value');
+AssertTrue(Condition := modifyResult, Message := 'Did not report a modify was successful');
+
+TEST_FINISHED();]]></ST>
+      </Implementation>
+    </Method>
+    <Method Name="ModifyUDIntPropertyFromJsonString" Id="{d750b1d9-54d2-42c9-85a2-ca3a020339b4}">
+      <Declaration><![CDATA[METHOD PUBLIC ModifyUDIntPropertyFromJsonString
+VAR_INPUT
+END_VAR
+VAR
+	jsonTestString : T_MAXSTRING := '{"myUDInt" : 123}';
+	newValue : UDINT := 456;
+	modifyResult : BOOL;
+	actual : UDINT;
+	expected : UDINT := 456;
+	readResult : BOOL;
+END_VAR]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[TEST('ModifyUDIntPropertyFromJsonString');
+
+// @TEST-RUN
+jsonParser.ParseDocument(jsonTestString);
+modifyResult := jsonParser.TryModify('.myUDInt',newValue);
+readResult := jsonParser.TryRead('.myUDInt',actual);
+jsonParser.NewDocument();
+
+// @TEST-ASSERT
+AssertEquals(Expected := expected, Actual := actual, Message := 'Did not modify to the correct value');
+AssertTrue(Condition := modifyResult, Message := 'Did not report a modify was successful');
+
+TEST_FINISHED();]]></ST>
+      </Implementation>
+    </Method>
+    <Method Name="ModifyValueFromChainedProperty" Id="{edc06e47-ec07-4beb-bd50-3aeb3e846da2}">
+      <Declaration><![CDATA[METHOD PUBLIC ModifyValueFromChainedProperty
+VAR_INPUT
+END_VAR
+VAR
+	jsonTestString : T_MAXSTRING := '{"level1" : {"level2" : {"level3" : {"level4" : 123}}}}';
+	newValue : DINT := 456;
+	modifyResult : BOOL;
+	actual : DINT;
+	expected : DINT := 456;
+	readResult : BOOL;
+END_VAR]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[TEST('ModifyValueFromChainedProperty');
+
+// @TEST-RUN
+jsonParser.ParseDocument(jsonTestString);
+modifyResult := jsonParser.TryModify('.level1.level2.level3.level4',newValue);
+readResult := jsonParser.TryRead('.level1.level2.level3.level4',actual);
+jsonParser.NewDocument();
+
+// @TEST-ASSERT
+AssertEquals(Expected := expected, Actual := actual, Message := 'Did not modify to the correct value');
+AssertTrue(Condition := modifyResult, Message := 'Did not report a modify was successful');
+
+TEST_FINISHED();]]></ST>
+      </Implementation>
+    </Method>
     <Method Name="ReadBoolArrayMemberFromJsonString" Id="{03ef375a-e98e-0372-0f9d-1b689aebffa7}">
       <Declaration><![CDATA[METHOD PUBLIC ReadBoolArrayMemberFromJsonString
 VAR_INPUT
@@ -396,5 +828,168 @@ AssertTrue(Condition := readResult, Message := 'Did not report a read was succes
 TEST_FINISHED();]]></ST>
       </Implementation>
     </Method>
+    <LineIds Name="JsonDomParser_TestSuit">
+      <LineId Id="23" Count="0" />
+      <LineId Id="25" Count="0" />
+      <LineId Id="31" Count="1" />
+      <LineId Id="34" Count="1" />
+      <LineId Id="42" Count="0" />
+      <LineId Id="41" Count="0" />
+      <LineId Id="40" Count="0" />
+      <LineId Id="44" Count="1" />
+      <LineId Id="33" Count="0" />
+      <LineId Id="46" Count="1" />
+      <LineId Id="49" Count="0" />
+      <LineId Id="3" Count="14" />
+      <LineId Id="2" Count="0" />
+    </LineIds>
+    <LineIds Name="JsonDomParser_TestSuit.ModifyBoolArrayMemberFromJsonString">
+      <LineId Id="3" Count="3" />
+      <LineId Id="31" Count="0" />
+      <LineId Id="7" Count="6" />
+      <LineId Id="2" Count="0" />
+    </LineIds>
+    <LineIds Name="JsonDomParser_TestSuit.ModifyDIntArrayMemberFromJsonString">
+      <LineId Id="3" Count="3" />
+      <LineId Id="30" Count="0" />
+      <LineId Id="7" Count="6" />
+      <LineId Id="2" Count="0" />
+    </LineIds>
+    <LineIds Name="JsonDomParser_TestSuit.ModifyDIntPropertyFromJsonString">
+      <LineId Id="3" Count="3" />
+      <LineId Id="30" Count="0" />
+      <LineId Id="7" Count="6" />
+      <LineId Id="2" Count="0" />
+    </LineIds>
+    <LineIds Name="JsonDomParser_TestSuit.ModifyFalseBoolPropertyFromJsonString">
+      <LineId Id="3" Count="3" />
+      <LineId Id="30" Count="0" />
+      <LineId Id="7" Count="6" />
+      <LineId Id="2" Count="0" />
+    </LineIds>
+    <LineIds Name="JsonDomParser_TestSuit.ModifyIntArrayMemberFromJsonString">
+      <LineId Id="3" Count="3" />
+      <LineId Id="30" Count="0" />
+      <LineId Id="7" Count="6" />
+      <LineId Id="2" Count="0" />
+    </LineIds>
+    <LineIds Name="JsonDomParser_TestSuit.ModifyIntPropertyFromJsonString">
+      <LineId Id="3" Count="3" />
+      <LineId Id="30" Count="0" />
+      <LineId Id="7" Count="6" />
+      <LineId Id="2" Count="0" />
+    </LineIds>
+    <LineIds Name="JsonDomParser_TestSuit.ModifyLRealArrayMemberFromJsonString">
+      <LineId Id="3" Count="3" />
+      <LineId Id="30" Count="0" />
+      <LineId Id="7" Count="6" />
+      <LineId Id="2" Count="0" />
+    </LineIds>
+    <LineIds Name="JsonDomParser_TestSuit.ModifyLRealPropertyFromJsonString">
+      <LineId Id="3" Count="3" />
+      <LineId Id="30" Count="0" />
+      <LineId Id="7" Count="6" />
+      <LineId Id="2" Count="0" />
+    </LineIds>
+    <LineIds Name="JsonDomParser_TestSuit.ModifyRealArrayMemberFromJsonString">
+      <LineId Id="3" Count="3" />
+      <LineId Id="30" Count="0" />
+      <LineId Id="7" Count="6" />
+      <LineId Id="2" Count="0" />
+    </LineIds>
+    <LineIds Name="JsonDomParser_TestSuit.ModifyRealPropertyFromJsonString">
+      <LineId Id="3" Count="3" />
+      <LineId Id="30" Count="0" />
+      <LineId Id="7" Count="6" />
+      <LineId Id="2" Count="0" />
+    </LineIds>
+    <LineIds Name="JsonDomParser_TestSuit.ModifyStringPropertyFromJsonString">
+      <LineId Id="3" Count="3" />
+      <LineId Id="30" Count="0" />
+      <LineId Id="7" Count="6" />
+      <LineId Id="2" Count="0" />
+    </LineIds>
+    <LineIds Name="JsonDomParser_TestSuit.ModifyTrueBoolPropertyFromJsonString">
+      <LineId Id="49" Count="11" />
+      <LineId Id="2" Count="0" />
+    </LineIds>
+    <LineIds Name="JsonDomParser_TestSuit.ModifyUDIntArrayMemberFromJsonString">
+      <LineId Id="3" Count="3" />
+      <LineId Id="30" Count="0" />
+      <LineId Id="7" Count="6" />
+      <LineId Id="2" Count="0" />
+    </LineIds>
+    <LineIds Name="JsonDomParser_TestSuit.ModifyUDIntPropertyFromJsonString">
+      <LineId Id="3" Count="3" />
+      <LineId Id="30" Count="0" />
+      <LineId Id="7" Count="6" />
+      <LineId Id="2" Count="0" />
+    </LineIds>
+    <LineIds Name="JsonDomParser_TestSuit.ModifyValueFromChainedProperty">
+      <LineId Id="3" Count="3" />
+      <LineId Id="30" Count="0" />
+      <LineId Id="7" Count="6" />
+      <LineId Id="2" Count="0" />
+    </LineIds>
+    <LineIds Name="JsonDomParser_TestSuit.ReadBoolArrayMemberFromJsonString">
+      <LineId Id="3" Count="10" />
+      <LineId Id="2" Count="0" />
+    </LineIds>
+    <LineIds Name="JsonDomParser_TestSuit.ReadDIntArrayMemberFromJsonString">
+      <LineId Id="3" Count="10" />
+      <LineId Id="2" Count="0" />
+    </LineIds>
+    <LineIds Name="JsonDomParser_TestSuit.ReadDIntPropertyFromJsonString">
+      <LineId Id="3" Count="10" />
+      <LineId Id="2" Count="0" />
+    </LineIds>
+    <LineIds Name="JsonDomParser_TestSuit.ReadFalseBoolPropertyFromJsonString">
+      <LineId Id="3" Count="10" />
+      <LineId Id="2" Count="0" />
+    </LineIds>
+    <LineIds Name="JsonDomParser_TestSuit.ReadIntArrayMemberFromJsonString">
+      <LineId Id="3" Count="10" />
+      <LineId Id="2" Count="0" />
+    </LineIds>
+    <LineIds Name="JsonDomParser_TestSuit.ReadIntPropertyFromJsonString">
+      <LineId Id="3" Count="10" />
+      <LineId Id="2" Count="0" />
+    </LineIds>
+    <LineIds Name="JsonDomParser_TestSuit.ReadLRealArrayMemberFromJsonString">
+      <LineId Id="3" Count="10" />
+      <LineId Id="2" Count="0" />
+    </LineIds>
+    <LineIds Name="JsonDomParser_TestSuit.ReadLRealPropertyFromJsonString">
+      <LineId Id="3" Count="10" />
+      <LineId Id="2" Count="0" />
+    </LineIds>
+    <LineIds Name="JsonDomParser_TestSuit.ReadRealArrayMemberFromJsonString">
+      <LineId Id="3" Count="10" />
+      <LineId Id="2" Count="0" />
+    </LineIds>
+    <LineIds Name="JsonDomParser_TestSuit.ReadRealPropertyFromJsonString">
+      <LineId Id="3" Count="10" />
+      <LineId Id="2" Count="0" />
+    </LineIds>
+    <LineIds Name="JsonDomParser_TestSuit.ReadStringPropertyFromJsonString">
+      <LineId Id="3" Count="10" />
+      <LineId Id="2" Count="0" />
+    </LineIds>
+    <LineIds Name="JsonDomParser_TestSuit.ReadTrueBoolPropertyFromJsonString">
+      <LineId Id="3" Count="10" />
+      <LineId Id="2" Count="0" />
+    </LineIds>
+    <LineIds Name="JsonDomParser_TestSuit.ReadUDIntArrayMemberFromJsonString">
+      <LineId Id="3" Count="10" />
+      <LineId Id="2" Count="0" />
+    </LineIds>
+    <LineIds Name="JsonDomParser_TestSuit.ReadUDIntPropertyFromJsonString">
+      <LineId Id="3" Count="10" />
+      <LineId Id="2" Count="0" />
+    </LineIds>
+    <LineIds Name="JsonDomParser_TestSuit.ReadValueFromChainedProperties">
+      <LineId Id="3" Count="10" />
+      <LineId Id="2" Count="0" />
+    </LineIds>
   </POU>
 </TcPlcObject>

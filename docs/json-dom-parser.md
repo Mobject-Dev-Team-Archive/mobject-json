@@ -18,8 +18,10 @@ The JsonDomParser Class is an extension to the current TwinCAT implementation of
 ```declaration
 PROGRAM Main
 VAR
-  json : T_MAXSTRING := '{"level1" : {"level2" : {"level3" : {"level4" : 123}}}}';
+  jsonParser : JsonDomParser;
+  json : T_MAXSTRING := '{"level1" : {"level2" : {"level3" : {"level4" : 123, "myArray" : ["a","b","c"]}}}}';
   result : DINT;
+  newString : STRING := "d";
   successful : BOOL;
 END_VAR
 ```
@@ -29,10 +31,42 @@ END_VAR
 jsonParser.ParseDocument(json);
 
 // use the new "TryRead" method to read values using JSONPath Syntax
-successful := jsonParser.TryRead('.level1.level2.level3.level4',result); // successful = true, result := 123
+successful := jsonParser.TryRead('.level1.level2.level3.level4', result); 
+// successful = true
+// result := 123
+
+successful := jsonParser.TryModify('.level1.level2.level3.myArray[2]', newString); 
+json := jsonParser.GetDocument();
+// successful = true
+// json = '{"level1" : {"level2" : {"level3" : {"level4" : 123, "myArray" : ["a","b","d"]}}}}';
 ```
 
 ## Methods
+
+### TryModify()
+
+Tries to modify the value at the path specified. The modify will fail if the path does not already exist.
+
+#### Parameters
+
+| Parameters | Datatype    | Description                                        |
+| ---------- | ----------- | -------------------------------------------------- |
+| Path       | T_MAXSTRING | The path of the value specified in JSONPath Syntax |
+| Source     | ANY         | The symbol used as the source data                 |
+
+#### Return
+
+| Datatype | Description                               |
+| -------- | ----------------------------------------- |
+| BOOL     | Returns true if the modify was successful |
+
+#### Usage
+
+```example
+// {"myInt" : 123}';
+newValue := 456;
+modified := jsonParser.TryModify('.myInt', newValue);  // {"myInt" : 456}, modified = true
+```
 
 ### TryRead()
 

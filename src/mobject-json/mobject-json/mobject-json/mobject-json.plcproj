@@ -18,7 +18,7 @@
     <Company>mobject</Company>
     <Released>false</Released>
     <Title>mobject-json</Title>
-    <ProjectVersion>0.0.0</ProjectVersion>
+    <ProjectVersion>0.1.0</ProjectVersion>
     <DefaultNamespace>mobject-json</DefaultNamespace>
     <Placeholder>mobject-json</Placeholder>
     <Author>mobject dev team</Author>
@@ -55,7 +55,7 @@
   </ItemGroup>
   <ItemGroup>
     <PlaceholderResolution Include="mobject-converters">
-      <Resolution>mobject-converters, 0.1.0 (mobject)</Resolution>
+      <Resolution>mobject-converters, 0.1.1 (mobject)</Resolution>
     </PlaceholderResolution>
     <PlaceholderResolution Include="mobject-disposable">
       <Resolution>mobject-disposable, 0.3.1 (mobject)</Resolution>

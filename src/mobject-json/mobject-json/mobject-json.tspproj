@@ -1,5 +1,5 @@
 <?xml version="1.0"?>
-<TcSmProject xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="http://www.beckhoff.com/schemas/2012/07/TcSmProject" TcSmVersion="1.0" TcVersion="3.1.4024.42">
+<TcSmProject xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="http://www.beckhoff.com/schemas/2012/07/TcSmProject" TcSmVersion="1.0" TcVersion="3.1.4024.47">
 	<Project ProjectGUID="{2C6AD9B1-DC6B-4CDE-8F8F-632F203662B9}" Target64Bit="true" ShowHideConfigurations="#x106">
 		<Plc>
 			<Project GUID="{0D200BFB-3705-434C-8559-F0E48AA21B99}" Name="mobject-json" PrjFilePath="mobject-json\mobject-json.plcproj" TmcFilePath="mobject-json\mobject-json.tmc" ReloadTmc="true" AmsPort="851" FileArchiveSettings="#x000e"/>
