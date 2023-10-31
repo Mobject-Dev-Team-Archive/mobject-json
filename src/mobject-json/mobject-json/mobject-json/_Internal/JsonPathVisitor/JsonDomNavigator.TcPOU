@@ -1,0 +1,112 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4024.12">
+  <POU Name="JsonDomNavigator" Id="{8dcae62e-8322-46a6-945f-bd6da2ebb110}" SpecialFunc="None">
+    <Declaration><![CDATA[FUNCTION_BLOCK JsonDomNavigator IMPLEMENTS I_JsonPathVisitor
+VAR
+	jsonDomParser : REFERENCE TO JsonDomParser;
+	currentJsonPosition : SJsonValue;
+	_currentNode : SJsonValue;
+END_VAR
+]]></Declaration>
+    <Implementation>
+      <ST><![CDATA[]]></ST>
+    </Implementation>
+    <Folder Name="Constructor" Id="{04fc1430-9345-473f-a4b2-f1c612665b3e}" />
+    <Method Name="ArrayIndexFound" Id="{98db7489-e8e0-4d0a-a655-8d7a75b6cd7b}">
+      <Declaration><![CDATA[METHOD ArrayIndexFound
+VAR_INPUT
+	Index : UDINT;
+END_VAR
+]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[currentJsonPosition := jsonDomParser.GetArrayValueByIdx(currentJsonPosition, Index);]]></ST>
+      </Implementation>
+    </Method>
+    <Property Name="CurrentNode" Id="{989a9abf-47c4-46fe-8239-df8a3794c12b}">
+      <Declaration><![CDATA[PROPERTY PUBLIC CurrentNode : SJsonValue]]></Declaration>
+      <Get Name="Get" Id="{10905a16-4fee-402f-a2c3-6b5973ef1cdb}">
+        <Declaration><![CDATA[VAR
+END_VAR
+]]></Declaration>
+        <Implementation>
+          <ST><![CDATA[CurrentNode := _currentNode;]]></ST>
+        </Implementation>
+      </Get>
+    </Property>
+    <Method Name="EndOfParse" Id="{1933187d-055b-4280-a3dd-fb95e40be1c4}">
+      <Declaration><![CDATA[METHOD EndOfParse
+VAR_INPUT
+END_VAR
+]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[_currentNode := currentJsonPosition;]]></ST>
+      </Implementation>
+    </Method>
+    <Method Name="FB_init" Id="{c9de5196-45a9-4bb9-8cd3-1c3a220960f4}" FolderPath="Constructor\">
+      <Declaration><![CDATA[METHOD FB_init : BOOL
+VAR_INPUT
+	bInitRetains : BOOL; // if TRUE, the retain variables are initialized (warm start / cold start)
+	bInCopyCode : BOOL;  // if TRUE, the instance afterwards gets moved into the copy code (online change)
+	JsonDomParser : REFERENCE TO JsonDomParser;
+END_VAR
+]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[THIS^.jsonDomParser REF= JsonDomParser;]]></ST>
+      </Implementation>
+    </Method>
+    <Method Name="InvalidSyntaxFound" Id="{00a8c3f8-bf0b-456e-8b7d-b3d7e64b3294}">
+      <Declaration><![CDATA[METHOD InvalidSyntaxFound
+VAR_INPUT
+	Character : BYTE;
+	Position : UDINT;
+END_VAR
+]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[currentJsonPosition := 0;]]></ST>
+      </Implementation>
+    </Method>
+    <Method Name="PropertyFound" Id="{0373e239-39fc-45b6-a1bd-230ceca8166d}">
+      <Declaration><![CDATA[METHOD PropertyFound
+VAR_INPUT
+	Name : T_MAXSTRING;
+END_VAR
+]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[currentJsonPosition := jsonDomParser.FindMember(currentJsonPosition,Name);	]]></ST>
+      </Implementation>
+    </Method>
+    <Method Name="StartOfParse" Id="{2a485667-84fd-4586-9186-faf843b7ab5e}">
+      <Declaration><![CDATA[METHOD StartOfParse
+VAR_INPUT
+END_VAR
+]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[currentJsonPosition := jsonDomParser.GetDocumentRoot();]]></ST>
+      </Implementation>
+    </Method>
+    <LineIds Name="JsonDomNavigator">
+      <LineId Id="9" Count="0" />
+    </LineIds>
+    <LineIds Name="JsonDomNavigator.ArrayIndexFound">
+      <LineId Id="6" Count="0" />
+    </LineIds>
+    <LineIds Name="JsonDomNavigator.CurrentNode.Get">
+      <LineId Id="2" Count="0" />
+    </LineIds>
+    <LineIds Name="JsonDomNavigator.EndOfParse">
+      <LineId Id="5" Count="0" />
+    </LineIds>
+    <LineIds Name="JsonDomNavigator.FB_init">
+      <LineId Id="7" Count="0" />
+    </LineIds>
+    <LineIds Name="JsonDomNavigator.InvalidSyntaxFound">
+      <LineId Id="7" Count="0" />
+    </LineIds>
+    <LineIds Name="JsonDomNavigator.PropertyFound">
+      <LineId Id="6" Count="0" />
+    </LineIds>
+    <LineIds Name="JsonDomNavigator.StartOfParse">
+      <LineId Id="5" Count="0" />
+    </LineIds>
+  </POU>
+</TcPlcObject>

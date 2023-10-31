@@ -70,7 +70,7 @@
   </ItemGroup>
   <ItemGroup>
     <PlaceholderResolution Include="mobject-json">
-      <Resolution>mobject-json, 0.1.0 (mobject)</Resolution>
+      <Resolution>mobject-json, 0.1.1 (mobject)</Resolution>
     </PlaceholderResolution>
   </ItemGroup>
   <ProjectExtensions>

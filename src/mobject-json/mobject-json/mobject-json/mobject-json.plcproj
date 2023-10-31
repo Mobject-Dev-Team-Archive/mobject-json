@@ -18,7 +18,7 @@
     <Company>mobject</Company>
     <Released>false</Released>
     <Title>mobject-json</Title>
-    <ProjectVersion>0.1.0</ProjectVersion>
+    <ProjectVersion>0.1.1</ProjectVersion>
     <DefaultNamespace>mobject-json</DefaultNamespace>
     <Placeholder>mobject-json</Placeholder>
     <Author>mobject dev team</Author>
@@ -83,9 +83,21 @@
   </ItemGroup>
   <ItemGroup>
     <Folder Include="JsonDomParser" />
+    <Folder Include="_Internal" />
+    <Folder Include="_Internal\JsonPathVisitor" />
+    <Folder Include="_Internal\JsonPathSyntaxParser" />
   </ItemGroup>
   <ItemGroup>
     <Compile Include="JsonDomParser\JsonDomParser.TcPOU">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="_Internal\JsonPathSyntaxParser\JsonPathSyntaxParser.TcPOU">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="_Internal\JsonPathVisitor\I_JsonPathVisitor.TcIO">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="_Internal\JsonPathVisitor\JsonDomNavigator.TcPOU">
       <SubType>Code</SubType>
     </Compile>
   </ItemGroup>

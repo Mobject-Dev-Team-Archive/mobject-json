@@ -13,164 +13,6 @@ END_VAR
       <ST><![CDATA[]]></ST>
     </Implementation>
     <Folder Name="Private" Id="{57ebaeff-72b8-48f1-a518-b5e3240b9107}" />
-    <Method Name="ConvertPathToJsonPosition" Id="{91121397-dd47-4729-b855-0f647368f2eb}" FolderPath="Private\">
-      <Declaration><![CDATA[METHOD PRIVATE ConvertPathToJsonPosition : SJsonValue
-VAR_INPUT
-	Path : REFERENCE TO STRING;
-	Document : SJsonValue;
-END_VAR
-VAR
-//	pRootElement : POINTER TO JsonPathElement_Root;
-//	pPropertyElement : POINTER TO JsonPathElement_Property; 
-//	pArrayElement : POINTER TO JsonPathElement_ArraySingleSelector; 
-	
-	currentJsonPosition : SJsonValue;
-	currentCharacterPositionInPath : UDINT;
-
-	currentElementStart : UDINT;
-	currentElementEnd : UDINT;
-	currentElementLength : UDINT;
-	elementText : T_MAXSTRING;
-	endOfRepeat : BOOL;
-END_VAR
-VAR CONSTANT
-	PERIOD : BYTE := 16#2E; // .
-	DOLLAR_SIGN : BYTE := 16#24; // $
-	SINGLE_QUOTE : BYTE := 16#27; // '
-	LEFT_SQUARE_BRACKET : BYTE := 16#5B; // [
-	RIGHT_SQUARE_BRACKET : BYTE := 16#5D; // ]
-	NULL : BYTE := 0; // null
-END_VAR]]></Declaration>
-      <Implementation>
-        <ST><![CDATA[IF Path[0] = NULL THEN
-	RETURN;
-END_IF
-
-currentCharacterPositionInPath := 0;
-currentlyParsingType := NOTHING;
-currentJsonPosition := Document;
-
-REPEAT 
-	
-	IF currentJsonPosition = 0 THEN
-		RETURN;
-	END_IF
-	
-	IF Path[currentCharacterPositionInPath] = NULL THEN
-		 endOfRepeat := TRUE;
-	END_IF
-		
-	CASE currentlyParsingType OF
-		
-		NOTHING: 
-		
-			// at this point we are not currently "parsing" a known type from the string, therfore the next character should 
-			// decide what type is next. 
-		
-			IF Path[currentCharacterPositionInPath] = DOLLAR_SIGN THEN
-				
-				// i.e. the following string $.myValue would indicate that we are here.
-				//                           ^                                         
-				// as such, we do not need to take any action.  We already create a root element at the start, so this is an 
-				// optional character which they do not need to supply. 				
-				
-			ELSIF Path[currentCharacterPositionInPath] = PERIOD THEN
-				
-				// i.e. the following string $.myValue would indicate that we are here.
-				//                            ^                                        
-				// as such, we do not need to take any action.  
-				
-			ELSIF Path[currentCharacterPositionInPath] = LEFT_SQUARE_BRACKET THEN
-				
-				// i.e. the following string $.myValue[1].['myProperty'] would indicate that we could be at the start of one of two types
-				//                                    ^   ^                                      
-				// as such, we mark that we could be either a property or array and continue				
-				currentlyParsingType := BRACKET_NOTATION_PROPERTY_OR_ARRAY;				
-				
-			ELSIF Path[currentCharacterPositionInPath] = RIGHT_SQUARE_BRACKET THEN
-				
-				// This would indicate a failed parse as this should not happen.
-				
-			ELSIF Path[currentCharacterPositionInPath] = SINGLE_QUOTE THEN
-				
-				// This would indicate a failed parse as this should not happen.
-				
-			ELSE
-				
-				// i.e. the following string $.myValue[1].['myProperty'] would indicate that we could be at the start of a property
-				//                             ^                      
-				currentlyParsingType := DOT_NOTATION_PROPERTY;
-				currentElementStart := currentCharacterPositionInPath;	
-		
-			END_IF
-			
-		DOT_NOTATION_PROPERTY:
-		
-			IF Path[currentCharacterPositionInPath] = PERIOD OR Path[currentCharacterPositionInPath] = LEFT_SQUARE_BRACKET OR Path[currentCharacterPositionInPath] = NULL THEN
-				
-				currentElementEnd := currentCharacterPositionInPath - 1;
-				
-				currentElementLength := 1 + currentElementEnd - currentElementStart;
-				memset(ADR(elementText),0,SIZEOF(elementText));
-				memcpy(ADR(elementText),ADR(Path[currentElementStart]),currentElementLength);
-		
-				currentJsonPosition := FindMember(currentJsonPosition,elementText);	
-				currentlyParsingType := NOTHING;
-				CONTINUE;
-				
-			END_IF
-			
-		BRACKET_NOTATION_PROPERTY_OR_ARRAY:
-		
-			IF Path[currentCharacterPositionInPath] = SINGLE_QUOTE THEN
-				currentlyParsingType := BRACKET_NOTATION_PROPERTY_ELEMENT;
-				currentElementStart := currentCharacterPositionInPath + 1;			
-			ELSE
-				currentlyParsingType := BRACKET_NOTATION_ARRAY_ELEMENT;
-				currentElementStart := currentCharacterPositionInPath;			
-			END_IF
-			
-		BRACKET_NOTATION_PROPERTY_ELEMENT:
-		
-			IF Path[currentCharacterPositionInPath] = SINGLE_QUOTE THEN
-				
-				currentElementEnd := currentCharacterPositionInPath - 1;
-
-				currentElementLength := 1 + currentElementEnd - currentElementStart;
-				memset(ADR(elementText),0,SIZEOF(elementText));
-				memcpy(ADR(elementText),ADR(Path[currentElementStart]),currentElementLength);
-				
-				currentJsonPosition := FindMember(currentJsonPosition,elementText);				
-				currentlyParsingType := NOTHING;
-						
-			END_IF
-			
-		BRACKET_NOTATION_ARRAY_ELEMENT:
-		
-			IF Path[currentCharacterPositionInPath] = RIGHT_SQUARE_BRACKET THEN
-				
-				currentElementEnd := currentCharacterPositionInPath - 1;
-				
-				currentElementLength := 1 + currentElementEnd - currentElementStart;
-				memset(ADR(elementText),0,SIZEOF(elementText));
-				memcpy(ADR(elementText),ADR(Path[currentElementStart]),currentElementLength);
-				
-				currentJsonPosition := GetArrayValueByIdx(currentJsonPosition, STRING_TO_UDINT(elementText));		
-				currentlyParsingType := NOTHING;
-						
-			END_IF
-			
-
-	END_CASE
-	
-	currentCharacterPositionInPath := currentCharacterPositionInPath + 1;
-	
-UNTIL endOfRepeat 
-END_REPEAT
-	
-ConvertPathToJsonPosition := currentJsonPosition;]]></ST>
-      </Implementation>
-    </Method>
     <Method Name="TryModify" Id="{6e1a9e09-ed83-492b-82c6-fce6ce715223}">
       <Declaration><![CDATA[METHOD PUBLIC TryModify : BOOL
 VAR_INPUT
@@ -178,12 +20,13 @@ VAR_INPUT
 	Source : ANY;
 END_VAR
 VAR
-	root : SJsonValue;
+	jsonDomNavigator : JsonDomNavigator(THIS^);
+	jsonPathSyntaxParser : JsonPathSyntaxParser;
 	jsonValue : SJsonValue;
 END_VAR]]></Declaration>
       <Implementation>
-        <ST><![CDATA[root := GetDocumentRoot();
-jsonValue := ConvertPathToJsonPosition(Path, root);
+        <ST><![CDATA[jsonPathSyntaxParser.Parse(Path, jsonDomNavigator);
+jsonValue := jsonDomNavigator.CurrentNode;
 
 IF jsonValue = 0 THEN
 	RETURN;
@@ -236,7 +79,8 @@ VAR_INPUT
 	Destination : ANY;
 END_VAR
 VAR
-	root : SJsonValue;
+	jsonDomNavigator : JsonDomNavigator(THIS^);
+	jsonPathSyntaxParser : JsonPathSyntaxParser;
 	jsonValue : SJsonValue;
 	_BOOL : BOOL;
 	_DINT : DINT;
@@ -247,8 +91,8 @@ VAR
 	_STRING : POINTER TO STRING(1);
 END_VAR]]></Declaration>
       <Implementation>
-        <ST><![CDATA[root := GetDocumentRoot();
-jsonValue := ConvertPathToJsonPosition(Path, root);
+        <ST><![CDATA[jsonPathSyntaxParser.Parse(Path, jsonDomNavigator);
+jsonValue := jsonDomNavigator.CurrentNode;
 
 IF jsonValue = 0 THEN
 	RETURN;
@@ -529,16 +373,13 @@ TrySetUint64 := TRUE;]]></ST>
     <LineIds Name="JsonDomParser">
       <LineId Id="2" Count="0" />
     </LineIds>
-    <LineIds Name="JsonDomParser.ConvertPathToJsonPosition">
-      <LineId Id="3" Count="125" />
-      <LineId Id="2" Count="0" />
-    </LineIds>
     <LineIds Name="JsonDomParser.TryModify">
       <LineId Id="217" Count="43" />
       <LineId Id="194" Count="0" />
     </LineIds>
     <LineIds Name="JsonDomParser.TryRead">
-      <LineId Id="3" Count="48" />
+      <LineId Id="67" Count="0" />
+      <LineId Id="4" Count="47" />
       <LineId Id="2" Count="0" />
     </LineIds>
     <LineIds Name="JsonDomParser.TrySetBool">
