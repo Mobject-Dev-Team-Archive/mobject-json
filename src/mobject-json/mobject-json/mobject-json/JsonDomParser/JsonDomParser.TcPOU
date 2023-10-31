@@ -32,7 +32,7 @@ IF jsonValue = 0 THEN
 	RETURN;
 END_IF
 
-IF IsArray(jsonValue) OR IsObject(jsonValue) THEN
+IF IsObject(jsonValue) THEN
 	RETURN;
 END_IF
 
@@ -370,6 +370,65 @@ SetUint64(jsonValue,_ULINT);
 TrySetUint64 := TRUE;]]></ST>
       </Implementation>
     </Method>
+    <Method Name="TryWrite" Id="{9409e7d4-16a3-4ef6-99bb-41a32322606b}">
+      <Declaration><![CDATA[METHOD PUBLIC TryWrite : BOOL
+VAR_INPUT
+	Path : T_MaxString;
+	Source : ANY;
+END_VAR
+VAR
+	jsonDomCreator : JsonDomCreator(THIS^);
+	jsonPathSyntaxParser : JsonPathSyntaxParser;
+	jsonValue : SJsonValue;
+END_VAR]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[jsonPathSyntaxParser.Parse(Path, jsonDomCreator);
+jsonValue := jsonDomCreator.CurrentNode;
+
+IF jsonValue = 0 THEN
+	RETURN;
+END_IF
+
+IF IsObject(jsonValue) THEN
+	RETURN;
+END_IF
+
+IF TrySetBool(jsonValue, Source) THEN
+	TryWrite := TRUE;
+	RETURN;
+END_IF
+
+IF TrySetString(jsonValue, Source) THEN
+	TryWrite := TRUE;
+	RETURN;
+END_IF
+
+IF TrySetInt(jsonValue, Source) THEN
+	TryWrite := TRUE;
+	RETURN;
+END_IF
+
+IF TrySetUint(jsonValue, Source) THEN
+	TryWrite := TRUE;
+	RETURN;
+END_IF
+
+IF TrySetDouble(jsonValue, Source) THEN
+	TryWrite := TRUE;
+	RETURN;
+END_IF
+
+IF TrySetInt64(jsonValue, Source) THEN
+	TryWrite := TRUE;
+	RETURN;
+END_IF
+
+IF TrySetUint64(jsonValue, Source) THEN
+	TryWrite := TRUE;
+	RETURN;
+END_IF]]></ST>
+      </Implementation>
+    </Method>
     <LineIds Name="JsonDomParser">
       <LineId Id="2" Count="0" />
     </LineIds>
@@ -488,6 +547,10 @@ TrySetUint64 := TRUE;]]></ST>
     <LineIds Name="JsonDomParser.TrySetUint64">
       <LineId Id="144" Count="20" />
       <LineId Id="128" Count="0" />
+    </LineIds>
+    <LineIds Name="JsonDomParser.TryWrite">
+      <LineId Id="217" Count="43" />
+      <LineId Id="194" Count="0" />
     </LineIds>
   </POU>
 </TcPlcObject>

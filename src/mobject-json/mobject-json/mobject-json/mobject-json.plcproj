@@ -18,7 +18,7 @@
     <Company>mobject</Company>
     <Released>false</Released>
     <Title>mobject-json</Title>
-    <ProjectVersion>0.1.1</ProjectVersion>
+    <ProjectVersion>0.2.0</ProjectVersion>
     <DefaultNamespace>mobject-json</DefaultNamespace>
     <Placeholder>mobject-json</Placeholder>
     <Author>mobject dev team</Author>
@@ -98,6 +98,9 @@
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="_Internal\JsonPathVisitor\JsonDomNavigator.TcPOU">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="_Internal\JsonPathVisitor\JsonDomCreator.TcPOU">
       <SubType>Code</SubType>
     </Compile>
   </ItemGroup>
