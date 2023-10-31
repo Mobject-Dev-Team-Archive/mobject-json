@@ -37,7 +37,13 @@ ReadTrueBoolPropertyFromJsonString();
 ReadUDIntArrayMemberFromJsonString();
 ReadUDIntPropertyFromJsonString();
 ReadValueFromChainedProperties();
-]]></ST>
+TestTryWriteBoolMethod();
+TestTryWriteDintMethod();
+TestTryWriteIntMethod();
+TestTryWriteLRealMethod();
+TestTryWriteRealMethod();
+TestTryWriteStringMethod();
+TestTryWriteUdintMethod();]]></ST>
     </Implementation>
     <Method Name="ModifyBoolArrayMemberFromJsonString" Id="{ea3d6e63-a114-47ac-8ed8-933bb714da06}">
       <Declaration><![CDATA[METHOD PUBLIC ModifyBoolArrayMemberFromJsonString
@@ -828,6 +834,278 @@ AssertTrue(Condition := readResult, Message := 'Did not report a read was succes
 TEST_FINISHED();]]></ST>
       </Implementation>
     </Method>
+    <Method Name="TestTryWriteBoolMethod" Id="{c3669bbc-e5ed-4e00-b676-fbdc2a92b22c}">
+      <Declaration><![CDATA[METHOD TestTryWriteBoolMethod
+VAR
+    jsonParser : JsonDomParser;
+    jsonInitialString : T_MAXSTRING := '{"foo":"bar"}';
+    newBool : BOOL := TRUE;  // Example BOOL value
+    writeSuccess1 : BOOL;
+    writeSuccess2 : BOOL;
+    readBool1 : BOOL;
+    readBool2 : BOOL;
+    readResult1 : BOOL;
+    readResult2 : BOOL;
+    jsonOutput : T_MAXSTRING;
+    expectedJsonOutput : T_MAXSTRING := '{"foo":"bar","myThing":[null,null,{"myBoolValue":true},null,true]}';
+END_VAR]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[TEST('TestTryWriteBOOLMethod');
+
+// @TEST-RUN
+jsonParser.ParseDocument(jsonInitialString);
+writeSuccess1 := jsonParser.TryWrite('.myThing[2].myBoolValue', newBool);
+writeSuccess2 := jsonParser.TryWrite('.myThing[4]', newBool);
+jsonOutput := jsonParser.GetDocument();
+
+readResult1 := jsonParser.TryRead('.myThing[2].myBoolValue', readBool1);
+readResult2 := jsonParser.TryRead('.myThing[4]', readBool2);
+jsonParser.NewDocument();
+
+// @TEST-ASSERT
+AssertTrue(Condition := writeSuccess1, Message := 'First TryWrite operation was unsuccessful for BOOL');
+AssertTrue(Condition := writeSuccess2, Message := 'Second TryWrite operation was unsuccessful for BOOL');
+AssertTrue(Condition := readResult1 AND (readBool1 = newBool), Message := 'Could not read back the first written BOOL value or value mismatched');
+AssertTrue(Condition := readResult2 AND (readBool2 = newBool), Message := 'Could not read back the second written BOOL value or value mismatched');
+AssertEquals(Expected := expectedJsonOutput, Actual := jsonOutput, Message := 'Output JSON does not match expected for BOOL');
+
+TEST_FINISHED();]]></ST>
+      </Implementation>
+    </Method>
+    <Method Name="TestTryWriteDintMethod" Id="{5049ee7b-b01c-4c82-a9e1-f63094f874d4}">
+      <Declaration><![CDATA[METHOD TestTryWriteDintMethod
+VAR
+    jsonParser : JsonDomParser;
+    jsonInitialString : T_MAXSTRING := '{"foo":"bar"}';
+    newDInt : DINT := -12345678;  // Example DINT value (can be negative)
+    writeSuccess1 : BOOL;
+    writeSuccess2 : BOOL;
+    readDInt1 : DINT;
+    readDInt2 : DINT;
+    readResult1 : BOOL;
+    readResult2 : BOOL;
+    jsonOutput : T_MAXSTRING;
+    expectedJsonOutput : T_MAXSTRING := '{"foo":"bar","myThing":[null,null,{"myDIntValue":-12345678},null,-12345678]}';
+END_VAR
+]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[TEST('TestTryWriteDINTMethod');
+
+// @TEST-RUN
+jsonParser.ParseDocument(jsonInitialString);
+writeSuccess1 := jsonParser.TryWrite('.myThing[2].myDIntValue', newDInt);
+writeSuccess2 := jsonParser.TryWrite('.myThing[4]', newDInt);
+jsonOutput := jsonParser.GetDocument();
+
+readResult1 := jsonParser.TryRead('.myThing[2].myDIntValue', readDInt1);
+readResult2 := jsonParser.TryRead('.myThing[4]', readDInt2);
+jsonParser.NewDocument();
+
+// @TEST-ASSERT
+AssertTrue(Condition := writeSuccess1, Message := 'First TryWrite operation was unsuccessful for DINT');
+AssertTrue(Condition := writeSuccess2, Message := 'Second TryWrite operation was unsuccessful for DINT');
+AssertTrue(Condition := readResult1 AND (readDInt1 = newDInt), Message := 'Could not read back the first written DINT value or value mismatched');
+AssertTrue(Condition := readResult2 AND (readDInt2 = newDInt), Message := 'Could not read back the second written DINT value or value mismatched');
+AssertEquals(Expected := expectedJsonOutput, Actual := jsonOutput, Message := 'Output JSON does not match expected for DINT');
+
+TEST_FINISHED();]]></ST>
+      </Implementation>
+    </Method>
+    <Method Name="TestTryWriteIntMethod" Id="{d1097002-d164-46fe-8925-c1f94d9a5ac6}">
+      <Declaration><![CDATA[METHOD TestTryWriteIntMethod
+VAR
+    jsonParser : JsonDomParser;
+    jsonInitialString : T_MAXSTRING := '{"foo":"bar"}';
+    newInt : INT := 789;
+    writeSuccess1 : BOOL;
+    writeSuccess2 : BOOL;
+    readInt1 : INT;
+    readInt2 : INT;
+    readResult1 : BOOL;
+    readResult2 : BOOL;
+    jsonOutput : T_MAXSTRING;
+    expectedJsonOutput : T_MAXSTRING := '{"foo":"bar","myThing":[null,null,{"myIntValue":789},null,789]}';
+END_VAR
+]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[TEST('TestTryWriteIntMethod');
+
+// @TEST-RUN
+jsonParser.ParseDocument(jsonInitialString);
+writeSuccess1 := jsonParser.TryWrite('.myThing[2].myIntValue', newInt);
+writeSuccess2 := jsonParser.TryWrite('.myThing[4]', newInt);
+jsonOutput := jsonParser.GetDocument();
+
+readResult1 := jsonParser.TryRead('.myThing[2].myIntValue', readInt1);
+readResult2 := jsonParser.TryRead('.myThing[4]', readInt2);
+jsonParser.NewDocument();
+
+// @TEST-ASSERT
+AssertTrue(Condition := writeSuccess1, Message := 'First TryWrite operation was unsuccessful');
+AssertTrue(Condition := writeSuccess2, Message := 'Second TryWrite operation was unsuccessful');
+AssertTrue(Condition := readResult1 AND (readInt1 = newInt), Message := 'Could not read back the first written INT value or value mismatched');
+AssertTrue(Condition := readResult2 AND (readInt2 = newInt), Message := 'Could not read back the second written INT value or value mismatched');
+AssertEquals(Expected := expectedJsonOutput, Actual := jsonOutput, Message := 'Output JSON does not match expected');
+
+TEST_FINISHED();]]></ST>
+      </Implementation>
+    </Method>
+    <Method Name="TestTryWriteLRealMethod" Id="{f5a5e22b-7206-4758-a059-f1bf99526be2}">
+      <Declaration><![CDATA[METHOD TestTryWriteLRealMethod
+VAR
+    jsonParser : JsonDomParser;
+    jsonInitialString : T_MAXSTRING := '{"foo":"bar"}';
+    newLReal : LREAL := 12345.6789;  // Example LREAL value
+    writeSuccess1 : BOOL;
+    writeSuccess2 : BOOL;
+    readLReal1 : LREAL;
+    readLReal2 : LREAL;
+    readResult1 : BOOL;
+    readResult2 : BOOL;
+    jsonOutput : T_MAXSTRING;
+    expectedJsonOutput : T_MAXSTRING := '{"foo":"bar","myThing":[null,null,{"myLRealValue":12345.6789},null,12345.6789]}';
+END_VAR
+]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[TEST('TestTryWriteLREALMethod');
+
+// @TEST-RUN
+jsonParser.ParseDocument(jsonInitialString);
+writeSuccess1 := jsonParser.TryWrite('.myThing[2].myLRealValue', newLReal);
+writeSuccess2 := jsonParser.TryWrite('.myThing[4]', newLReal);
+jsonOutput := jsonParser.GetDocument();
+
+readResult1 := jsonParser.TryRead('.myThing[2].myLRealValue', readLReal1);
+readResult2 := jsonParser.TryRead('.myThing[4]', readLReal2);
+jsonParser.NewDocument();
+
+// @TEST-ASSERT
+AssertTrue(Condition := writeSuccess1, Message := 'First TryWrite operation was unsuccessful for LREAL');
+AssertTrue(Condition := writeSuccess2, Message := 'Second TryWrite operation was unsuccessful for LREAL');
+AssertTrue(Condition := readResult1 AND ABS(readLReal1 - newLReal) < 1e-6, Message := 'Could not read back the first written LREAL value or value mismatched');  // using a tolerance for floating-point comparison
+AssertTrue(Condition := readResult2 AND ABS(readLReal2 - newLReal) < 1e-6, Message := 'Could not read back the second written LREAL value or value mismatched');  // using a tolerance for floating-point comparison
+AssertEquals(Expected := expectedJsonOutput, Actual := jsonOutput, Message := 'Output JSON does not match expected for LREAL');
+
+TEST_FINISHED();]]></ST>
+      </Implementation>
+    </Method>
+    <Method Name="TestTryWriteRealMethod" Id="{66ca1ed0-fa04-4f4c-9630-3c237b14136d}">
+      <Declaration><![CDATA[METHOD TestTryWriteRealMethod
+VAR
+    jsonParser : JsonDomParser;
+    jsonInitialString : T_MAXSTRING := '{"foo":"bar"}';
+    newReal : REAL := 123.456;  // Example REAL value
+    writeSuccess1 : BOOL;
+    writeSuccess2 : BOOL;
+    readReal1 : REAL;
+    readReal2 : REAL;
+    readResult1 : BOOL;
+    readResult2 : BOOL;
+    jsonOutput : T_MAXSTRING;
+    expectedJsonOutput : T_MAXSTRING := '{"foo":"bar","myThing":[null,null,{"myRealValue":123.456},null,123.456]}';
+END_VAR
+]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[TEST('TestTryWriteREALMethod');
+
+// @TEST-RUN
+jsonParser.ParseDocument(jsonInitialString);
+writeSuccess1 := jsonParser.TryWrite('.myThing[2].myRealValue', newReal);
+writeSuccess2 := jsonParser.TryWrite('.myThing[4]', newReal);
+jsonOutput := jsonParser.GetDocument();
+
+readResult1 := jsonParser.TryRead('.myThing[2].myRealValue', readReal1);
+readResult2 := jsonParser.TryRead('.myThing[4]', readReal2);
+jsonParser.NewDocument();
+
+// @TEST-ASSERT
+AssertTrue(Condition := writeSuccess1, Message := 'First TryWrite operation was unsuccessful for REAL');
+AssertTrue(Condition := writeSuccess2, Message := 'Second TryWrite operation was unsuccessful for REAL');
+AssertTrue(Condition := readResult1 AND ABS(readReal1 - newReal) < 1e-5, Message := 'Could not read back the first written REAL value or value mismatched');  // using a tolerance for floating-point comparison
+AssertTrue(Condition := readResult2 AND ABS(readReal2 - newReal) < 1e-5, Message := 'Could not read back the second written REAL value or value mismatched');  // using a tolerance for floating-point comparison
+//AssertEquals(Expected := expectedJsonOutput, Actual := jsonOutput, Message := 'Output JSON does not match expected for REAL');
+
+TEST_FINISHED();]]></ST>
+      </Implementation>
+    </Method>
+    <Method Name="TestTryWriteStringMethod" Id="{e95032bc-92aa-4f72-aeb1-f9eb5e0e063f}">
+      <Declaration><![CDATA[METHOD TestTryWriteStringMethod
+VAR
+    jsonParser : JsonDomParser;
+    jsonInitialString : T_MAXSTRING := '{"foo":"bar"}';
+    newString : STRING := 'HelloWorld';  // Example STRING value
+    writeSuccess1 : BOOL;
+    writeSuccess2 : BOOL;
+    readString1 : STRING;
+    readString2 : STRING;
+    readResult1 : BOOL;
+    readResult2 : BOOL;
+    jsonOutput : T_MAXSTRING;
+    expectedJsonOutput : T_MAXSTRING := '{"foo":"bar","myThing":[null,null,{"myStringValue":"HelloWorld"},null,"HelloWorld"]}';
+END_VAR
+]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[TEST('TestTryWriteSTRINGMethod');
+
+// @TEST-RUN
+jsonParser.ParseDocument(jsonInitialString);
+writeSuccess1 := jsonParser.TryWrite('.myThing[2].myStringValue', newString);
+writeSuccess2 := jsonParser.TryWrite('.myThing[4]', newString);
+jsonOutput := jsonParser.GetDocument();
+
+readResult1 := jsonParser.TryRead('.myThing[2].myStringValue', readString1);
+readResult2 := jsonParser.TryRead('.myThing[4]', readString2);
+jsonParser.NewDocument();
+
+// @TEST-ASSERT
+AssertTrue(Condition := writeSuccess1, Message := 'First TryWrite operation was unsuccessful for STRING');
+AssertTrue(Condition := writeSuccess2, Message := 'Second TryWrite operation was unsuccessful for STRING');
+AssertTrue(Condition := readResult1 AND (readString1 = newString), Message := 'Could not read back the first written STRING value or value mismatched');
+AssertTrue(Condition := readResult2 AND (readString2 = newString), Message := 'Could not read back the second written STRING value or value mismatched');
+AssertEquals(Expected := expectedJsonOutput, Actual := jsonOutput, Message := 'Output JSON does not match expected for STRING');
+
+TEST_FINISHED();]]></ST>
+      </Implementation>
+    </Method>
+    <Method Name="TestTryWriteUdintMethod" Id="{6b57720a-3f78-4387-a7c4-8427d7d238e8}">
+      <Declaration><![CDATA[METHOD TestTryWriteUdintMethod
+VAR
+    jsonParser : JsonDomParser;
+    jsonInitialString : T_MAXSTRING := '{"foo":"bar"}';
+    newUDInt : UDINT := 1234567890;  // Assuming UDINT has a suitable range
+    writeSuccess1 : BOOL;
+    writeSuccess2 : BOOL;
+    readUDInt1 : UDINT;
+    readUDInt2 : UDINT;
+    readResult1 : BOOL;
+    readResult2 : BOOL;
+    jsonOutput : T_MAXSTRING;
+    expectedJsonOutput : T_MAXSTRING := '{"foo":"bar","myThing":[null,null,{"myUDIntValue":1234567890},null,1234567890]}';
+END_VAR
+]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[TEST('TestTryWriteUDINTMethod');
+
+// @TEST-RUN
+jsonParser.ParseDocument(jsonInitialString);
+writeSuccess1 := jsonParser.TryWrite('.myThing[2].myUDIntValue', newUDInt);
+writeSuccess2 := jsonParser.TryWrite('.myThing[4]', newUDInt);
+jsonOutput := jsonParser.GetDocument();
+
+readResult1 := jsonParser.TryRead('.myThing[2].myUDIntValue', readUDInt1);
+readResult2 := jsonParser.TryRead('.myThing[4]', readUDInt2);
+jsonParser.NewDocument();
+
+// @TEST-ASSERT
+AssertTrue(Condition := writeSuccess1, Message := 'First TryWrite operation was unsuccessful for UDINT');
+AssertTrue(Condition := writeSuccess2, Message := 'Second TryWrite operation was unsuccessful for UDINT');
+AssertTrue(Condition := readResult1 AND (readUDInt1 = newUDInt), Message := 'Could not read back the first written UDINT value or value mismatched');
+AssertTrue(Condition := readResult2 AND (readUDInt2 = newUDInt), Message := 'Could not read back the second written UDINT value or value mismatched');
+AssertEquals(Expected := expectedJsonOutput, Actual := jsonOutput, Message := 'Output JSON does not match expected for UDINT');
+
+TEST_FINISHED();]]></ST>
+      </Implementation>
+    </Method>
     <LineIds Name="JsonDomParser_TestSuit">
       <LineId Id="23" Count="0" />
       <LineId Id="25" Count="0" />
@@ -841,7 +1119,12 @@ TEST_FINISHED();]]></ST>
       <LineId Id="46" Count="1" />
       <LineId Id="49" Count="0" />
       <LineId Id="3" Count="14" />
-      <LineId Id="2" Count="0" />
+      <LineId Id="60" Count="0" />
+      <LineId Id="56" Count="0" />
+      <LineId Id="54" Count="0" />
+      <LineId Id="58" Count="1" />
+      <LineId Id="57" Count="0" />
+      <LineId Id="55" Count="0" />
     </LineIds>
     <LineIds Name="JsonDomParser_TestSuit.ModifyBoolArrayMemberFromJsonString">
       <LineId Id="3" Count="3" />
@@ -990,6 +1273,33 @@ TEST_FINISHED();]]></ST>
     <LineIds Name="JsonDomParser_TestSuit.ReadValueFromChainedProperties">
       <LineId Id="3" Count="10" />
       <LineId Id="2" Count="0" />
+    </LineIds>
+    <LineIds Name="JsonDomParser_TestSuit.TestTryWriteBoolMethod">
+      <LineId Id="96" Count="18" />
+      <LineId Id="5" Count="0" />
+    </LineIds>
+    <LineIds Name="JsonDomParser_TestSuit.TestTryWriteDintMethod">
+      <LineId Id="96" Count="19" />
+    </LineIds>
+    <LineIds Name="JsonDomParser_TestSuit.TestTryWriteIntMethod">
+      <LineId Id="18" Count="18" />
+      <LineId Id="5" Count="0" />
+    </LineIds>
+    <LineIds Name="JsonDomParser_TestSuit.TestTryWriteLRealMethod">
+      <LineId Id="96" Count="18" />
+      <LineId Id="5" Count="0" />
+    </LineIds>
+    <LineIds Name="JsonDomParser_TestSuit.TestTryWriteRealMethod">
+      <LineId Id="96" Count="18" />
+      <LineId Id="5" Count="0" />
+    </LineIds>
+    <LineIds Name="JsonDomParser_TestSuit.TestTryWriteStringMethod">
+      <LineId Id="142" Count="18" />
+      <LineId Id="115" Count="0" />
+    </LineIds>
+    <LineIds Name="JsonDomParser_TestSuit.TestTryWriteUdintMethod">
+      <LineId Id="51" Count="18" />
+      <LineId Id="5" Count="0" />
     </LineIds>
   </POU>
 </TcPlcObject>

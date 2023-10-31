@@ -31,11 +31,11 @@ END_VAR
 jsonParser.ParseDocument(json);
 
 // use the new "TryRead" method to read values using JSONPath Syntax
-successful := jsonParser.TryRead('.level1.level2.level3.level4', result); 
+successful := jsonParser.TryRead('.level1.level2.level3.level4', result);
 // successful = true
 // result := 123
 
-successful := jsonParser.TryModify('.level1.level2.level3.myArray[2]', newString); 
+successful := jsonParser.TryModify('.level1.level2.level3.myArray[2]', newString);
 json := jsonParser.GetDocument();
 // successful = true
 // json = '{"level1" : {"level2" : {"level3" : {"level4" : 123, "myArray" : ["a","b","d"]}}}}';
@@ -90,4 +90,39 @@ Tries to read the value at the path specified.
 ```example
 // {"myInt" : 123}';
 read := jsonParser.TryRead('.myInt',result);  // result = 123, read = true
+```
+
+### TryWrite()
+
+The TryWrite() method attempts to write a value at the specified path within a JSON document. If the path does not exist, the method will attempt to create the necessary structure in the JSON document to accommodate the value.
+
+#### Parameters
+
+| Parameters | Datatype    | Description                                             |
+| ---------- | ----------- | ------------------------------------------------------- |
+| Path       | T_MAXSTRING | The path of the value specified in JSONPath Syntax      |
+| Source     | ANY         | The data value you want to write to the specified path. |
+
+#### Return
+
+| Datatype | Description                              |
+| -------- | ---------------------------------------- |
+| BOOL     | Returns true if the write was successful |
+
+#### Usage
+
+```example
+// Initial JSON: {"user" : {"name" : "Alice"}}
+newValue := 25;
+modifiedAge := jsonParser.TryWrite('.user.age', newValue);  // Adds an "age" field to the "user" object
+
+newAddress := '123 Maple St';
+modifiedAddress := jsonParser.TryWrite('.user.address.street', newAddress);  // Creates a nested "address" object with a "street" field inside the "user" object
+
+newCity := 'Wonderland';
+modifiedCity := jsonParser.TryWrite('.user.address.city', newCity);  // Adds a "city" field to the newly created "address" object
+
+// After the operations, JSON becomes:
+// {"user" : {"name" : "Alice", "age" : 25, "address" : {"street" : "123 Maple St", "city" : "Wonderland"}}}
+// The 'modifiedAge', 'modifiedAddress', and 'modifiedCity' variables are all set to true.
 ```

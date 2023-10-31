@@ -3,28 +3,14 @@
   <POU Name="MAIN" Id="{571dcd2b-7f1a-0119-09ce-d4765fa24bb1}" SpecialFunc="None">
     <Declaration><![CDATA[PROGRAM MAIN
 VAR
-//	jsonDomParser_TestSuit : JsonDomParser_TestSuit;
-	jsonParser : JsonDomParser;
-	json : T_MAXSTRING := '{"myInt" : 123}';
-	newString : STRING := 'foobar';
-	success : BOOL;
-	jsonOutput : T_MAXSTRING;
+	jsonDomParser_TestSuit : JsonDomParser_TestSuit;
 END_VAR
 ]]></Declaration>
     <Implementation>
-      <ST><![CDATA[//TcUnit.RUN();
-jsonParser.ParseDocument(json);
-success := jsonParser.TryWrite('.myThing[2].myString',newString);
-success := jsonParser.TryWrite('.myThing[4].myString',newString);
-jsonOutput := jsonParser.GetDocument();
-jsonParser.NewDocument();]]></ST>
+      <ST><![CDATA[TcUnit.RUN();]]></ST>
     </Implementation>
     <LineIds Name="MAIN">
       <LineId Id="2" Count="0" />
-      <LineId Id="17" Count="1" />
-      <LineId Id="25" Count="0" />
-      <LineId Id="21" Count="0" />
-      <LineId Id="24" Count="0" />
     </LineIds>
   </POU>
 </TcPlcObject>

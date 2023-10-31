@@ -1,5 +1,9 @@
 # Changelog
 
+## 0.2.0
+
+- Added TryWrite() method which attempts to write a value at the specified path within a JSON document. If the path does not exist, the method will attempt to create the necessary structure in the JSON document to accommodate the value. 
+
 ## 0.1.1
 
 - Refactored Json Path Syntax Parsing to it's own class.  It's now possible to parse paths using an I_JsonPathVisitor.
