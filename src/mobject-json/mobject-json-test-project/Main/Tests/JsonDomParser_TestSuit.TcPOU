@@ -37,6 +37,7 @@ ReadTrueBoolPropertyFromJsonString();
 ReadUDIntArrayMemberFromJsonString();
 ReadUDIntPropertyFromJsonString();
 ReadValueFromChainedProperties();
+TestTryLocateMethod();
 TestTryWriteBoolMethod();
 TestTryWriteDintMethod();
 TestTryWriteIntMethod();
@@ -834,6 +835,38 @@ AssertTrue(Condition := readResult, Message := 'Did not report a read was succes
 TEST_FINISHED();]]></ST>
       </Implementation>
     </Method>
+    <Method Name="TestTryLocateMethod" Id="{0a20117d-20ff-4a6a-9095-e564d64d82cc}">
+      <Declaration><![CDATA[METHOD PUBLIC TestTryLocateMethod
+VAR_INPUT
+END_VAR
+VAR
+	jsonTestString : T_MAXSTRING := '{"level1" : {"level2" : "test"}}';
+	root : SJsonValue;
+	level1 : SJsonValue;
+	level2 : SJsonValue;
+	actual : SJsonValue;
+	locateResult : BOOL;
+END_VAR]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[TEST('TestTryLocateMethod');
+
+// @TEST-RUN
+root := jsonParser.ParseDocument(jsonTestString);
+
+// manually obtain the correct result
+level1 := jsonParser.FindMember(root,'level1');
+level2 := jsonParser.FindMember(level1,'level2');
+
+locateResult := jsonParser.TryLocate('.level1.level2',actual);
+jsonParser.NewDocument();
+
+// @TEST-ASSERT
+AssertEquals(Expected := level2, Actual := actual, Message := 'Did not locate the correct member');
+AssertTrue(Condition := locateResult, Message := 'Did not report a locate was successful');
+
+TEST_FINISHED();]]></ST>
+      </Implementation>
+    </Method>
     <Method Name="TestTryWriteBoolMethod" Id="{c3669bbc-e5ed-4e00-b676-fbdc2a92b22c}">
       <Declaration><![CDATA[METHOD TestTryWriteBoolMethod
 VAR
@@ -1119,6 +1152,7 @@ TEST_FINISHED();]]></ST>
       <LineId Id="46" Count="1" />
       <LineId Id="49" Count="0" />
       <LineId Id="3" Count="14" />
+      <LineId Id="65" Count="0" />
       <LineId Id="60" Count="0" />
       <LineId Id="56" Count="0" />
       <LineId Id="54" Count="0" />
@@ -1272,6 +1306,14 @@ TEST_FINISHED();]]></ST>
     </LineIds>
     <LineIds Name="JsonDomParser_TestSuit.ReadValueFromChainedProperties">
       <LineId Id="3" Count="10" />
+      <LineId Id="2" Count="0" />
+    </LineIds>
+    <LineIds Name="JsonDomParser_TestSuit.TestTryLocateMethod">
+      <LineId Id="3" Count="3" />
+      <LineId Id="31" Count="2" />
+      <LineId Id="35" Count="0" />
+      <LineId Id="30" Count="0" />
+      <LineId Id="7" Count="6" />
       <LineId Id="2" Count="0" />
     </LineIds>
     <LineIds Name="JsonDomParser_TestSuit.TestTryWriteBoolMethod">

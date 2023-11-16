@@ -1,5 +1,9 @@
 # Changelog
 
+## 0.3.0 
+
+- Added TryLocate() method which attempts to resolve the path into an SJsonValue which can be used with the parser. 
+
 ## 0.2.0
 
 - Added TryWrite() method which attempts to write a value at the specified path within a JSON document. If the path does not exist, the method will attempt to create the necessary structure in the JSON document to accommodate the value. 

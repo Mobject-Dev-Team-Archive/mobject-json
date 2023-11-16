@@ -43,7 +43,31 @@ json := jsonParser.GetDocument();
 
 ## Methods
 
-### TryModify()
+### TryLocate(Path, Destination)
+
+Tries to resolve the json path specified to a SJsonValue.
+
+#### Parameters
+
+| Parameters  | Datatype    | Description                                                  |
+| ----------- | ----------- | ------------------------------------------------------------ |
+| Path        | T_MAXSTRING | The path of the value specified in JSONPath Syntax           |
+| Destination | REFERENCE TO SJsonValue | The symbol used as the destination if the read is successful |
+
+#### Return
+
+| Datatype | Description                             |
+| -------- | --------------------------------------- |
+| BOOL     | Returns true if the get was successful |
+
+#### Usage
+
+```example
+// {"myInt" : 123}';
+read := jsonParser.TryLocate('.myInt', location);  // location = pointer to json value 123, read = true
+```
+
+### TryModify(Path, Source)
 
 Tries to modify the value at the path specified. The modify will fail if the path does not already exist.
 
@@ -68,7 +92,7 @@ newValue := 456;
 modified := jsonParser.TryModify('.myInt', newValue);  // {"myInt" : 456}, modified = true
 ```
 
-### TryRead()
+### TryRead(Path, Destination)
 
 Tries to read the value at the path specified.
 
@@ -92,7 +116,7 @@ Tries to read the value at the path specified.
 read := jsonParser.TryRead('.myInt',result);  // result = 123, read = true
 ```
 
-### TryWrite()
+### TryWrite(Path, Source)
 
 The TryWrite() method attempts to write a value at the specified path within a JSON document. If the path does not exist, the method will attempt to create the necessary structure in the JSON document to accommodate the value.
 
