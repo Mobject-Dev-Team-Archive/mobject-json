@@ -13,6 +13,29 @@ END_VAR
       <ST><![CDATA[]]></ST>
     </Implementation>
     <Folder Name="Private" Id="{57ebaeff-72b8-48f1-a518-b5e3240b9107}" />
+    <Method Name="TryLocate" Id="{120ecad0-bb13-4e81-897e-2640b3fd903f}">
+      <Declaration><![CDATA[METHOD PUBLIC TryLocate : BOOL
+VAR_INPUT
+	Path : T_MaxString;
+	Destination : REFERENCE TO SJsonValue;
+END_VAR
+VAR
+	jsonDomNavigator : JsonDomNavigator(THIS^);
+	jsonPathSyntaxParser : JsonPathSyntaxParser;
+	jsonValue : SJsonValue;
+END_VAR]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[jsonPathSyntaxParser.Parse(Path, jsonDomNavigator);
+jsonValue := jsonDomNavigator.CurrentNode;
+
+IF jsonValue = 0 THEN
+	RETURN;
+END_IF
+
+Destination := jsonValue;
+TryLocate := TRUE;]]></ST>
+      </Implementation>
+    </Method>
     <Method Name="TryModify" Id="{6e1a9e09-ed83-492b-82c6-fce6ce715223}">
       <Declaration><![CDATA[METHOD PUBLIC TryModify : BOOL
 VAR_INPUT
@@ -431,6 +454,10 @@ END_IF]]></ST>
     </Method>
     <LineIds Name="JsonDomParser">
       <LineId Id="2" Count="0" />
+    </LineIds>
+    <LineIds Name="JsonDomParser.TryLocate">
+      <LineId Id="289" Count="7" />
+      <LineId Id="279" Count="0" />
     </LineIds>
     <LineIds Name="JsonDomParser.TryModify">
       <LineId Id="217" Count="43" />
