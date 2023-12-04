@@ -18,7 +18,7 @@
     <Company>mobject</Company>
     <Released>false</Released>
     <Title>mobject-json</Title>
-    <ProjectVersion>0.3.0</ProjectVersion>
+    <ProjectVersion>1.0.0</ProjectVersion>
     <DefaultNamespace>mobject-json</DefaultNamespace>
     <Placeholder>mobject-json</Placeholder>
     <Author>mobject dev team</Author>
@@ -36,14 +36,6 @@
     <CombineIds>true</CombineIds>
   </PropertyGroup>
   <ItemGroup>
-    <PlaceholderReference Include="mobject-converters">
-      <DefaultResolution>mobject-converters, * (mobject)</DefaultResolution>
-      <Namespace>mobject_converters</Namespace>
-    </PlaceholderReference>
-    <PlaceholderReference Include="mobject-disposable">
-      <DefaultResolution>mobject-disposable, * (mobject)</DefaultResolution>
-      <Namespace>mobject_disposable</Namespace>
-    </PlaceholderReference>
     <PlaceholderReference Include="Tc2_System">
       <DefaultResolution>Tc2_System, * (Beckhoff Automation GmbH)</DefaultResolution>
       <Namespace>Tc2_System</Namespace>
@@ -54,12 +46,6 @@
     </PlaceholderReference>
   </ItemGroup>
   <ItemGroup>
-    <PlaceholderResolution Include="mobject-converters">
-      <Resolution>mobject-converters, 0.1.1 (mobject)</Resolution>
-    </PlaceholderResolution>
-    <PlaceholderResolution Include="mobject-disposable">
-      <Resolution>mobject-disposable, 0.3.1 (mobject)</Resolution>
-    </PlaceholderResolution>
     <PlaceholderResolution Include="Tc2_Standard">
       <Resolution>Tc2_Standard, 3.3.3.0 (Beckhoff Automation GmbH)</Resolution>
     </PlaceholderResolution>
@@ -103,6 +89,14 @@
     <Compile Include="_Internal\JsonPathVisitor\JsonDomCreator.TcPOU">
       <SubType>Code</SubType>
     </Compile>
+  </ItemGroup>
+  <ItemGroup>
+    <LibraryReference Include="mobject-converters,1.0.0,mobject">
+      <Namespace>mobject_converters</Namespace>
+    </LibraryReference>
+    <LibraryReference Include="mobject-disposable,1.0.0,mobject">
+      <Namespace>mobject_disposable</Namespace>
+    </LibraryReference>
   </ItemGroup>
   <ProjectExtensions>
     <PlcProjectOptions>

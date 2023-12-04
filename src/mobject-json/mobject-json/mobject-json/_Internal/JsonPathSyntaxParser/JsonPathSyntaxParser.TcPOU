@@ -1,7 +1,10 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4024.12">
   <POU Name="JsonPathSyntaxParser" Id="{3f2c9ba1-6b7b-45ac-be94-628c28d9acab}" SpecialFunc="None">
-    <Declaration><![CDATA[FUNCTION_BLOCK JsonPathSyntaxParser
+    <Declaration><![CDATA[{attribute 'linkalways'} 
+{attribute 'no_explicit_call' := 'This FB is a CLASS and must be accessed using methods or properties'}
+{attribute 'enable_dynamic_creation'}
+FUNCTION_BLOCK JsonPathSyntaxParser
 VAR
 	currentlyParsingType : (NOTHING, DOT_NOTATION_PROPERTY, BRACKET_NOTATION_PROPERTY_OR_ARRAY, BRACKET_NOTATION_PROPERTY_ELEMENT, BRACKET_NOTATION_ARRAY_ELEMENT);
 END_VAR
@@ -163,29 +166,5 @@ END_REPEAT
 JsonPathVisitor.EndOfParse();]]></ST>
       </Implementation>
     </Method>
-    <LineIds Name="JsonPathSyntaxParser">
-      <LineId Id="9" Count="0" />
-    </LineIds>
-    <LineIds Name="JsonPathSyntaxParser.Parse">
-      <LineId Id="166" Count="1" />
-      <LineId Id="9" Count="0" />
-      <LineId Id="163" Count="0" />
-      <LineId Id="10" Count="4" />
-      <LineId Id="16" Count="1" />
-      <LineId Id="22" Count="34" />
-      <LineId Id="161" Count="0" />
-      <LineId Id="57" Count="3" />
-      <LineId Id="162" Count="0" />
-      <LineId Id="61" Count="3" />
-      <LineId Id="188" Count="0" />
-      <LineId Id="66" Count="14" />
-      <LineId Id="159" Count="0" />
-      <LineId Id="158" Count="0" />
-      <LineId Id="82" Count="25" />
-      <LineId Id="160" Count="0" />
-      <LineId Id="108" Count="25" />
-      <LineId Id="165" Count="0" />
-      <LineId Id="164" Count="0" />
-    </LineIds>
   </POU>
 </TcPlcObject>

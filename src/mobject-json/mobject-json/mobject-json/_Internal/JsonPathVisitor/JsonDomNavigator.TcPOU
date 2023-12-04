@@ -1,7 +1,10 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4024.12">
   <POU Name="JsonDomNavigator" Id="{8dcae62e-8322-46a6-945f-bd6da2ebb110}" SpecialFunc="None">
-    <Declaration><![CDATA[FUNCTION_BLOCK JsonDomNavigator IMPLEMENTS I_JsonPathVisitor
+    <Declaration><![CDATA[{attribute 'linkalways'} 
+{attribute 'no_explicit_call' := 'This FB is a CLASS and must be accessed using methods or properties'}
+{attribute 'enable_dynamic_creation'}
+FUNCTION_BLOCK JsonDomNavigator IMPLEMENTS I_JsonPathVisitor
 VAR
 	jsonDomParser : REFERENCE TO JsonDomParser;
 	currentJsonPosition : SJsonValue;
@@ -84,29 +87,5 @@ END_VAR
         <ST><![CDATA[currentJsonPosition := jsonDomParser.GetDocumentRoot();]]></ST>
       </Implementation>
     </Method>
-    <LineIds Name="JsonDomNavigator">
-      <LineId Id="9" Count="0" />
-    </LineIds>
-    <LineIds Name="JsonDomNavigator.ArrayIndexFound">
-      <LineId Id="6" Count="0" />
-    </LineIds>
-    <LineIds Name="JsonDomNavigator.CurrentNode.Get">
-      <LineId Id="2" Count="0" />
-    </LineIds>
-    <LineIds Name="JsonDomNavigator.EndOfParse">
-      <LineId Id="5" Count="0" />
-    </LineIds>
-    <LineIds Name="JsonDomNavigator.FB_init">
-      <LineId Id="7" Count="0" />
-    </LineIds>
-    <LineIds Name="JsonDomNavigator.InvalidSyntaxFound">
-      <LineId Id="7" Count="0" />
-    </LineIds>
-    <LineIds Name="JsonDomNavigator.PropertyFound">
-      <LineId Id="6" Count="0" />
-    </LineIds>
-    <LineIds Name="JsonDomNavigator.StartOfParse">
-      <LineId Id="5" Count="0" />
-    </LineIds>
   </POU>
 </TcPlcObject>

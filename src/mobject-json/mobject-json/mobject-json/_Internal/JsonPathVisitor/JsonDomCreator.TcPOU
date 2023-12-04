@@ -1,7 +1,10 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4024.12">
   <POU Name="JsonDomCreator" Id="{aaddb788-6475-4c7c-838b-d4068aaf346f}" SpecialFunc="None">
-    <Declaration><![CDATA[FUNCTION_BLOCK JsonDomCreator IMPLEMENTS I_JsonPathVisitor
+    <Declaration><![CDATA[{attribute 'linkalways'} 
+{attribute 'no_explicit_call' := 'This FB is a CLASS and must be accessed using methods or properties'}
+{attribute 'enable_dynamic_creation'}
+FUNCTION_BLOCK JsonDomCreator IMPLEMENTS I_JsonPathVisitor
 VAR
 	jsonDomParser : REFERENCE TO JsonDomParser;
 	currentJsonPosition : SJsonValue;
@@ -138,54 +141,5 @@ END_VAR
         <ST><![CDATA[currentJsonPosition := jsonDomParser.GetDocumentRoot();]]></ST>
       </Implementation>
     </Method>
-    <LineIds Name="JsonDomCreator">
-      <LineId Id="9" Count="0" />
-    </LineIds>
-    <LineIds Name="JsonDomCreator.ArrayIndexFound">
-      <LineId Id="34" Count="0" />
-      <LineId Id="37" Count="0" />
-      <LineId Id="6" Count="0" />
-      <LineId Id="40" Count="0" />
-      <LineId Id="15" Count="3" />
-      <LineId Id="23" Count="0" />
-      <LineId Id="25" Count="0" />
-      <LineId Id="45" Count="0" />
-      <LineId Id="38" Count="0" />
-      <LineId Id="41" Count="0" />
-      <LineId Id="43" Count="0" />
-      <LineId Id="46" Count="0" />
-      <LineId Id="44" Count="0" />
-      <LineId Id="42" Count="0" />
-    </LineIds>
-    <LineIds Name="JsonDomCreator.CurrentNode.Get">
-      <LineId Id="2" Count="0" />
-    </LineIds>
-    <LineIds Name="JsonDomCreator.EndOfParse">
-      <LineId Id="5" Count="0" />
-    </LineIds>
-    <LineIds Name="JsonDomCreator.FB_init">
-      <LineId Id="7" Count="0" />
-    </LineIds>
-    <LineIds Name="JsonDomCreator.InvalidSyntaxFound">
-      <LineId Id="7" Count="0" />
-    </LineIds>
-    <LineIds Name="JsonDomCreator.PadStartOfArray">
-      <LineId Id="7" Count="8" />
-      <LineId Id="5" Count="0" />
-      <LineId Id="21" Count="0" />
-      <LineId Id="20" Count="0" />
-    </LineIds>
-    <LineIds Name="JsonDomCreator.PropertyFound">
-      <LineId Id="6" Count="0" />
-      <LineId Id="14" Count="0" />
-      <LineId Id="13" Count="0" />
-      <LineId Id="19" Count="0" />
-      <LineId Id="15" Count="1" />
-      <LineId Id="18" Count="0" />
-      <LineId Id="17" Count="0" />
-    </LineIds>
-    <LineIds Name="JsonDomCreator.StartOfParse">
-      <LineId Id="5" Count="0" />
-    </LineIds>
   </POU>
 </TcPlcObject>

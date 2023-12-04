@@ -32,10 +32,6 @@
     <Folder Include="POUs" />
   </ItemGroup>
   <ItemGroup>
-    <PlaceholderReference Include="mobject-json">
-      <DefaultResolution>mobject-json, * (mobject)</DefaultResolution>
-      <Namespace>mobject_json</Namespace>
-    </PlaceholderReference>
     <PlaceholderReference Include="Tc2_Standard">
       <DefaultResolution>Tc2_Standard, * (Beckhoff Automation GmbH)</DefaultResolution>
       <Namespace>Tc2_Standard</Namespace>
@@ -69,9 +65,9 @@
     </None>
   </ItemGroup>
   <ItemGroup>
-    <PlaceholderResolution Include="mobject-json">
-      <Resolution>mobject-json, 0.3.0 (mobject)</Resolution>
-    </PlaceholderResolution>
+    <LibraryReference Include="mobject-json,1.0.0,mobject">
+      <Namespace>mobject_json</Namespace>
+    </LibraryReference>
   </ItemGroup>
   <ProjectExtensions>
     <PlcProjectOptions>

@@ -1,14 +1,14 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4024.12">
   <POU Name="JsonDomParser" Id="{9ee703c7-5146-4108-a56a-2e66870e39e2}" SpecialFunc="None">
-    <Declaration><![CDATA[{attribute 'no_explicit_call' := 'This FB is a CLASS and must be accessed using methods or properties'}
+    <Declaration><![CDATA[{attribute 'linkalways'} 
+{attribute 'no_explicit_call' := 'This FB is a CLASS and must be accessed using methods or properties'}
 {attribute 'enable_dynamic_creation'}
 FUNCTION_BLOCK JsonDomParser EXTENDS FB_JsonDynDomParser
 VAR
 	currentlyParsingType : (NOTHING, DOT_NOTATION_PROPERTY, BRACKET_NOTATION_PROPERTY_OR_ARRAY, BRACKET_NOTATION_PROPERTY_ELEMENT, BRACKET_NOTATION_ARRAY_ELEMENT);
 	readWriteDataType : FB_JsonReadWriteDataType;
-END_VAR
-]]></Declaration>
+END_VAR]]></Declaration>
     <Implementation>
       <ST><![CDATA[]]></ST>
     </Implementation>
@@ -452,132 +452,5 @@ IF TrySetUint64(jsonValue, Source) THEN
 END_IF]]></ST>
       </Implementation>
     </Method>
-    <LineIds Name="JsonDomParser">
-      <LineId Id="2" Count="0" />
-    </LineIds>
-    <LineIds Name="JsonDomParser.TryLocate">
-      <LineId Id="289" Count="7" />
-      <LineId Id="279" Count="0" />
-    </LineIds>
-    <LineIds Name="JsonDomParser.TryModify">
-      <LineId Id="217" Count="43" />
-      <LineId Id="194" Count="0" />
-    </LineIds>
-    <LineIds Name="JsonDomParser.TryRead">
-      <LineId Id="67" Count="0" />
-      <LineId Id="4" Count="47" />
-      <LineId Id="2" Count="0" />
-    </LineIds>
-    <LineIds Name="JsonDomParser.TrySetBool">
-      <LineId Id="121" Count="0" />
-      <LineId Id="125" Count="0" />
-      <LineId Id="123" Count="0" />
-      <LineId Id="127" Count="0" />
-      <LineId Id="126" Count="0" />
-      <LineId Id="129" Count="0" />
-      <LineId Id="128" Count="0" />
-    </LineIds>
-    <LineIds Name="JsonDomParser.TrySetDouble">
-      <LineId Id="32" Count="0" />
-      <LineId Id="42" Count="0" />
-      <LineId Id="41" Count="0" />
-      <LineId Id="33" Count="1" />
-      <LineId Id="78" Count="0" />
-      <LineId Id="58" Count="1" />
-      <LineId Id="57" Count="0" />
-      <LineId Id="73" Count="0" />
-      <LineId Id="45" Count="0" />
-      <LineId Id="81" Count="0" />
-      <LineId Id="47" Count="0" />
-      <LineId Id="82" Count="0" />
-      <LineId Id="30" Count="0" />
-      <LineId Id="49" Count="0" />
-      <LineId Id="39" Count="0" />
-      <LineId Id="50" Count="2" />
-      <LineId Id="40" Count="0" />
-      <LineId Id="54" Count="0" />
-    </LineIds>
-    <LineIds Name="JsonDomParser.TrySetInt">
-      <LineId Id="32" Count="0" />
-      <LineId Id="76" Count="0" />
-      <LineId Id="65" Count="1" />
-      <LineId Id="64" Count="0" />
-      <LineId Id="75" Count="0" />
-      <LineId Id="68" Count="1" />
-      <LineId Id="67" Count="0" />
-      <LineId Id="74" Count="0" />
-      <LineId Id="71" Count="1" />
-      <LineId Id="70" Count="0" />
-      <LineId Id="73" Count="0" />
-      <LineId Id="45" Count="0" />
-      <LineId Id="81" Count="0" />
-      <LineId Id="47" Count="0" />
-      <LineId Id="82" Count="0" />
-      <LineId Id="30" Count="0" />
-      <LineId Id="49" Count="0" />
-      <LineId Id="39" Count="0" />
-      <LineId Id="50" Count="2" />
-      <LineId Id="40" Count="0" />
-      <LineId Id="54" Count="0" />
-    </LineIds>
-    <LineIds Name="JsonDomParser.TrySetInt64">
-      <LineId Id="121" Count="0" />
-      <LineId Id="125" Count="0" />
-      <LineId Id="123" Count="0" />
-      <LineId Id="127" Count="0" />
-      <LineId Id="126" Count="0" />
-      <LineId Id="129" Count="0" />
-      <LineId Id="128" Count="0" />
-    </LineIds>
-    <LineIds Name="JsonDomParser.TrySetString">
-      <LineId Id="121" Count="0" />
-      <LineId Id="125" Count="0" />
-      <LineId Id="123" Count="0" />
-      <LineId Id="127" Count="0" />
-      <LineId Id="126" Count="0" />
-      <LineId Id="149" Count="0" />
-      <LineId Id="148" Count="0" />
-      <LineId Id="137" Count="0" />
-    </LineIds>
-    <LineIds Name="JsonDomParser.TrySetUint">
-      <LineId Id="32" Count="0" />
-      <LineId Id="42" Count="0" />
-      <LineId Id="41" Count="0" />
-      <LineId Id="33" Count="1" />
-      <LineId Id="78" Count="0" />
-      <LineId Id="58" Count="1" />
-      <LineId Id="57" Count="0" />
-      <LineId Id="77" Count="0" />
-      <LineId Id="62" Count="1" />
-      <LineId Id="61" Count="0" />
-      <LineId Id="76" Count="0" />
-      <LineId Id="65" Count="1" />
-      <LineId Id="64" Count="0" />
-      <LineId Id="75" Count="0" />
-      <LineId Id="68" Count="1" />
-      <LineId Id="67" Count="0" />
-      <LineId Id="74" Count="0" />
-      <LineId Id="71" Count="1" />
-      <LineId Id="70" Count="0" />
-      <LineId Id="73" Count="0" />
-      <LineId Id="45" Count="0" />
-      <LineId Id="81" Count="0" />
-      <LineId Id="47" Count="0" />
-      <LineId Id="82" Count="0" />
-      <LineId Id="30" Count="0" />
-      <LineId Id="49" Count="0" />
-      <LineId Id="39" Count="0" />
-      <LineId Id="50" Count="2" />
-      <LineId Id="40" Count="0" />
-      <LineId Id="54" Count="0" />
-    </LineIds>
-    <LineIds Name="JsonDomParser.TrySetUint64">
-      <LineId Id="144" Count="20" />
-      <LineId Id="128" Count="0" />
-    </LineIds>
-    <LineIds Name="JsonDomParser.TryWrite">
-      <LineId Id="217" Count="43" />
-      <LineId Id="194" Count="0" />
-    </LineIds>
   </POU>
 </TcPlcObject>

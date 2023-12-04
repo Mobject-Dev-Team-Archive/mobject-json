@@ -1,8 +1,7 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4024.12">
   <Itf Name="I_JsonPathVisitor" Id="{c1dac714-cbe4-4603-a4e5-5a57e2896df5}">
-    <Declaration><![CDATA[INTERFACE I_JsonPathVisitor
-]]></Declaration>
+    <Declaration><![CDATA[INTERFACE I_JsonPathVisitor EXTENDS __System.IQueryInterface]]></Declaration>
     <Method Name="ArrayIndexFound" Id="{8e27be4f-8d15-4afe-a0c4-1802ab53b441}">
       <Declaration><![CDATA[METHOD ArrayIndexFound
 VAR_INPUT
