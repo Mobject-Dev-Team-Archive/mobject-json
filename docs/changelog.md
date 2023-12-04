@@ -4,6 +4,7 @@
 
 - Updated to support mobject-converters v1.0.1-beta.
 - Bugfix with JsonDomParser writing Int and Uint64.
+- Added explicit conversion to remove warning message.
 
 ## v1.0.0-beta
 
