@@ -159,7 +159,7 @@ END_IF
 
 IF IsString(jsonValue) AND Destination.TypeClass = __SYSTEM.TYPE_CLASS.TYPE_STRING THEN
 	_STRING := Destination.pValue;
-	IF (CopyString(jsonValue,_STRING^,Destination.diSize) > 0) THEN;
+	IF (CopyString(jsonValue,_STRING^,DINT_TO_UDINT(Destination.diSize)) > 0) THEN;
 		TryRead := TRUE;
 		RETURN;
 	END_IF
@@ -180,7 +180,7 @@ END_VAR]]></Declaration>
 	RETURN;
 END_IF
 
-memcpy(ADR(_BOOL),Source.pValue,Source.diSize);
+memcpy(ADR(_BOOL),Source.pValue,DINT_TO_UDINT(Source.diSize));
 SetBool(jsonValue,_BOOL);
 TrySetBool := TRUE;]]></ST>
       </Implementation>
@@ -200,11 +200,11 @@ END_VAR]]></Declaration>
         <ST><![CDATA[CASE Source.TypeClass OF 
 
 	__SYSTEM.TYPE_CLASS.TYPE_REAL : 
-		memcpy(ADR(_REAL),Source.pValue,Source.diSize);
+		memcpy(ADR(_REAL),Source.pValue,DINT_TO_UDINT(Source.diSize));
 		convertSuccessful := TryConvert_Source_TO_Destination(_REAL,_LREAL);
 	
 	__SYSTEM.TYPE_CLASS.TYPE_LREAL : 
-		memcpy(ADR(_LREAL),Source.pValue,Source.diSize);
+		memcpy(ADR(_LREAL),Source.pValue,DINT_TO_UDINT(Source.diSize));
 		convertSuccessful := TRUE;
 		
 ELSE 
@@ -231,21 +231,21 @@ VAR
 	convertSuccessful : BOOL;
 	_SINT : USINT;	
 	_INT : UINT;
-	_DINT : UDINT;
+	_DINT : DINT;
 END_VAR]]></Declaration>
       <Implementation>
         <ST><![CDATA[CASE Source.TypeClass OF
 		
 	__SYSTEM.TYPE_CLASS.TYPE_SINT : 
-		memcpy(ADR(_SINT),Source.pValue,Source.diSize);
+		memcpy(ADR(_SINT),Source.pValue,DINT_TO_UDINT(Source.diSize));
 		convertSuccessful := TryConvert_Source_TO_Destination(_SINT,_DINT);
 		
 	__SYSTEM.TYPE_CLASS.TYPE_INT : 
-		memcpy(ADR(_INT),Source.pValue,Source.diSize);
+		memcpy(ADR(_INT),Source.pValue,DINT_TO_UDINT(Source.diSize));
 		convertSuccessful := TryConvert_Source_TO_Destination(_INT,_DINT);
 		
 	__SYSTEM.TYPE_CLASS.TYPE_DINT : 
-		memcpy(ADR(_DINT),Source.pValue,Source.diSize);
+		memcpy(ADR(_DINT),Source.pValue,DINT_TO_UDINT(Source.diSize));
 		convertSuccessful := TRUE;
 		
 ELSE 
@@ -276,7 +276,7 @@ END_VAR]]></Declaration>
 	RETURN;
 END_IF
 
-memcpy(ADR(_LINT),Source.pValue,Source.diSize);
+memcpy(ADR(_LINT),Source.pValue,DINT_TO_UDINT(Source.diSize));
 SetInt64(jsonValue,_LINT);
 TrySetInt64 := TRUE;]]></ST>
       </Implementation>
@@ -320,27 +320,27 @@ END_VAR]]></Declaration>
         <ST><![CDATA[CASE Source.TypeClass OF 
 
 	__SYSTEM.TYPE_CLASS.TYPE_BYTE : 
-		memcpy(ADR(_BYTE),Source.pValue,Source.diSize);
+		memcpy(ADR(_BYTE),Source.pValue,DINT_TO_UDINT(Source.diSize));
 		convertSuccessful := TryConvert_Source_TO_Destination(_BYTE,_UDINT);
 	
 	__SYSTEM.TYPE_CLASS.TYPE_WORD : 
-		memcpy(ADR(_WORD),Source.pValue,Source.diSize);
+		memcpy(ADR(_WORD),Source.pValue,DINT_TO_UDINT(Source.diSize));
 		convertSuccessful := TryConvert_Source_TO_Destination(_WORD,_UDINT);
 		
 	__SYSTEM.TYPE_CLASS.TYPE_DWORD : 
-		memcpy(ADR(_DWORD),Source.pValue,Source.diSize);
+		memcpy(ADR(_DWORD),Source.pValue,DINT_TO_UDINT(Source.diSize));
 		convertSuccessful := TryConvert_Source_TO_Destination(_DWORD,_UDINT);
 		
 	__SYSTEM.TYPE_CLASS.TYPE_USINT : 
-		memcpy(ADR(_USINT),Source.pValue,Source.diSize);
+		memcpy(ADR(_USINT),Source.pValue,DINT_TO_UDINT(Source.diSize));
 		convertSuccessful := TryConvert_Source_TO_Destination(_USINT,_UDINT);
 		
 	__SYSTEM.TYPE_CLASS.TYPE_UINT : 
-		memcpy(ADR(_UINT),Source.pValue,Source.diSize);
+		memcpy(ADR(_UINT),Source.pValue,DINT_TO_UDINT(Source.diSize));
 		convertSuccessful := TryConvert_Source_TO_Destination(_UINT,_UDINT);
 		
 	__SYSTEM.TYPE_CLASS.TYPE_UDINT : 
-		memcpy(ADR(_UDINT),Source.pValue,Source.diSize);
+		memcpy(ADR(_UDINT),Source.pValue,DINT_TO_UDINT(Source.diSize));
 		convertSuccessful := TRUE;
 		
 ELSE 
@@ -366,17 +366,17 @@ END_VAR
 VAR
 	convertSuccessful : BOOL;
 	_LWORD : LWORD;
-	_ULINT : LINT;
+	_ULINT : ULINT;
 END_VAR]]></Declaration>
       <Implementation>
         <ST><![CDATA[CASE Source.TypeClass OF 
 
 	__SYSTEM.TYPE_CLASS.TYPE_LWORD : 
-		memcpy(ADR(_LWORD),Source.pValue,Source.diSize);
+		memcpy(ADR(_LWORD),Source.pValue,DINT_TO_UDINT(Source.diSize));
 		convertSuccessful := TryConvert_Source_TO_Destination(_LWORD,_ULINT);
 	
 	__SYSTEM.TYPE_CLASS.TYPE_ULINT : 
-		memcpy(ADR(_ULINT),Source.pValue,Source.diSize);
+		memcpy(ADR(_ULINT),Source.pValue,DINT_TO_UDINT(Source.diSize));
 		convertSuccessful := TRUE;
 		
 ELSE 

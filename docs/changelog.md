@@ -1,5 +1,10 @@
 # Changelog
 
+## v1.0.1-beta
+
+- Updated to support mobject-converters v1.0.1-beta.
+- Bugfix with JsonDomParser writing Int and Uint64.
+
 ## v1.0.0-beta
 
 - Changed status from alpha to beta.

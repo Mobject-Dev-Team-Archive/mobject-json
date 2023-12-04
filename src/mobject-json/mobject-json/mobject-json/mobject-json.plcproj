@@ -18,7 +18,7 @@
     <Company>mobject</Company>
     <Released>false</Released>
     <Title>mobject-json</Title>
-    <ProjectVersion>1.0.0</ProjectVersion>
+    <ProjectVersion>1.0.1</ProjectVersion>
     <DefaultNamespace>mobject-json</DefaultNamespace>
     <Placeholder>mobject-json</Placeholder>
     <Author>mobject dev team</Author>
@@ -91,7 +91,7 @@
     </Compile>
   </ItemGroup>
   <ItemGroup>
-    <LibraryReference Include="mobject-converters,1.0.0,mobject">
+    <LibraryReference Include="mobject-converters,1.0.1,mobject">
       <Namespace>mobject_converters</Namespace>
     </LibraryReference>
     <LibraryReference Include="mobject-disposable,1.0.0,mobject">
