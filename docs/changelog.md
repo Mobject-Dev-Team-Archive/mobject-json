@@ -1,5 +1,10 @@
 # Changelog
 
+## v1.1.0-beta
+
+- Updated to support mobject-serialization v0.1.0-alpha.
+- Added JsonSerializer
+
 ## v1.0.1-beta
 
 - Updated to support mobject-converters v1.0.1-beta.

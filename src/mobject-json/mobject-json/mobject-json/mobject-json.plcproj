@@ -18,7 +18,7 @@
     <Company>mobject</Company>
     <Released>false</Released>
     <Title>mobject-json</Title>
-    <ProjectVersion>1.0.1</ProjectVersion>
+    <ProjectVersion>1.1.0</ProjectVersion>
     <DefaultNamespace>mobject-json</DefaultNamespace>
     <Placeholder>mobject-json</Placeholder>
     <Author>mobject dev team</Author>
@@ -69,12 +69,16 @@
   </ItemGroup>
   <ItemGroup>
     <Folder Include="JsonDomParser" />
+    <Folder Include="JsonSerializer" />
     <Folder Include="_Internal" />
     <Folder Include="_Internal\JsonPathVisitor" />
     <Folder Include="_Internal\JsonPathSyntaxParser" />
   </ItemGroup>
   <ItemGroup>
     <Compile Include="JsonDomParser\JsonDomParser.TcPOU">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="JsonSerializer\JsonSerializer.TcPOU">
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="_Internal\JsonPathSyntaxParser\JsonPathSyntaxParser.TcPOU">
@@ -97,14 +101,45 @@
     <LibraryReference Include="mobject-disposable,1.0.0,mobject">
       <Namespace>mobject_disposable</Namespace>
     </LibraryReference>
+    <LibraryReference Include="mobject-serialization,0.1.0,mobject">
+      <Namespace>mobject_serialization</Namespace>
+    </LibraryReference>
   </ItemGroup>
   <ProjectExtensions>
     <PlcProjectOptions>
       <XmlArchive>
-        <Data>
-          <o xml:space="preserve" t="OptionKey">
+  <Data>
+    <o xml:space="preserve" t="OptionKey">
       <v n="Name">"&lt;ProjectRoot&gt;"</v>
       <d n="SubKeys" t="Hashtable" ckt="String" cvt="OptionKey">
+        <v>{192FAD59-8248-4824-A8DE-9177C94C195A}</v>
+        <o>
+          <v n="Name">"{192FAD59-8248-4824-A8DE-9177C94C195A}"</v>
+          <d n="SubKeys" t="Hashtable" />
+          <d n="Values" t="Hashtable" />
+        </o>
+        <v>{29BD8D0C-3586-4548-BB48-497B9A01693F}</v>
+        <o>
+          <v n="Name">"{29BD8D0C-3586-4548-BB48-497B9A01693F}"</v>
+          <d n="SubKeys" t="Hashtable" ckt="String" cvt="OptionKey">
+            <v>Rules</v>
+            <o>
+              <v n="Name">"Rules"</v>
+              <d n="SubKeys" t="Hashtable" />
+              <d n="Values" t="Hashtable" />
+            </o>
+          </d>
+          <d n="Values" t="Hashtable" />
+        </o>
+        <v>{8F99A816-E488-41E4-9FA3-846536012284}</v>
+        <o>
+          <v n="Name">"{8F99A816-E488-41E4-9FA3-846536012284}"</v>
+          <d n="SubKeys" t="Hashtable" />
+          <d n="Values" t="Hashtable" ckt="String" cvt="String">
+            <v>DisabledWarningIds</v>
+            <v>394</v>
+          </d>
+        </o>
         <v>{40450F57-0AA3-4216-96F3-5444ECB29763}</v>
         <o>
           <v n="Name">"{40450F57-0AA3-4216-96F3-5444ECB29763}"</v>
@@ -117,13 +152,13 @@
       </d>
       <d n="Values" t="Hashtable" />
     </o>
-        </Data>
-        <TypeList>
-          <Type n="Hashtable">System.Collections.Hashtable</Type>
-          <Type n="OptionKey">{54dd0eac-a6d8-46f2-8c27-2f43c7e49861}</Type>
-          <Type n="String">System.String</Type>
-        </TypeList>
-      </XmlArchive>
+  </Data>
+  <TypeList>
+    <Type n="Hashtable">System.Collections.Hashtable</Type>
+    <Type n="OptionKey">{54dd0eac-a6d8-46f2-8c27-2f43c7e49861}</Type>
+    <Type n="String">System.String</Type>
+  </TypeList>
+</XmlArchive>
     </PlcProjectOptions>
   </ProjectExtensions>
 </Project>

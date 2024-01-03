@@ -26,6 +26,9 @@
     <Compile Include="Tests\JsonDomParser_TestSuit.TcPOU">
       <SubType>Code</SubType>
     </Compile>
+    <Compile Include="Tests\JsonSerializer_TestSuite.TcPOU">
+      <SubType>Code</SubType>
+    </Compile>
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Tests" />
@@ -39,10 +42,6 @@
     <PlaceholderReference Include="Tc2_System">
       <DefaultResolution>Tc2_System, * (Beckhoff Automation GmbH)</DefaultResolution>
       <Namespace>Tc2_System</Namespace>
-    </PlaceholderReference>
-    <PlaceholderReference Include="Tc3_JsonXml">
-      <DefaultResolution>Tc3_JsonXml, * (Beckhoff Automation GmbH)</DefaultResolution>
-      <Namespace>Tc3_JsonXml</Namespace>
     </PlaceholderReference>
     <PlaceholderReference Include="Tc3_Module">
       <DefaultResolution>Tc3_Module, * (Beckhoff Automation GmbH)</DefaultResolution>
@@ -65,8 +64,11 @@
     </None>
   </ItemGroup>
   <ItemGroup>
-    <LibraryReference Include="mobject-json,1.0.1,mobject">
+    <LibraryReference Include="mobject-json,1.1.0,mobject">
       <Namespace>mobject_json</Namespace>
+    </LibraryReference>
+    <LibraryReference Include="mobject-serialization,0.1.0,mobject">
+      <Namespace>mobject_serialization</Namespace>
     </LibraryReference>
   </ItemGroup>
   <ProjectExtensions>
