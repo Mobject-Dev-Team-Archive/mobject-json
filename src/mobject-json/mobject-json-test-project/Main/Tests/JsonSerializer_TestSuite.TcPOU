@@ -1,0 +1,1653 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4024.12">
+  <POU Name="JsonSerializer_TestSuite" Id="{a0257640-79d7-4989-a8b2-5eb7ba391d90}" SpecialFunc="None">
+    <Declaration><![CDATA[FUNCTION_BLOCK JsonSerializer_TestSuite EXTENDS TcUnit.FB_TestSuite]]></Declaration>
+    <Implementation>
+      <ST><![CDATA[TestAddBase64();
+TestAddBoolWithFalseBoolVariable();
+TestAddBoolWithTrueBoolVariable();
+TestAddByte();
+TestAddBytesAsHex();
+TestAddDateTime();
+TestAddDcTime();
+TestAddDint();
+TestAddDword();
+TestAddFileTime();
+TestAddInt();
+TestAddKey();
+TestAddKeyBase64();
+TestAddKeyBoolWithFalseBoolVariable();
+TestAddKeyBoolWithTrueBoolVariable();
+TestAddKeyByte();
+TestAddKeyBytesAsHex();
+TestAddKeyDateTime();
+TestAddKeyDcTime();
+TestAddKeyDint();
+TestAddKeyDword();
+TestAddKeyFileTime();
+TestAddKeyInt();
+TestAddKeyLint();
+TestAddKeyLreal();
+TestAddKeyLtime();
+TestAddKeyLword();
+TestAddKeyNull();
+TestAddKeyRawObject();
+TestAddKeyReal();
+TestAddKeySint();
+TestAddKeyString();
+TestAddKeyStringByRef();
+TestAddKeyTime();
+TestAddKeyTod();
+TestAddKeyUdint();
+TestAddKeyUint();
+TestAddKeyUlint();
+TestAddKeyUsint();
+TestAddKeyWord();
+TestAddLint();
+TestAddLreal();
+TestAddLtime();
+TestAddLword();
+TestAddNull();
+TestAddRawObject();
+TestAddReal();
+TestAddSint();
+TestAddString();
+TestAddStringByRef();
+TestAddTime();
+TestAddTod();
+TestAddUdint();
+TestAddUint();
+TestAddUlint();
+TestAddUsint();
+TestAddWord();
+TestClone();
+TestGetSerializedDataLengthEmpty();
+TestGetSerializedDataLengthWithEmptyObject();
+TestGetSerializedDataLengthWithSimpleObject();
+TestReset();
+TestSerializeArray();
+TestSerializeObject();]]></ST>
+    </Implementation>
+    <Method Name="TestAddBase64" Id="{f8782e74-34f8-4983-92fd-8f2103b015b1}">
+      <Declaration><![CDATA[METHOD PUBLIC TestAddBase64
+VAR
+	jsonSerializer : JsonSerializer;
+	rawData : ARRAY[0..4] OF BYTE := [104, 101, 108, 108, 111];
+	out : STRING;
+	expected : STRING := '"aGVsbG8="';
+END_VAR]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[TEST('TestAddBase64');
+
+jsonSerializer.AddBase64(ADR(rawData), SIZEOF(rawData));
+jsonSerializer.TryGetSerialziedData(ADR(out),SIZEOF(out));
+
+AssertEquals(
+	Expected := expected,
+	Actual := out,
+	Message := 'Did not produce the expected JSON string for Base64 encoded "hello"'
+);
+
+TEST_FINISHED();]]></ST>
+      </Implementation>
+    </Method>
+    <Method Name="TestAddBoolWithFalseBoolVariable" Id="{0c54b0ea-8ee8-455b-b24d-24df8b1384a4}">
+      <Declaration><![CDATA[METHOD PUBLIC TestAddBoolWithFalseBoolVariable
+VAR
+	jsonSerializer : JsonSerializer;
+	value : BOOL := FALSE;
+	out : STRING;
+	expected : STRING := 'false';
+END_VAR]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[TEST('TestAddBoolWithFalseBoolVariable');
+
+jsonSerializer.AddBool(value);
+jsonSerializer.TryGetSerialziedData(ADR(out),SIZEOF(out));
+
+AssertEquals(
+	Expected := expected,
+	Actual := out,
+	Message := 'Did not produce the expected JSON string for a false value'
+);
+
+TEST_FINISHED();]]></ST>
+      </Implementation>
+    </Method>
+    <Method Name="TestAddBoolWithTrueBoolVariable" Id="{6c27936e-fadd-4f72-9cad-673bc964e68b}">
+      <Declaration><![CDATA[METHOD PUBLIC TestAddBoolWithTrueBoolVariable
+VAR
+	jsonSerializer : JsonSerializer;
+	value : BOOL := TRUE;
+	out : STRING;
+	expected : STRING := 'true';
+END_VAR]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[TEST('TestAddBoolWithTrueBoolVariable');
+
+jsonSerializer.AddBool(value);
+jsonSerializer.TryGetSerialziedData(ADR(out),SIZEOF(out));
+
+AssertEquals(
+	Expected := expected,
+	Actual := out,
+	Message := 'Did not produce the expected JSON string for a true value'
+);
+
+TEST_FINISHED();]]></ST>
+      </Implementation>
+    </Method>
+    <Method Name="TestAddByte" Id="{bcd79e79-3c62-4713-a3f4-8d6b16a69cca}">
+      <Declaration><![CDATA[METHOD PUBLIC TestAddByte
+VAR
+	jsonSerializer : JsonSerializer;
+	byteValue : BYTE := 100;
+	out : STRING;
+	expected : STRING := '100';
+END_VAR]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[TEST('TestAddByte');
+
+jsonSerializer.AddByte(byteValue);
+jsonSerializer.TryGetSerialziedData(ADR(out),SIZEOF(out));
+
+AssertEquals(
+	Expected := expected,
+	Actual := out,
+	Message := 'Did not produce the expected JSON string for the BYTE value'
+);
+
+TEST_FINISHED();]]></ST>
+      </Implementation>
+    </Method>
+    <Method Name="TestAddBytesAsHex" Id="{4cb9d455-dd48-4548-820a-ae215c1a098d}">
+      <Declaration><![CDATA[METHOD PUBLIC TestAddBytesAsHex
+VAR
+	jsonSerializer : JsonSerializer;
+	binaryData : ARRAY[0..3] OF BYTE := [16#BA, 16#AD, 16#F0, 16#0D];
+	out : STRING;
+	expected : STRING := '"baadf00d"';
+END_VAR]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[TEST('TestAddBytesAsHex');
+
+jsonSerializer.AddBytesAsHex(ADR(binaryData), SIZEOF(binaryData));
+jsonSerializer.TryGetSerialziedData(ADR(out),SIZEOF(out));
+
+AssertEquals(
+	Expected := expected,
+	Actual := out,
+	Message := 'Did not produce the expected JSON string for hexadecimal binary data'
+);
+
+TEST_FINISHED();]]></ST>
+      </Implementation>
+    </Method>
+    <Method Name="TestAddDateTime" Id="{e03e2669-248e-4419-9bdc-a55ba6d29da1}">
+      <Declaration><![CDATA[METHOD PUBLIC TestAddDateTime
+VAR
+	jsonSerializer : JsonSerializer;
+	dateTimeValue : DATE_AND_TIME := DT#2023-12-30-15:20:00;
+	out : STRING;
+	expected : STRING := '"2023-12-30T15:20:00"';
+END_VAR]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[TEST('TestAddDateTime');
+
+jsonSerializer.AddDateTime(dateTimeValue);
+jsonSerializer.TryGetSerialziedData(ADR(out),SIZEOF(out));
+
+AssertEquals(
+	Expected := expected,
+	Actual := out,
+	Message := 'Did not produce the expected JSON string for the DATE_AND_TIME value'
+);
+
+TEST_FINISHED();]]></ST>
+      </Implementation>
+    </Method>
+    <Method Name="TestAddDcTime" Id="{df710d67-4143-4939-8c82-6187c649db42}">
+      <Declaration><![CDATA[METHOD PUBLIC TestAddDcTime
+VAR
+	jsonSerializer : JsonSerializer;
+	dcTimeValue : DCTIME := 12345678;
+	out : STRING;
+	expected : STRING := '"2000-01-01T00:00:00.012345678"';
+END_VAR]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[TEST('TestAddDcTime');
+
+jsonSerializer.AddDcTime(dcTimeValue);
+jsonSerializer.TryGetSerialziedData(ADR(out),SIZEOF(out));
+
+AssertEquals(
+	Expected := expected,
+	Actual := out,
+	Message := 'Did not produce the expected JSON string for the DCTIME value'
+);
+
+TEST_FINISHED();]]></ST>
+      </Implementation>
+    </Method>
+    <Method Name="TestAddDint" Id="{717336e9-e4e1-4d57-bbc2-02cf2c05bb90}">
+      <Declaration><![CDATA[METHOD PUBLIC TestAddDint
+VAR
+	jsonSerializer : JsonSerializer;
+	dintValue : DINT := 12345;
+	out : STRING;
+	expected : STRING := '12345';
+END_VAR]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[TEST('TestAddDint');
+
+jsonSerializer.AddDint(dintValue);
+jsonSerializer.TryGetSerialziedData(ADR(out),SIZEOF(out));
+
+AssertEquals(
+	Expected := expected,
+	Actual := out,
+	Message := 'Did not produce the expected JSON string for the DINT value'
+);
+
+TEST_FINISHED();]]></ST>
+      </Implementation>
+    </Method>
+    <Method Name="TestAddDword" Id="{6f58a6de-d37b-4282-bd52-75e63761ef69}">
+      <Declaration><![CDATA[METHOD PUBLIC TestAddDword
+VAR
+	jsonSerializer : JsonSerializer;
+	dwordValue : DWORD := 12345;
+	out : STRING;
+	expected : STRING := '12345';
+END_VAR]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[TEST('TestAddDword');
+
+jsonSerializer.AddDword(dwordValue);
+jsonSerializer.TryGetSerialziedData(ADR(out),SIZEOF(out));
+
+AssertEquals(
+	Expected := expected,
+	Actual := out,
+	Message := 'Did not produce the expected JSON string for the DWORD value'
+);
+
+TEST_FINISHED();]]></ST>
+      </Implementation>
+    </Method>
+    <Method Name="TestAddFileTime" Id="{32a7cdf7-cdc3-4b84-a890-3ab8722024d5}">
+      <Declaration><![CDATA[METHOD PUBLIC TestAddFileTime
+VAR
+	jsonSerializer : JsonSerializer;
+	fileTimeValue : FILETIME := 12345678;
+	out : STRING;
+	expected : STRING := '"1601-01-01T00:00:01.2345678"';
+END_VAR]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[TEST('TestAddFileTime');
+
+jsonSerializer.AddFileTime(fileTimeValue);
+jsonSerializer.TryGetSerialziedData(ADR(out),SIZEOF(out));
+
+AssertEquals(
+	Expected := expected,
+	Actual := out,
+	Message := 'Did not produce the expected JSON string for the FileTime value'
+);
+
+TEST_FINISHED();]]></ST>
+      </Implementation>
+    </Method>
+    <Method Name="TestAddInt" Id="{49ace676-adef-4138-990a-85444ae68df6}">
+      <Declaration><![CDATA[METHOD PUBLIC TestAddInt
+VAR
+	jsonSerializer : JsonSerializer;
+	intValue : INT := 12345;
+	out : STRING;
+	expected : STRING := '12345';
+END_VAR]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[TEST('TestAddInt');
+
+jsonSerializer.AddInt(intValue);
+jsonSerializer.TryGetSerialziedData(ADR(out),SIZEOF(out));
+
+AssertEquals(
+	Expected := expected,
+	Actual := out,
+	Message := 'Did not produce the expected JSON string for the INT value'
+);
+
+TEST_FINISHED();]]></ST>
+      </Implementation>
+    </Method>
+    <Method Name="TestAddKey" Id="{ae433d96-26f5-4f94-8253-2f2f284529aa}">
+      <Declaration><![CDATA[METHOD PUBLIC TestAddKey
+VAR
+	jsonSerializer : JsonSerializer;
+	out : STRING;
+	expected : STRING := '{"data":123}';
+END_VAR]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[TEST('TestAddKey');
+
+jsonSerializer.StartObject();
+jsonSerializer.AddKey('data');
+jsonSerializer.AddDint(123);
+jsonSerializer.EndObject();
+
+jsonSerializer.TryGetSerialziedData(ADR(out),SIZEOF(out));
+
+AssertEquals(
+	Expected := expected,
+	Actual := out,
+	Message := 'Did not produce the expected JSON string for the KEY value'
+);
+
+TEST_FINISHED();]]></ST>
+      </Implementation>
+    </Method>
+    <Method Name="TestAddKeyBase64" Id="{72680682-b70c-42dc-8762-95573b007616}">
+      <Declaration><![CDATA[METHOD PUBLIC TestAddKeyBase64
+VAR
+	jsonSerializer : JsonSerializer;
+	rawData : ARRAY[0..4] OF BYTE := [104, 101, 108, 108, 111];
+	out : STRING;
+	expected : STRING := '{"data":"aGVsbG8="}';
+END_VAR]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[TEST('TestAddKeyBase64');
+
+jsonSerializer.StartObject();
+jsonSerializer.AddKeyBase64('data',ADR(rawData), SIZEOF(rawData));
+jsonSerializer.EndObject();
+
+jsonSerializer.TryGetSerialziedData(ADR(out),SIZEOF(out));
+
+AssertEquals(
+	Expected := expected,
+	Actual := out,
+	Message := 'Did not produce the expected JSON string for Base64 encoded "hello"'
+);
+
+TEST_FINISHED();]]></ST>
+      </Implementation>
+    </Method>
+    <Method Name="TestAddKeyBoolWithFalseBoolVariable" Id="{68a8a2eb-d3c2-48b1-ae43-b7d9820e8a71}">
+      <Declaration><![CDATA[METHOD PUBLIC TestAddKeyBoolWithFalseBoolVariable
+VAR
+	jsonSerializer : JsonSerializer;
+	value : BOOL := FALSE;
+	out : STRING;
+	expected : STRING := '{"data":false}';
+END_VAR]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[TEST('TestAddKeyBoolWithFalseBoolVariable');
+
+jsonSerializer.StartObject();
+jsonSerializer.AddKeyBool('data',value);
+jsonSerializer.EndObject();
+
+jsonSerializer.TryGetSerialziedData(ADR(out),SIZEOF(out));
+
+AssertEquals(
+	Expected := expected,
+	Actual := out,
+	Message := 'Did not produce the expected JSON string for a false value'
+);
+
+TEST_FINISHED();]]></ST>
+      </Implementation>
+    </Method>
+    <Method Name="TestAddKeyBoolWithTrueBoolVariable" Id="{d15b139a-62af-48fc-b883-f68e99657231}">
+      <Declaration><![CDATA[METHOD PUBLIC TestAddKeyBoolWithTrueBoolVariable
+VAR
+	jsonSerializer : JsonSerializer;
+	value : BOOL := TRUE;
+	out : STRING;
+	expected : STRING := '{"data":true}';
+END_VAR]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[TEST('TestAddKeyBoolWithTrueBoolVariable');
+
+jsonSerializer.StartObject();
+jsonSerializer.AddKeyBool('data',value);
+jsonSerializer.EndObject();
+
+jsonSerializer.TryGetSerialziedData(ADR(out),SIZEOF(out));
+
+AssertEquals(
+	Expected := expected,
+	Actual := out,
+	Message := 'Did not produce the expected JSON string for a true value'
+);
+
+TEST_FINISHED();]]></ST>
+      </Implementation>
+    </Method>
+    <Method Name="TestAddKeyByte" Id="{4dc8fafc-9350-48bb-8161-a66e977246f3}">
+      <Declaration><![CDATA[METHOD PUBLIC TestAddKeyByte
+VAR
+	jsonSerializer : JsonSerializer;
+	byteValue : BYTE := 100;
+	out : STRING;
+	expected : STRING := '{"data":100}';
+END_VAR]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[TEST('TestAddKeyByte');
+
+jsonSerializer.StartObject();
+jsonSerializer.AddKeyByte('data',byteValue);
+jsonSerializer.EndObject();
+
+jsonSerializer.TryGetSerialziedData(ADR(out),SIZEOF(out));
+
+AssertEquals(
+	Expected := expected,
+	Actual := out,
+	Message := 'Did not produce the expected JSON string for the BYTE value'
+);
+
+TEST_FINISHED();]]></ST>
+      </Implementation>
+    </Method>
+    <Method Name="TestAddKeyBytesAsHex" Id="{164c5812-c5aa-4e0a-89d8-b27e9fa8274a}">
+      <Declaration><![CDATA[METHOD PUBLIC TestAddKeyBytesAsHex
+VAR
+	jsonSerializer : JsonSerializer;
+	binaryData : ARRAY[0..3] OF BYTE := [16#BA, 16#AD, 16#F0, 16#0D];
+	out : STRING;
+	expected : STRING := '{"data":"baadf00d"}';
+END_VAR]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[TEST('TestAddKeyBytesAsHex');
+
+jsonSerializer.StartObject();
+jsonSerializer.AddKeyBytesAsHex('data',ADR(binaryData), SIZEOF(binaryData));
+jsonSerializer.EndObject();
+
+jsonSerializer.TryGetSerialziedData(ADR(out),SIZEOF(out));
+
+AssertEquals(
+	Expected := expected,
+	Actual := out,
+	Message := 'Did not produce the expected JSON string for hexadecimal binary data'
+);
+
+TEST_FINISHED();]]></ST>
+      </Implementation>
+    </Method>
+    <Method Name="TestAddKeyDateTime" Id="{b0790bc1-4633-415d-9396-6e521a613506}">
+      <Declaration><![CDATA[METHOD PUBLIC TestAddKeyDateTime
+VAR
+	jsonSerializer : JsonSerializer;
+	dateTimeValue : DATE_AND_TIME := DT#2023-12-30-15:20:00;
+	out : STRING;
+	expected : STRING := '{"data":"2023-12-30T15:20:00"}';
+END_VAR]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[TEST('TestAddKeyDateTime');
+
+jsonSerializer.StartObject();
+jsonSerializer.AddKeyDateTime('data',dateTimeValue);
+jsonSerializer.EndObject();
+
+jsonSerializer.TryGetSerialziedData(ADR(out),SIZEOF(out));
+
+AssertEquals(
+	Expected := expected,
+	Actual := out,
+	Message := 'Did not produce the expected JSON string for the DATE_AND_TIME value'
+);
+
+TEST_FINISHED();]]></ST>
+      </Implementation>
+    </Method>
+    <Method Name="TestAddKeyDcTime" Id="{5502d9de-a777-43b6-ab27-20cff844c4fe}">
+      <Declaration><![CDATA[METHOD PUBLIC TestAddKeyDcTime
+VAR
+	jsonSerializer : JsonSerializer;
+	dcTimeValue : DCTIME := 12345678;
+	out : STRING;
+	expected : STRING := '{"data":"2000-01-01T00:00:00.012345678"}';
+END_VAR]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[TEST('TestAddKeyDcTime');
+
+jsonSerializer.StartObject();
+jsonSerializer.AddKeyDcTime('data',dcTimeValue);
+jsonSerializer.EndObject();
+
+jsonSerializer.TryGetSerialziedData(ADR(out),SIZEOF(out));
+
+AssertEquals(
+	Expected := expected,
+	Actual := out,
+	Message := 'Did not produce the expected JSON string for the DCTIME value'
+);
+
+TEST_FINISHED();]]></ST>
+      </Implementation>
+    </Method>
+    <Method Name="TestAddKeyDint" Id="{3d02af57-d07e-4e0c-b2ca-056aa0367348}">
+      <Declaration><![CDATA[METHOD PUBLIC TestAddKeyDint
+VAR
+	jsonSerializer : JsonSerializer;
+	dintValue : DINT := 12345;
+	out : STRING;
+	expected : STRING := '{"data":12345}';
+END_VAR]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[TEST('TestAddKeyDint');
+
+jsonSerializer.StartObject();
+jsonSerializer.AddKeyDint('data',dintValue);
+jsonSerializer.EndObject();
+
+jsonSerializer.TryGetSerialziedData(ADR(out),SIZEOF(out));
+
+AssertEquals(
+	Expected := expected,
+	Actual := out,
+	Message := 'Did not produce the expected JSON string for the DINT value'
+);
+
+TEST_FINISHED();]]></ST>
+      </Implementation>
+    </Method>
+    <Method Name="TestAddKeyDword" Id="{8495958d-f074-4078-bb6c-8d40f4b74443}">
+      <Declaration><![CDATA[METHOD PUBLIC TestAddKeyDword
+VAR
+	jsonSerializer : JsonSerializer;
+	dwordValue : DWORD := 12345;
+	out : STRING;
+	expected : STRING := '{"data":12345}';
+END_VAR]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[TEST('TestAddKeyDword');
+
+jsonSerializer.StartObject();
+jsonSerializer.AddKeyDword('data',dwordValue);
+jsonSerializer.EndObject();
+
+jsonSerializer.TryGetSerialziedData(ADR(out),SIZEOF(out));
+
+AssertEquals(
+	Expected := expected,
+	Actual := out,
+	Message := 'Did not produce the expected JSON string for the DWORD value'
+);
+
+TEST_FINISHED();]]></ST>
+      </Implementation>
+    </Method>
+    <Method Name="TestAddKeyFileTime" Id="{eceea125-57b8-4555-aae9-cf2a31473738}">
+      <Declaration><![CDATA[METHOD PUBLIC TestAddKeyFileTime
+VAR
+	jsonSerializer : JsonSerializer;
+	fileTimeValue : FILETIME := 12345678;
+	out : STRING;
+	expected : STRING := '{"data":"1601-01-01T00:00:01.2345678"}';
+END_VAR]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[TEST('TestAddKeyFileTime');
+
+jsonSerializer.StartObject();
+jsonSerializer.AddKeyFileTime('data',fileTimeValue);
+jsonSerializer.EndObject();
+
+jsonSerializer.TryGetSerialziedData(ADR(out),SIZEOF(out));
+
+AssertEquals(
+	Expected := expected,
+	Actual := out,
+	Message := 'Did not produce the expected JSON string for the FileTime value'
+);
+
+TEST_FINISHED();]]></ST>
+      </Implementation>
+    </Method>
+    <Method Name="TestAddKeyInt" Id="{bf78a064-e529-4a48-8d18-3feb1b5cf500}">
+      <Declaration><![CDATA[METHOD PUBLIC TestAddKeyInt
+VAR
+	jsonSerializer : JsonSerializer;
+	intValue : INT := 12345;
+	out : STRING;
+	expected : STRING := '{"data":12345}';
+END_VAR]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[TEST('TestAddKeyInt');
+
+jsonSerializer.StartObject();
+jsonSerializer.AddKeyInt('data',intValue);
+jsonSerializer.EndObject();
+
+jsonSerializer.TryGetSerialziedData(ADR(out),SIZEOF(out));
+
+AssertEquals(
+	Expected := expected,
+	Actual := out,
+	Message := 'Did not produce the expected JSON string for the INT value'
+);
+
+TEST_FINISHED();]]></ST>
+      </Implementation>
+    </Method>
+    <Method Name="TestAddKeyLint" Id="{32faf043-fe6e-49f0-924e-0852705270fb}">
+      <Declaration><![CDATA[METHOD PUBLIC TestAddKeyLint
+VAR
+	jsonSerializer : JsonSerializer;
+	lintValue : LINT := 9223372036854775807;
+	out : STRING;
+	expected : STRING := '{"data":9223372036854775807}';
+END_VAR]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[TEST('TestAddKeyLint');
+
+jsonSerializer.StartObject();
+jsonSerializer.AddKeyLint('data',lintValue);
+jsonSerializer.EndObject();
+
+jsonSerializer.TryGetSerialziedData(ADR(out),SIZEOF(out));
+
+AssertEquals(
+	Expected := expected,
+	Actual := out,
+	Message := 'Did not produce the expected JSON string for the LINT value'
+);
+
+TEST_FINISHED();]]></ST>
+      </Implementation>
+    </Method>
+    <Method Name="TestAddKeyLreal" Id="{4ebf20f3-5014-4f5d-8dc1-2cc4adb1caa7}">
+      <Declaration><![CDATA[METHOD PUBLIC TestAddKeyLreal
+VAR
+	jsonSerializer : JsonSerializer;
+	lrealValue : LREAL := 123456.789;
+	out : STRING;
+	expected : STRING := '{"data":123456.789}';
+END_VAR]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[TEST('TestAddKeyLreal');
+
+jsonSerializer.StartObject();
+jsonSerializer.AddKeyLreal('data',lrealValue);
+jsonSerializer.EndObject();
+
+jsonSerializer.TryGetSerialziedData(ADR(out),SIZEOF(out));
+
+AssertEquals(
+	Expected := expected,
+	Actual := out,
+	Message := 'Did not produce the expected JSON string for the LREAL value'
+);
+
+TEST_FINISHED();]]></ST>
+      </Implementation>
+    </Method>
+    <Method Name="TestAddKeyLtime" Id="{3f22c5fa-72a1-410f-83c5-cab7d2d268f6}">
+      <Declaration><![CDATA[METHOD PUBLIC TestAddKeyLtime
+VAR
+	jsonSerializer : JsonSerializer;
+	ltimeValue : LTIME := LTIME#100D2H30M40S500MS600US700NS;
+	out : STRING;
+	expected : STRING := '{"data":"LTIME#100d2h30m40s500ms600us700ns"}';
+END_VAR]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[TEST('TestAddKeyLtime');
+
+jsonSerializer.StartObject();
+jsonSerializer.AddKeyLtime('data',ltimeValue);
+jsonSerializer.EndObject();
+
+jsonSerializer.TryGetSerialziedData(ADR(out),SIZEOF(out));
+
+AssertEquals(
+	Expected := expected,
+	Actual := out,
+	Message := 'Did not produce the expected JSON string for the LTIME value'
+);
+
+TEST_FINISHED();]]></ST>
+      </Implementation>
+    </Method>
+    <Method Name="TestAddKeyLword" Id="{48ff8c1f-835a-4902-9a71-94079cae43a4}">
+      <Declaration><![CDATA[METHOD PUBLIC TestAddKeyLword
+VAR
+	jsonSerializer : JsonSerializer;
+	lwordValue : LWORD := 9223372036854775807;
+	out : STRING;
+	expected : STRING := '{"data":9223372036854775807}';
+END_VAR]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[TEST('TestAddKeyLword');
+
+jsonSerializer.StartObject();
+jsonSerializer.AddKeyLword('data',lwordValue);
+jsonSerializer.EndObject();
+
+jsonSerializer.TryGetSerialziedData(ADR(out),SIZEOF(out));
+
+AssertEquals(
+	Expected := expected,
+	Actual := out,
+	Message := 'Did not produce the expected JSON string for the LWORD value'
+);
+
+TEST_FINISHED();]]></ST>
+      </Implementation>
+    </Method>
+    <Method Name="TestAddKeyNull" Id="{5f4b01ad-0701-41b3-97db-5f01d36754f0}">
+      <Declaration><![CDATA[METHOD PUBLIC TestAddKeyNull
+VAR
+	jsonSerializer : JsonSerializer;
+	out : STRING;
+	expected : STRING := '{"data":null}';
+END_VAR]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[TEST('TestAddKeyNull');
+
+jsonSerializer.StartObject();
+jsonSerializer.AddKeyNull('data');
+jsonSerializer.EndObject();
+
+jsonSerializer.TryGetSerialziedData(ADR(out),SIZEOF(out));
+
+AssertEquals(
+	Expected := expected,
+	Actual := out,
+	Message := 'Did not produce the expected JSON string for the NULL value'
+);
+
+TEST_FINISHED();]]></ST>
+      </Implementation>
+    </Method>
+    <Method Name="TestAddKeyRawObject" Id="{d341e0c5-6b02-451c-987b-75a9c3c634c8}">
+      <Declaration><![CDATA[METHOD PUBLIC TestAddKeyRawObject
+VAR
+	jsonSerializer : JsonSerializer;
+	rawObject : STRING := '{"foo":"bar"}';
+	out : STRING;
+	expected : STRING := '{"data":{"foo":"bar"}}';
+END_VAR]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[TEST('TestAddKeyRawObject');
+
+jsonSerializer.StartObject();
+jsonSerializer.AddKeyRawObject('data',rawObject);
+jsonSerializer.EndObject();
+
+jsonSerializer.TryGetSerialziedData(ADR(out),SIZEOF(out));
+
+AssertEquals(
+	Expected := expected,
+	Actual := out,
+	Message := 'Did not produce the expected JSON string for the raw object value'
+);
+
+TEST_FINISHED();]]></ST>
+      </Implementation>
+    </Method>
+    <Method Name="TestAddKeyReal" Id="{5d88f92d-4a32-4966-9fd3-f01e7927811b}">
+      <Declaration><![CDATA[METHOD PUBLIC TestAddKeyReal
+VAR
+	jsonSerializer : JsonSerializer;
+	realValue : REAL := 123.4;
+	out : STRING;
+	expected : STRING := '{"data":123.4}';
+END_VAR]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[TEST('TestAddKeyReal');
+
+jsonSerializer.StartObject();
+jsonSerializer.AddKeyReal('data',realValue);
+jsonSerializer.EndObject();
+
+jsonSerializer.TryGetSerialziedData(ADR(out),SIZEOF(out));
+
+AssertEquals(
+	Expected := expected,
+	Actual := out,
+	Message := 'Did not produce the expected JSON string for the REAL value'
+);
+
+TEST_FINISHED();]]></ST>
+      </Implementation>
+    </Method>
+    <Method Name="TestAddKeySint" Id="{ac3c22e2-9f0d-493a-ba21-0f4f107b91e2}">
+      <Declaration><![CDATA[METHOD PUBLIC TestAddKeySint
+VAR
+	jsonSerializer : JsonSerializer;
+	sintValue : SINT := 123;
+	out : STRING;
+	expected : STRING := '{"data":123}';
+END_VAR]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[TEST('TestAddKeySint');
+
+jsonSerializer.StartObject();
+jsonSerializer.AddKeySint('data',sintValue);
+jsonSerializer.EndObject();
+
+jsonSerializer.TryGetSerialziedData(ADR(out),SIZEOF(out));
+
+AssertEquals(
+	Expected := expected,
+	Actual := out,
+	Message := 'Did not produce the expected JSON string for the SINT value'
+);
+
+TEST_FINISHED();]]></ST>
+      </Implementation>
+    </Method>
+    <Method Name="TestAddKeyString" Id="{cfcdafd4-1ccc-4b06-b43f-8ef2c9efd052}">
+      <Declaration><![CDATA[METHOD PUBLIC TestAddKeyString
+VAR
+	jsonSerializer : JsonSerializer;
+	stringValue : STRING := 'foobar';
+	out : STRING;
+	expected : STRING := '{"data":"foobar"}';
+END_VAR]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[TEST('TestAddKeyString');
+
+jsonSerializer.StartObject();
+jsonSerializer.AddKeyString('data',stringValue);
+jsonSerializer.EndObject();
+
+jsonSerializer.TryGetSerialziedData(ADR(out),SIZEOF(out));
+
+AssertEquals(
+	Expected := expected,
+	Actual := out,
+	Message := 'Did not produce the expected JSON string for the STRING value'
+);
+
+TEST_FINISHED();]]></ST>
+      </Implementation>
+    </Method>
+    <Method Name="TestAddKeyStringByRef" Id="{9a4585ce-e4dd-4e7d-9f5d-8fb27c0bcb57}">
+      <Declaration><![CDATA[METHOD PUBLIC TestAddKeyStringByRef
+VAR
+	jsonSerializer : JsonSerializer;
+	stringValue : T_MAXSTRING := '1234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890';
+	out : T_MAXSTRING;
+	expected : T_MAXSTRING := '{"data":"1234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890"}';
+END_VAR]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[TEST('TestAddKeyStringByRef');
+
+jsonSerializer.StartObject();
+jsonSerializer.AddKeyStringByRef('data',stringValue);
+jsonSerializer.EndObject();
+
+jsonSerializer.TryGetSerialziedData(ADR(out),SIZEOF(out));
+
+AssertEquals(
+	Expected := expected,
+	Actual := out,
+	Message := 'Did not produce the expected JSON string for the STRING using reference value'
+);
+
+TEST_FINISHED();]]></ST>
+      </Implementation>
+    </Method>
+    <Method Name="TestAddKeyTime" Id="{e5051e88-4428-4d9b-a4e2-2064b9234a6e}">
+      <Declaration><![CDATA[METHOD PUBLIC TestAddKeyTime
+VAR
+	jsonSerializer : JsonSerializer;
+	timeValue : TIME := T#49D17H2M47S295MS;
+	out : STRING;
+	expected : STRING := '{"data":"T#49d17h2m47s295ms"}';
+END_VAR]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[TEST('TestAddKeyTime');
+
+jsonSerializer.StartObject();
+jsonSerializer.AddKeyTime('data',timeValue);
+jsonSerializer.EndObject();
+
+jsonSerializer.TryGetSerialziedData(ADR(out),SIZEOF(out));
+
+AssertEquals(
+	Expected := expected,
+	Actual := out,
+	Message := 'Did not produce the expected JSON string for the TIME value'
+);
+
+TEST_FINISHED();]]></ST>
+      </Implementation>
+    </Method>
+    <Method Name="TestAddKeyTod" Id="{49cc19b7-8e05-4890-a14c-84315e9df43a}">
+      <Declaration><![CDATA[METHOD PUBLIC TestAddKeyTod
+VAR
+	jsonSerializer : JsonSerializer;
+	todValue : TOD := TOD#23:01:23.456;
+	out : STRING;
+	expected : STRING := '{"data":"TOD#23:01:23.456"}';
+END_VAR]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[TEST('TestAddKeyTod');
+
+jsonSerializer.StartObject();
+jsonSerializer.AddKeyTod('data',todValue);
+jsonSerializer.EndObject();
+
+jsonSerializer.TryGetSerialziedData(ADR(out),SIZEOF(out));
+
+AssertEquals(
+	Expected := expected,
+	Actual := out,
+	Message := 'Did not produce the expected JSON string for the TOD value'
+);
+
+TEST_FINISHED();]]></ST>
+      </Implementation>
+    </Method>
+    <Method Name="TestAddKeyUdint" Id="{2f1c4f26-f33b-4736-b2b8-37697352d9ca}">
+      <Declaration><![CDATA[METHOD PUBLIC TestAddKeyUdint
+VAR
+	jsonSerializer : JsonSerializer;
+	udintValue : UDINT := 123456;
+	out : STRING;
+	expected : STRING := '{"data":123456}';
+END_VAR]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[TEST('TestAddKeyUdint');
+
+jsonSerializer.StartObject();
+jsonSerializer.AddKeyUdint('data',udintValue);
+jsonSerializer.EndObject();
+
+jsonSerializer.TryGetSerialziedData(ADR(out),SIZEOF(out));
+
+AssertEquals(
+	Expected := expected,
+	Actual := out,
+	Message := 'Did not produce the expected JSON string for the UDINT value'
+);
+
+TEST_FINISHED();]]></ST>
+      </Implementation>
+    </Method>
+    <Method Name="TestAddKeyUint" Id="{6a980bc3-9e58-4c8c-bab9-29aecf78c542}">
+      <Declaration><![CDATA[METHOD PUBLIC TestAddKeyUint
+VAR
+	jsonSerializer : JsonSerializer;
+	uintValue : UINT := 12345;
+	out : STRING;
+	expected : STRING := '{"data":12345}';
+END_VAR]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[TEST('TestAddKeyUint');
+
+jsonSerializer.StartObject();
+jsonSerializer.AddKeyUint('data',uintValue);
+jsonSerializer.EndObject();
+
+jsonSerializer.TryGetSerialziedData(ADR(out),SIZEOF(out));
+
+AssertEquals(
+	Expected := expected,
+	Actual := out,
+	Message := 'Did not produce the expected JSON string for the UINT value'
+);
+
+TEST_FINISHED();]]></ST>
+      </Implementation>
+    </Method>
+    <Method Name="TestAddKeyUlint" Id="{27dbc1ee-f189-42c3-9ff3-b469c5c90688}">
+      <Declaration><![CDATA[METHOD PUBLIC TestAddKeyUlint
+VAR
+	jsonSerializer : JsonSerializer;
+	ulintValue : ULINT := 9223372036854775807;
+	out : STRING;
+	expected : STRING := '{"data":9223372036854775807}';
+END_VAR]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[TEST('TestAddKeyUlint');
+
+jsonSerializer.StartObject();
+jsonSerializer.AddKeyUlint('data',ulintValue);
+jsonSerializer.EndObject();
+
+jsonSerializer.TryGetSerialziedData(ADR(out),SIZEOF(out));
+
+AssertEquals(
+	Expected := expected,
+	Actual := out,
+	Message := 'Did not produce the expected JSON string for the ULINT value'
+);
+
+TEST_FINISHED();]]></ST>
+      </Implementation>
+    </Method>
+    <Method Name="TestAddKeyUsint" Id="{fa63d6d8-b416-4524-8a34-620b309eb189}">
+      <Declaration><![CDATA[METHOD PUBLIC TestAddKeyUsint
+VAR
+	jsonSerializer : JsonSerializer;
+	usintValue : USINT := 123;
+	out : STRING;
+	expected : STRING := '{"data":123}';
+END_VAR]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[TEST('TestAddKeyUsint');
+
+jsonSerializer.StartObject();
+jsonSerializer.AddKeyUsint('data',usintValue);
+jsonSerializer.EndObject();
+
+jsonSerializer.TryGetSerialziedData(ADR(out),SIZEOF(out));
+
+AssertEquals(
+	Expected := expected,
+	Actual := out,
+	Message := 'Did not produce the expected JSON string for the USINT value'
+);
+
+TEST_FINISHED();]]></ST>
+      </Implementation>
+    </Method>
+    <Method Name="TestAddKeyWord" Id="{bc2d6577-1fee-404e-b7b6-cd2f5cc338f3}">
+      <Declaration><![CDATA[METHOD PUBLIC TestAddKeyWord
+VAR
+	jsonSerializer : JsonSerializer;
+	wordValue : WORD := 12345;
+	out : STRING;
+	expected : STRING := '{"data":12345}';
+END_VAR]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[TEST('TestAddKeyWord');
+
+jsonSerializer.StartObject();
+jsonSerializer.AddKeyWord('data',wordValue);
+jsonSerializer.EndObject();
+
+jsonSerializer.TryGetSerialziedData(ADR(out),SIZEOF(out));
+
+AssertEquals(
+	Expected := expected,
+	Actual := out,
+	Message := 'Did not produce the expected JSON string for the WORD value'
+);
+
+TEST_FINISHED();]]></ST>
+      </Implementation>
+    </Method>
+    <Method Name="TestAddLint" Id="{69486732-e7c3-4f97-84fd-2aeae5e37f6b}">
+      <Declaration><![CDATA[METHOD PUBLIC TestAddLint
+VAR
+	jsonSerializer : JsonSerializer;
+	lintValue : LINT := 9223372036854775807;
+	out : STRING;
+	expected : STRING := '9223372036854775807';
+END_VAR]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[TEST('TestAddLint');
+
+jsonSerializer.AddLint(lintValue);
+jsonSerializer.TryGetSerialziedData(ADR(out),SIZEOF(out));
+
+AssertEquals(
+	Expected := expected,
+	Actual := out,
+	Message := 'Did not produce the expected JSON string for the LINT value'
+);
+
+TEST_FINISHED();]]></ST>
+      </Implementation>
+    </Method>
+    <Method Name="TestAddLreal" Id="{2659114c-5e9a-49b8-a162-1792d09a67ef}">
+      <Declaration><![CDATA[METHOD PUBLIC TestAddLreal
+VAR
+	jsonSerializer : JsonSerializer;
+	lrealValue : LREAL := 123456.789;
+	out : STRING;
+	expected : STRING := '123456.789';
+END_VAR]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[TEST('TestAddLReal');
+
+jsonSerializer.AddLreal(lrealValue);
+jsonSerializer.TryGetSerialziedData(ADR(out),SIZEOF(out));
+
+AssertEquals(
+	Expected := expected,
+	Actual := out,
+	Message := 'Did not produce the expected JSON string for the LREAL value'
+);
+
+TEST_FINISHED();]]></ST>
+      </Implementation>
+    </Method>
+    <Method Name="TestAddLtime" Id="{1bff27ff-d0db-4d1c-bb47-1e56b163ff9e}">
+      <Declaration><![CDATA[METHOD PUBLIC TestAddLtime
+VAR
+	jsonSerializer : JsonSerializer;
+	ltimeValue : LTIME := LTIME#100D2H30M40S500MS600US700NS;
+	out : STRING;
+	expected : STRING := '"LTIME#100d2h30m40s500ms600us700ns"';
+END_VAR]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[TEST('TestAddLtime');
+
+jsonSerializer.AddLtime(ltimeValue);
+jsonSerializer.TryGetSerialziedData(ADR(out),SIZEOF(out));
+
+AssertEquals(
+	Expected := expected,
+	Actual := out,
+	Message := 'Did not produce the expected JSON string for the LTIME value'
+);
+
+TEST_FINISHED();]]></ST>
+      </Implementation>
+    </Method>
+    <Method Name="TestAddLword" Id="{5a85d542-8270-404c-b87a-446e4cdca12d}">
+      <Declaration><![CDATA[METHOD PUBLIC TestAddLword
+VAR
+	jsonSerializer : JsonSerializer;
+	lwordValue : LWORD := 9223372036854775807;
+	out : STRING;
+	expected : STRING := '9223372036854775807';
+END_VAR]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[TEST('TestAddLword');
+
+jsonSerializer.AddLword(lwordValue);
+jsonSerializer.TryGetSerialziedData(ADR(out),SIZEOF(out));
+
+AssertEquals(
+	Expected := expected,
+	Actual := out,
+	Message := 'Did not produce the expected JSON string for the LWORD value'
+);
+
+TEST_FINISHED();]]></ST>
+      </Implementation>
+    </Method>
+    <Method Name="TestAddNull" Id="{f806b9ba-8435-4597-9dae-684d9b1cf3b8}">
+      <Declaration><![CDATA[METHOD PUBLIC TestAddNull
+VAR
+	jsonSerializer : JsonSerializer;
+	out : STRING;
+	expected : STRING := 'null';
+END_VAR]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[TEST('TestAddNull');
+
+jsonSerializer.AddNull();
+jsonSerializer.TryGetSerialziedData(ADR(out),SIZEOF(out));
+
+AssertEquals(
+	Expected := expected,
+	Actual := out,
+	Message := 'Did not produce the expected JSON string for the NULL value'
+);
+
+TEST_FINISHED();]]></ST>
+      </Implementation>
+    </Method>
+    <Method Name="TestAddRawObject" Id="{9387f123-4e9d-4481-b806-9afbc06fd804}">
+      <Declaration><![CDATA[METHOD PUBLIC TestAddRawObject
+VAR
+	jsonSerializer : JsonSerializer;
+	rawObject : STRING := '{"foo":"bar"}';
+	out : STRING;
+	expected : STRING := '{"foo":"bar"}';
+END_VAR]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[TEST('TestAddRawObject');
+
+jsonSerializer.AddRawObject(rawObject);
+jsonSerializer.TryGetSerialziedData(ADR(out),SIZEOF(out));
+
+AssertEquals(
+	Expected := expected,
+	Actual := out,
+	Message := 'Did not produce the expected JSON string for the raw object value'
+);
+
+TEST_FINISHED();]]></ST>
+      </Implementation>
+    </Method>
+    <Method Name="TestAddReal" Id="{a98034a3-4984-4379-85b6-e96b1a9fc8a0}">
+      <Declaration><![CDATA[METHOD PUBLIC TestAddReal
+VAR
+	jsonSerializer : JsonSerializer;
+	realValue : REAL := 123.4;
+	out : STRING;
+	expected : STRING := '123.4';
+END_VAR]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[TEST('TestAddReal');
+
+jsonSerializer.AddReal(realValue);
+jsonSerializer.TryGetSerialziedData(ADR(out),SIZEOF(out));
+
+AssertEquals(
+	Expected := expected,
+	Actual := out,
+	Message := 'Did not produce the expected JSON string for the REAL value'
+);
+
+TEST_FINISHED();]]></ST>
+      </Implementation>
+    </Method>
+    <Method Name="TestAddSint" Id="{ca23c76e-0c99-457d-ae4c-4d713f461c4c}">
+      <Declaration><![CDATA[METHOD PUBLIC TestAddSint
+VAR
+	jsonSerializer : JsonSerializer;
+	intValue : SINT := 123;
+	out : STRING;
+	expected : STRING := '123';
+END_VAR]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[TEST('TestAddSint');
+
+jsonSerializer.AddSint(intValue);
+jsonSerializer.TryGetSerialziedData(ADR(out),SIZEOF(out));
+
+AssertEquals(
+	Expected := expected,
+	Actual := out,
+	Message := 'Did not produce the expected JSON string for the SINT value'
+);
+
+TEST_FINISHED();]]></ST>
+      </Implementation>
+    </Method>
+    <Method Name="TestAddString" Id="{9459ac35-a3ba-4b26-aa2c-ee317a3b0c7a}">
+      <Declaration><![CDATA[METHOD PUBLIC TestAddString
+VAR
+	jsonSerializer : JsonSerializer;
+	stringValue : STRING := 'foobar';
+	out : STRING;
+	expected : STRING := '"foobar"';
+END_VAR]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[TEST('TestAddString');
+
+jsonSerializer.AddString(stringValue);
+jsonSerializer.TryGetSerialziedData(ADR(out),SIZEOF(out));
+
+AssertEquals(
+	Expected := expected,
+	Actual := out,
+	Message := 'Did not produce the expected JSON string for the STRING value'
+);
+
+TEST_FINISHED();]]></ST>
+      </Implementation>
+    </Method>
+    <Method Name="TestAddStringByRef" Id="{a7a1e81b-ed46-4fb1-8481-9fa60d6b4fe3}">
+      <Declaration><![CDATA[METHOD PUBLIC TestAddStringByRef
+VAR
+	jsonSerializer : JsonSerializer;
+	stringValue : T_MAXSTRING := '1234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890';
+	out : T_MAXSTRING;
+	expected : T_MAXSTRING := '"1234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890"';
+END_VAR]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[TEST('TestAddStringByRef');
+
+jsonSerializer.AddStringByRef(stringValue);
+jsonSerializer.TryGetSerialziedData(ADR(out),SIZEOF(out));
+
+AssertEquals(
+	Expected := expected,
+	Actual := out,
+	Message := 'Did not produce the expected JSON string for the STRING using reference value'
+);
+
+TEST_FINISHED();]]></ST>
+      </Implementation>
+    </Method>
+    <Method Name="TestAddTime" Id="{a991b25d-5c25-4166-88da-042b18bbf1d1}">
+      <Declaration><![CDATA[METHOD PUBLIC TestAddTime
+VAR
+	jsonSerializer : JsonSerializer;
+	timeValue : TIME := T#49D17H2M47S295MS;
+	out : STRING;
+	expected : STRING := '"T#49d17h2m47s295ms"';
+END_VAR]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[TEST('TestAddTime');
+
+jsonSerializer.AddTime(timeValue);
+jsonSerializer.TryGetSerialziedData(ADR(out),SIZEOF(out));
+
+AssertEquals(
+	Expected := expected,
+	Actual := out,
+	Message := 'Did not produce the expected JSON string for the TIME value'
+);
+
+TEST_FINISHED();]]></ST>
+      </Implementation>
+    </Method>
+    <Method Name="TestAddTod" Id="{c307d301-22c5-41aa-b1c4-71d564f75395}">
+      <Declaration><![CDATA[METHOD PUBLIC TestAddTod
+VAR
+	jsonSerializer : JsonSerializer;
+	todValue : TOD := TOD#23:01:23.456;
+	out : STRING;
+	expected : STRING := '"TOD#23:01:23.456"';
+END_VAR]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[TEST('TestAddTod');
+
+jsonSerializer.AddTod(todValue);
+jsonSerializer.TryGetSerialziedData(ADR(out),SIZEOF(out));
+
+AssertEquals(
+	Expected := expected,
+	Actual := out,
+	Message := 'Did not produce the expected JSON string for the TOD value'
+);
+
+TEST_FINISHED();]]></ST>
+      </Implementation>
+    </Method>
+    <Method Name="TestAddUdint" Id="{53d3bcf7-1248-4e5a-a7e3-c4ce85ccf6d6}">
+      <Declaration><![CDATA[METHOD PUBLIC TestAddUdint
+VAR
+	jsonSerializer : JsonSerializer;
+	udintValue : UDINT := 123456;
+	out : STRING;
+	expected : STRING := '123456';
+END_VAR]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[TEST('TestAddUdint');
+
+jsonSerializer.AddUdint(udintValue);
+jsonSerializer.TryGetSerialziedData(ADR(out),SIZEOF(out));
+
+AssertEquals(
+	Expected := expected,
+	Actual := out,
+	Message := 'Did not produce the expected JSON string for the UDINT value'
+);
+
+TEST_FINISHED();]]></ST>
+      </Implementation>
+    </Method>
+    <Method Name="TestAddUint" Id="{f25dde75-86f8-425b-9d91-0606e1e21775}">
+      <Declaration><![CDATA[METHOD PUBLIC TestAddUint
+VAR
+	jsonSerializer : JsonSerializer;
+	uintValue : UINT := 12345;
+	out : STRING;
+	expected : STRING := '12345';
+END_VAR]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[TEST('TestAddUint');
+
+
+jsonSerializer.AddUint(uintValue);
+jsonSerializer.TryGetSerialziedData(ADR(out),SIZEOF(out));
+
+AssertEquals(
+	Expected := expected,
+	Actual := out,
+	Message := 'Did not produce the expected JSON string for the UINT value'
+);
+
+TEST_FINISHED();]]></ST>
+      </Implementation>
+    </Method>
+    <Method Name="TestAddUlint" Id="{7549c1fc-b408-487c-8cef-d6603815f9cc}">
+      <Declaration><![CDATA[METHOD PUBLIC TestAddUlint
+VAR
+	jsonSerializer : JsonSerializer;
+	ulintValue : ULINT := 9223372036854775807;
+	out : STRING;
+	expected : STRING := '9223372036854775807';
+END_VAR]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[TEST('TestAddUlint');
+
+jsonSerializer.AddUlint(ulintValue);
+jsonSerializer.TryGetSerialziedData(ADR(out),SIZEOF(out));
+
+AssertEquals(
+	Expected := expected,
+	Actual := out,
+	Message := 'Did not produce the expected JSON string for the ULINT value'
+);
+
+TEST_FINISHED();]]></ST>
+      </Implementation>
+    </Method>
+    <Method Name="TestAddUsint" Id="{5d87c440-3c5b-4b0f-ab82-0681d63ec175}">
+      <Declaration><![CDATA[METHOD PUBLIC TestAddUsint
+VAR
+	jsonSerializer : JsonSerializer;
+	usintValue : USINT := 123;
+	out : STRING;
+	expected : STRING := '123';
+END_VAR]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[TEST('TestAddUsint');
+
+jsonSerializer.AddUsint(usintValue);
+jsonSerializer.TryGetSerialziedData(ADR(out),SIZEOF(out));
+
+AssertEquals(
+	Expected := expected,
+	Actual := out,
+	Message := 'Did not produce the expected JSON string for the USINT value'
+);
+
+TEST_FINISHED();]]></ST>
+      </Implementation>
+    </Method>
+    <Method Name="TestAddWord" Id="{440ed168-ca4b-45bc-a134-2a8dab28b55d}">
+      <Declaration><![CDATA[METHOD PUBLIC TestAddWord
+VAR
+	jsonSerializer : JsonSerializer;
+	wordValue : WORD := 12345;
+	out : STRING;
+	expected : STRING := '12345';
+END_VAR]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[TEST('TestAddWord');
+
+jsonSerializer.AddWord(wordValue);
+jsonSerializer.TryGetSerialziedData(ADR(out),SIZEOF(out));
+
+AssertEquals(
+	Expected := expected,
+	Actual := out,
+	Message := 'Did not produce the expected JSON string for the WORD value'
+);
+
+TEST_FINISHED();]]></ST>
+      </Implementation>
+    </Method>
+    <Method Name="TestClone" Id="{25b6aba4-14c9-4b8e-bcf4-8f73860b1ef0}">
+      <Declaration><![CDATA[METHOD PUBLIC TestClone
+VAR
+	jsonSerializer : JsonSerializer;
+	clone : I_Serializer;
+	rawObject : STRING := '{"foo":"bar"}';
+	out : STRING;
+	expected : STRING := '{"foo":"bar"}';
+END_VAR]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[TEST('TestClone');
+
+// add something to the original 
+jsonSerializer.AddRawObject(rawObject);
+
+// deep clone
+clone := jsonSerializer.Clone();
+
+// reset the original
+jsonSerializer.Reset();
+
+// retreive the data from the clone
+clone.TryGetSerialziedData(ADR(out),SIZEOF(out));
+
+// clones are __NEW so must be disposed
+clone.Dispose();
+
+AssertEquals(
+	Expected := expected,
+	Actual := out,
+	Message := 'Did not create a deep copy clone'
+);
+
+TEST_FINISHED();]]></ST>
+      </Implementation>
+    </Method>
+    <Method Name="TestGetSerializedDataLengthEmpty" Id="{879d42ca-0256-44a2-a803-74cb07ceba66}">
+      <Declaration><![CDATA[METHOD PUBLIC TestGetSerializedDataLengthEmpty
+VAR
+	jsonSerializer : JsonSerializer;
+	rawObject : STRING := '';
+	length : UDINT;
+	expected : UDINT := 0;
+END_VAR]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[TEST('TestGetSerializedDataLengthEmpty');
+
+length := jsonSerializer.GetSeralizedDataLength();
+
+AssertEquals(
+	Expected := expected,
+	Actual := length,
+	Message := 'Did not produce the expected JSON string length'
+);
+
+TEST_FINISHED();]]></ST>
+      </Implementation>
+    </Method>
+    <Method Name="TestGetSerializedDataLengthWithEmptyObject" Id="{49c9d094-6301-4b48-8367-a0645885681a}">
+      <Declaration><![CDATA[METHOD PUBLIC TestGetSerializedDataLengthWithEmptyObject
+VAR
+	jsonSerializer : JsonSerializer;
+	rawObject : STRING := '{}';
+	length : UDINT;
+	expected : UDINT := 3;
+END_VAR]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[TEST('TestGetSerializedDataLengthWithEmptyObject');
+
+jsonSerializer.AddRawObject(rawObject);
+length := jsonSerializer.GetSeralizedDataLength();
+
+AssertEquals(
+	Expected := expected,
+	Actual := length,
+	Message := 'Did not produce the expected JSON string length'
+);
+
+TEST_FINISHED();]]></ST>
+      </Implementation>
+    </Method>
+    <Method Name="TestGetSerializedDataLengthWithSimpleObject" Id="{d66fef59-1287-4b33-b3e0-8ddd24410c0c}">
+      <Declaration><![CDATA[METHOD PUBLIC TestGetSerializedDataLengthWithSimpleObject
+VAR
+	jsonSerializer : JsonSerializer;
+	rawObject : STRING := '{"foo":"bar"}';
+	length : UDINT;
+	expected : UDINT := 14;
+END_VAR]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[TEST('TestGetSerializedDataLength');
+
+jsonSerializer.AddRawObject(rawObject);
+length := jsonSerializer.GetSeralizedDataLength();
+
+AssertEquals(
+	Expected := expected,
+	Actual := length,
+	Message := 'Did not produce the expected JSON string length'
+);
+
+TEST_FINISHED();]]></ST>
+      </Implementation>
+    </Method>
+    <Method Name="TestReset" Id="{cbea950f-f8b3-46cc-a490-a437aa389248}">
+      <Declaration><![CDATA[METHOD PUBLIC TestReset
+VAR
+	jsonSerializer : JsonSerializer;
+	rawObject : STRING := '{"foo":"bar"}';
+	out : STRING;
+	expected : STRING := '';
+END_VAR]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[TEST('TestReset');
+
+jsonSerializer.AddRawObject(rawObject);
+jsonSerializer.Reset();
+jsonSerializer.TryGetSerialziedData(ADR(out),SIZEOF(out));
+
+AssertEquals(
+	Expected := expected,
+	Actual := out,
+	Message := 'Did not reset'
+);
+
+TEST_FINISHED();]]></ST>
+      </Implementation>
+    </Method>
+    <Method Name="TestSerializeArray" Id="{d04039b5-0667-4601-aac4-5ba0bf2e5a1d}">
+      <Declaration><![CDATA[METHOD PUBLIC TestSerializeArray
+VAR
+	jsonSerializer : JsonSerializer;
+	out : STRING;
+	expected : STRING := '[123,true,"foobar",null]';
+END_VAR]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[TEST('TestSerializeArray');
+
+jsonSerializer.StartArray();
+jsonSerializer.AddDint(123);
+jsonSerializer.AddBool(TRUE);
+jsonSerializer.AddString('foobar');
+jsonSerializer.AddNull();
+jsonSerializer.EndArray();
+
+jsonSerializer.TryGetSerialziedData(ADR(out),SIZEOF(out));
+
+AssertEquals(
+	Expected := expected,
+	Actual := out,
+	Message := 'Did not produce the expected JSON string for the array'
+);
+
+TEST_FINISHED();]]></ST>
+      </Implementation>
+    </Method>
+    <Method Name="TestSerializeObject" Id="{aa1cb8a5-5f19-4626-83c1-79e71439d9d0}">
+      <Declaration><![CDATA[METHOD PUBLIC TestSerializeObject
+VAR
+	jsonSerializer : JsonSerializer;
+	out : STRING;
+	expected : STRING := '{"dint":123,"bool":true,"string":"foobar","null":null}';
+END_VAR]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[TEST('TestSerializeObject');
+
+jsonSerializer.StartObject();
+jsonSerializer.AddKeyDint('dint',123);
+jsonSerializer.AddKeyBool('bool',TRUE);
+jsonSerializer.AddKeyString('string','foobar');
+jsonSerializer.AddKeyNull('null');
+jsonSerializer.EndObject();
+
+jsonSerializer.TryGetSerialziedData(ADR(out),SIZEOF(out));
+
+AssertEquals(
+	Expected := expected,
+	Actual := out,
+	Message := 'Did not produce the expected JSON string for the object'
+);
+
+TEST_FINISHED();]]></ST>
+      </Implementation>
+    </Method>
+  </POU>
+</TcPlcObject>
