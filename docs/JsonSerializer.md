@@ -2,12 +2,12 @@
 
 ## Definition
 
-|             |                                                           |
-| ----------- | --------------------------------------------------------- |
-| Namespace   | mobject-json                                              |
-| Library     | mobject-json                                              |
-| Inheritance | [Disposable](https://disposable.mobject.org/#/disposable) |
-| Implements  | I_Serializer                                              |
+|             |                                                                 |
+| ----------- | --------------------------------------------------------------- |
+| Namespace   | mobject-json                                                    |
+| Library     | mobject-json                                                    |
+| Inheritance | [Disposable](https://disposable.mobject.org/#/disposable)       |
+| Implements  | [I_Serializer](http://serialization.mobject.org/#/i-serializer) |
 
 ## Remarks
 
@@ -51,9 +51,9 @@ Adds an array of bytes to the document as a base64 encoded string.
 
 #### Return
 
-| Datatype     | Description                                                                   |
-| ------------ | ----------------------------------------------------------------------------- |
-| I_Serializer | The same instance of the serializer, enabling chained or fluent method calls. |
+| Datatype                                                        | Description                                                                   |
+| --------------------------------------------------------------- | ----------------------------------------------------------------------------- |
+| [I_Serializer](http://serialization.mobject.org/#/i-serializer) | The same instance of the serializer, enabling chained or fluent method calls. |
 
 #### Usage
 
@@ -84,9 +84,9 @@ Adds a boolean value to the document, allowing for fluent coding with subsequent
 
 #### Return
 
-| Datatype     | Description                                                                    |
-| ------------ | ------------------------------------------------------------------------------ |
-| I_Serializer | The same instance of the serializer, enabling chained or fluent method calls.g |
+| Datatype                                                        | Description                                                                    |
+| --------------------------------------------------------------- | ------------------------------------------------------------------------------ |
+| [I_Serializer](http://serialization.mobject.org/#/i-serializer) | The same instance of the serializer, enabling chained or fluent method calls.g |
 
 #### Usage
 
@@ -155,9 +155,9 @@ Adds an array of bytes to the document as a base64 encoded string as a key value
 
 #### Return
 
-| Datatype     | Description                                                                   |
-| ------------ | ----------------------------------------------------------------------------- |
-| I_Serializer | The same instance of the serializer, enabling chained or fluent method calls. |
+| Datatype                                                        | Description                                                                   |
+| --------------------------------------------------------------- | ----------------------------------------------------------------------------- |
+| [I_Serializer](http://serialization.mobject.org/#/i-serializer) | The same instance of the serializer, enabling chained or fluent method calls. |
 
 #### Usage
 
