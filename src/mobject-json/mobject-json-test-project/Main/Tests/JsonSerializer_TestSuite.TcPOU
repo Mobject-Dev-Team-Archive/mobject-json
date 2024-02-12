@@ -31,7 +31,8 @@ TestAddKeyLreal();
 TestAddKeyLtime();
 TestAddKeyLword();
 TestAddKeyNull();
-TestAddKeyRawObject();
+TestAddKeyObject();
+TestAddKeyRawJson();
 TestAddKeyReal();
 TestAddKeySint();
 TestAddKeyString();
@@ -48,7 +49,8 @@ TestAddLreal();
 TestAddLtime();
 TestAddLword();
 TestAddNull();
-TestAddRawObject();
+TestAddObject();
+TestAddRawJson();
 TestAddReal();
 TestAddSint();
 TestAddString();
@@ -762,8 +764,34 @@ AssertEquals(
 TEST_FINISHED();]]></ST>
       </Implementation>
     </Method>
-    <Method Name="TestAddKeyRawObject" Id="{d341e0c5-6b02-451c-987b-75a9c3c634c8}">
-      <Declaration><![CDATA[METHOD PUBLIC TestAddKeyRawObject
+    <Method Name="TestAddKeyObject" Id="{bf777573-b496-45d8-a7cd-98b7d578dfdc}">
+      <Declaration><![CDATA[METHOD PUBLIC TestAddKeyObject
+VAR
+	jsonSerializer : JsonSerializer;
+	user : MockSerializableUserObject(Name := 'alice', Age := 40);
+	out : STRING;
+	expected : STRING := '{"data":{"Name":"alice","Age":40}}';
+END_VAR]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[TEST('TestAddKeyObject');
+
+jsonSerializer.StartObject();
+jsonSerializer.AddKeyObject('data',user);
+jsonSerializer.EndObject();
+
+jsonSerializer.TryGetSerialziedData(ADR(out),SIZEOF(out));
+
+AssertEquals(
+	Expected := expected,
+	Actual := out,
+	Message := 'Did not produce the expected JSON string for the Object value'
+);
+
+TEST_FINISHED();]]></ST>
+      </Implementation>
+    </Method>
+    <Method Name="TestAddKeyRawJson" Id="{d341e0c5-6b02-451c-987b-75a9c3c634c8}">
+      <Declaration><![CDATA[METHOD PUBLIC TestAddKeyRawJson
 VAR
 	jsonSerializer : JsonSerializer;
 	rawObject : STRING := '{"foo":"bar"}';
@@ -771,10 +799,10 @@ VAR
 	expected : STRING := '{"data":{"foo":"bar"}}';
 END_VAR]]></Declaration>
       <Implementation>
-        <ST><![CDATA[TEST('TestAddKeyRawObject');
+        <ST><![CDATA[TEST('TestAddKeyRawJson');
 
 jsonSerializer.StartObject();
-jsonSerializer.AddKeyRawObject('data',rawObject);
+jsonSerializer.AddKeyRawJson('data',rawObject);
 jsonSerializer.EndObject();
 
 jsonSerializer.TryGetSerialziedData(ADR(out),SIZEOF(out));
@@ -1188,8 +1216,31 @@ AssertEquals(
 TEST_FINISHED();]]></ST>
       </Implementation>
     </Method>
-    <Method Name="TestAddRawObject" Id="{9387f123-4e9d-4481-b806-9afbc06fd804}">
-      <Declaration><![CDATA[METHOD PUBLIC TestAddRawObject
+    <Method Name="TestAddObject" Id="{9b073f56-2164-47df-962d-a8960110b4ab}">
+      <Declaration><![CDATA[METHOD PUBLIC TestAddObject
+VAR
+	jsonSerializer : JsonSerializer;
+	user : MockSerializableUserObject(Name := 'alice', Age := 40);
+	out : STRING;
+	expected : STRING := '{"Name":"alice","Age":40}';
+END_VAR]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[TEST('TestAddObject');
+
+jsonSerializer.AddObject(user);
+jsonSerializer.TryGetSerialziedData(ADR(out),SIZEOF(out));
+
+AssertEquals(
+	Expected := expected,
+	Actual := out,
+	Message := 'Did not produce the expected JSON string for the Object value'
+);
+
+TEST_FINISHED();]]></ST>
+      </Implementation>
+    </Method>
+    <Method Name="TestAddRawJson" Id="{9387f123-4e9d-4481-b806-9afbc06fd804}">
+      <Declaration><![CDATA[METHOD PUBLIC TestAddRawJson
 VAR
 	jsonSerializer : JsonSerializer;
 	rawObject : STRING := '{"foo":"bar"}';
@@ -1197,9 +1248,9 @@ VAR
 	expected : STRING := '{"foo":"bar"}';
 END_VAR]]></Declaration>
       <Implementation>
-        <ST><![CDATA[TEST('TestAddRawObject');
+        <ST><![CDATA[TEST('TestAddRawJson');
 
-jsonSerializer.AddRawObject(rawObject);
+jsonSerializer.AddRawJson(rawObject);
 jsonSerializer.TryGetSerialziedData(ADR(out),SIZEOF(out));
 
 AssertEquals(
@@ -1478,7 +1529,7 @@ END_VAR]]></Declaration>
         <ST><![CDATA[TEST('TestClone');
 
 // add something to the original 
-jsonSerializer.AddRawObject(rawObject);
+jsonSerializer.AddRawJson(rawObject);
 
 // deep clone
 clone := jsonSerializer.Clone();
@@ -1534,7 +1585,7 @@ END_VAR]]></Declaration>
       <Implementation>
         <ST><![CDATA[TEST('TestGetSerializedDataLengthWithEmptyObject');
 
-jsonSerializer.AddRawObject(rawObject);
+jsonSerializer.AddRawJson(rawObject);
 length := jsonSerializer.GetSeralizedDataLength();
 
 AssertEquals(
@@ -1557,7 +1608,7 @@ END_VAR]]></Declaration>
       <Implementation>
         <ST><![CDATA[TEST('TestGetSerializedDataLength');
 
-jsonSerializer.AddRawObject(rawObject);
+jsonSerializer.AddRawJson(rawObject);
 length := jsonSerializer.GetSeralizedDataLength();
 
 AssertEquals(
@@ -1580,7 +1631,7 @@ END_VAR]]></Declaration>
       <Implementation>
         <ST><![CDATA[TEST('TestReset');
 
-jsonSerializer.AddRawObject(rawObject);
+jsonSerializer.AddRawJson(rawObject);
 jsonSerializer.Reset();
 jsonSerializer.TryGetSerialziedData(ADR(out),SIZEOF(out));
 

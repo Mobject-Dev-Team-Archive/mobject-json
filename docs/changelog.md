@@ -1,5 +1,17 @@
 # Changelog
 
+## v1.2.0-beta
+
+- Updated to support mobject-serialization v0.3.0-alpha.
+- Added JsonSeralizer.AddObject
+- Added JsonSeralizer.AddKeyObject
+- Added JsonDeserializer + tests
+
+!> This update contains the following breaking changes.
+
+- JsonSeralizer.AddKeyRawObject renamed to .AddKeyRawJson
+- JsonSeralizer.AddRawObject renamed to AddRawJson
+
 ## v1.1.0-beta
 
 - Updated to support mobject-serialization v0.1.0-alpha.

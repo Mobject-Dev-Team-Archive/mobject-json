@@ -18,7 +18,7 @@
     <Company>mobject</Company>
     <Released>false</Released>
     <Title>mobject-json</Title>
-    <ProjectVersion>1.1.0</ProjectVersion>
+    <ProjectVersion>1.2.0</ProjectVersion>
     <DefaultNamespace>mobject-json</DefaultNamespace>
     <Placeholder>mobject-json</Placeholder>
     <Author>mobject dev team</Author>
@@ -70,15 +70,26 @@
   <ItemGroup>
     <Folder Include="JsonDomParser" />
     <Folder Include="JsonSerializer" />
+    <Folder Include="JsonDeserializer" />
     <Folder Include="_Internal" />
     <Folder Include="_Internal\JsonPathVisitor" />
     <Folder Include="_Internal\JsonPathSyntaxParser" />
+    <Folder Include="_Internal\JsonDeserializerNode" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="JsonDeserializer\JsonDeserializer.TcPOU">
+      <SubType>Code</SubType>
+    </Compile>
     <Compile Include="JsonDomParser\JsonDomParser.TcPOU">
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="JsonSerializer\JsonSerializer.TcPOU">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="_Internal\JsonDeserializerNode\JsonDeserializerNode.TcPOU">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="_Internal\JsonDeserializerNode\JsonDeserializerNullNode.TcPOU">
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="_Internal\JsonPathSyntaxParser\JsonPathSyntaxParser.TcPOU">
@@ -101,15 +112,15 @@
     <LibraryReference Include="mobject-disposable,1.0.0,mobject">
       <Namespace>mobject_disposable</Namespace>
     </LibraryReference>
-    <LibraryReference Include="mobject-serialization,0.1.0,mobject">
+    <LibraryReference Include="mobject-serialization,0.3.0,mobject">
       <Namespace>mobject_serialization</Namespace>
     </LibraryReference>
   </ItemGroup>
   <ProjectExtensions>
     <PlcProjectOptions>
       <XmlArchive>
-  <Data>
-    <o xml:space="preserve" t="OptionKey">
+        <Data>
+          <o xml:space="preserve" t="OptionKey">
       <v n="Name">"&lt;ProjectRoot&gt;"</v>
       <d n="SubKeys" t="Hashtable" ckt="String" cvt="OptionKey">
         <v>{192FAD59-8248-4824-A8DE-9177C94C195A}</v>
@@ -152,13 +163,13 @@
       </d>
       <d n="Values" t="Hashtable" />
     </o>
-  </Data>
-  <TypeList>
-    <Type n="Hashtable">System.Collections.Hashtable</Type>
-    <Type n="OptionKey">{54dd0eac-a6d8-46f2-8c27-2f43c7e49861}</Type>
-    <Type n="String">System.String</Type>
-  </TypeList>
-</XmlArchive>
+        </Data>
+        <TypeList>
+          <Type n="Hashtable">System.Collections.Hashtable</Type>
+          <Type n="OptionKey">{54dd0eac-a6d8-46f2-8c27-2f43c7e49861}</Type>
+          <Type n="String">System.String</Type>
+        </TypeList>
+      </XmlArchive>
     </PlcProjectOptions>
   </ProjectExtensions>
 </Project>

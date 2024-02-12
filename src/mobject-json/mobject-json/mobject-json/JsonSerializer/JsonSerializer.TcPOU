@@ -305,16 +305,28 @@ AddNull();
 AddKeyNull := THIS^;]]></ST>
       </Implementation>
     </Method>
-    <Method Name="AddKeyRawObject" Id="{f6f7ebe5-d7f8-4d7e-9b71-9fe9d524c1d2}">
-      <Declaration><![CDATA[METHOD PUBLIC AddKeyRawObject : I_Serializer
+    <Method Name="AddKeyObject" Id="{7d1d87a5-521c-41f5-b7e8-a290a66af583}">
+      <Declaration><![CDATA[METHOD PUBLIC AddKeyObject : I_Serializer
+VAR_INPUT
+	Key : T_MAXSTRING;
+	Object : I_Serializable;
+END_VAR]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[AddKey(Key);
+Object.SerializeWith(THIS^);
+AddKeyObject := THIS^;]]></ST>
+      </Implementation>
+    </Method>
+    <Method Name="AddKeyRawJson" Id="{f6f7ebe5-d7f8-4d7e-9b71-9fe9d524c1d2}">
+      <Declaration><![CDATA[METHOD PUBLIC AddKeyRawJson : I_Serializer
 VAR_INPUT
 	Key : T_MAXSTRING;
 	RawObject : REFERENCE TO STRING;;
 END_VAR]]></Declaration>
       <Implementation>
         <ST><![CDATA[AddKey(Key);
-AddRawObject(RawObject);
-AddKeyRawObject := THIS^;]]></ST>
+AddRawJson(RawObject);
+AddKeyRawJson := THIS^;]]></ST>
       </Implementation>
     </Method>
     <Method Name="AddKeyReal" Id="{908060e9-3f04-0c29-3d32-837febc1c160}">
@@ -502,8 +514,18 @@ END_VAR]]></Declaration>
 AddNull := THIS^;]]></ST>
       </Implementation>
     </Method>
-    <Method Name="AddRawObject" Id="{13b4569e-f550-016e-02ae-6e99a0c4d8af}">
-      <Declaration><![CDATA[METHOD PUBLIC AddRawObject
+    <Method Name="AddObject" Id="{8cf14314-b2bd-4a87-9d46-b3972640de4c}">
+      <Declaration><![CDATA[METHOD PUBLIC AddObject
+VAR_INPUT
+	Object : I_Serializable;
+END_VAR
+]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[Object.SerializeWith(This^);]]></ST>
+      </Implementation>
+    </Method>
+    <Method Name="AddRawJson" Id="{13b4569e-f550-016e-02ae-6e99a0c4d8af}">
+      <Declaration><![CDATA[METHOD PUBLIC AddRawJson
 VAR_INPUT
 	RawObject : REFERENCE TO STRING;
 END_VAR]]></Declaration>
@@ -654,7 +676,7 @@ IF jsonSaxWriter.CopyDocument(pJsonString^, jsonSize) = 0 THEN
 	RETURN;
 END_IF
 
-pClone^.AddRawObject(pJsonString^);
+pClone^.AddRawJson(pJsonString^);
 __DELETE(pJsonString);]]></ST>
       </Implementation>
     </Method>

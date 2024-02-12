@@ -1,0 +1,77 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4024.12">
+  <POU Name="MockSerializableUserObject" Id="{5d4f5ab3-e37a-4ecd-bf72-d13a638087b3}" SpecialFunc="None">
+    <Declaration><![CDATA[FUNCTION_BLOCK MockSerializableUserObject IMPLEMENTS I_Serializable
+VAR
+	_name : STRING;
+	_age : INT;
+END_VAR
+]]></Declaration>
+    <Implementation>
+      <ST><![CDATA[]]></ST>
+    </Implementation>
+    <Folder Name="Constructor" Id="{97cbe3cc-cc11-42f2-8e97-485dc9b5f439}" />
+    <Property Name="Age" Id="{fe8ca219-eb4f-4459-aea6-bf21b61f79eb}">
+      <Declaration><![CDATA[PROPERTY PUBLIC Age : INT]]></Declaration>
+      <Get Name="Get" Id="{99bd1117-c90d-4017-8d6e-9587e5173e88}">
+        <Declaration><![CDATA[VAR
+END_VAR
+]]></Declaration>
+        <Implementation>
+          <ST><![CDATA[Age := _age;]]></ST>
+        </Implementation>
+      </Get>
+      <Set Name="Set" Id="{84c51676-5973-4b9c-bc19-3ae96c590e75}">
+        <Declaration><![CDATA[VAR
+END_VAR
+]]></Declaration>
+        <Implementation>
+          <ST><![CDATA[_age := Age;]]></ST>
+        </Implementation>
+      </Set>
+    </Property>
+    <Method Name="FB_init" Id="{2694d91f-5649-4d8c-ae10-ae5e6db88089}" FolderPath="Constructor\">
+      <Declaration><![CDATA[METHOD FB_init : BOOL
+VAR_INPUT
+	bInitRetains : BOOL; // if TRUE, the retain variables are initialized (warm start / cold start)
+	bInCopyCode : BOOL;  // if TRUE, the instance afterwards gets moved into the copy code (online change)
+	Name : STRING;
+	Age : INT;
+END_VAR
+]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[_name := Name;
+_age := Age;]]></ST>
+      </Implementation>
+    </Method>
+    <Property Name="Name" Id="{b50f28b1-3e2c-4776-8d04-fc58ed22a129}">
+      <Declaration><![CDATA[PROPERTY PUBLIC Name : STRING]]></Declaration>
+      <Get Name="Get" Id="{3897c1e4-00ba-41c2-9a90-84c853405abe}">
+        <Declaration><![CDATA[VAR
+END_VAR
+]]></Declaration>
+        <Implementation>
+          <ST><![CDATA[Name := _name;]]></ST>
+        </Implementation>
+      </Get>
+      <Set Name="Set" Id="{0b00e84d-d58f-4e23-a53d-2f6e9aa6944e}">
+        <Declaration><![CDATA[VAR
+END_VAR
+]]></Declaration>
+        <Implementation>
+          <ST><![CDATA[_name := Name;]]></ST>
+        </Implementation>
+      </Set>
+    </Property>
+    <Method Name="SerializeWith" Id="{c40dfd34-2132-4b7c-b94d-f13bf0bd90ac}">
+      <Declaration><![CDATA[METHOD SerializeWith
+VAR_INPUT
+	Serializer : I_Serializer;
+END_VAR
+]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[Serializer.StartObject().AddKeyString('Name',_name).AddKeyInt('Age',_age).EndObject();]]></ST>
+      </Implementation>
+    </Method>
+  </POU>
+</TcPlcObject>

@@ -1,0 +1,1529 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4024.12">
+  <POU Name="JsonDeserializer_TestSuite" Id="{6a6abfa1-5855-4e7d-8ca0-8a7a0f357752}" SpecialFunc="None">
+    <Declaration><![CDATA[FUNCTION_BLOCK JsonDeserializer_TestSuite EXTENDS TcUnit.FB_TestSuite]]></Declaration>
+    <Implementation>
+      <ST><![CDATA[TestClone();
+TestReset();
+TestGetArray();
+TestTryGetBase64();
+TestTryGetBoolWithFalseValue();
+TestTryGetBoolWithTrueValue();
+TestTryGetByte();
+TestTryGetHexAsBytes();
+TestTryGetDateTime();
+TestTryGetDcTime();
+TestTryGetDint();
+TestTryGetDword();
+TestTryGetFileTime();
+TestTryGetInt();
+TestTryGetKey();
+TestTryGetKeyBase64();
+TestTryGetKeyBoolWithFalseBoolVariable();
+TestTryGetKeyBoolWithTrueBoolVariable();
+TestTryGetKeyByte();
+TestTryGetKeyHexAsBytes();
+TestTryGetKeyDateTime();
+TestTryGetKeyDcTime();
+TestTryGetKeyDint();
+TestTryGetKeyDword();
+TestTryGetKeyFileTime();
+TestTryGetKeyInt();
+TestTryGetKeyLint();
+TestTryGetKeyLreal();
+TestTryGetKeyLtime();
+TestTryGetKeyLword();
+TestTryGetKeyObject();
+TestTryGetKeyReal();
+TestTryGetKeySint();
+TestTryGetKeyString();
+TestTryGetKeyTime();
+TestTryGetKeyTod();
+TestTryGetKeyUdint();
+TestTryGetKeyUint();
+TestTryGetKeyUlint();
+TestTryGetKeyUsint();
+TestTryGetKeyWord();
+TestTryGetLint();
+TestTryGetLreal();
+TestTryGetLtime();
+TestTryGetLword();
+TestTryGetObject();
+TestTryGetReal();
+TestTryGetSint();
+TestTryGetString();
+TestTryGetTime();
+TestTryGetTod();
+TestTryGetUdint();
+TestTryGetUint();
+TestTryGetUlint();
+TestTryGetUsint();
+TestTryGetWord();]]></ST>
+    </Implementation>
+    <Method Name="TestClone" Id="{6dedfcc2-659f-4018-b014-28d08ef099c6}">
+      <Declaration><![CDATA[METHOD PUBLIC TestClone
+VAR
+	jsonDeserializer : JsonDeserializer;
+	clone : I_Deserializer;
+    json : STRING := '{"data":100}';
+    out : BYTE;
+	hasDeserializer : BOOL;
+    expected : BYTE := 100;
+END_VAR]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[TEST('TestClone');
+
+// add something to the original 
+jsonDeserializer.TryLoad(json);
+
+// deep clone
+clone := jsonDeserializer.Clone();
+
+// reset the original
+jsonDeserializer.Reset();
+
+// retreive the data from the clone
+clone.TryGetKeyByte('data', out);
+
+// clones are __NEW so must be disposed
+clone.Dispose();
+
+AssertEquals(
+	Expected := expected,
+	Actual := out,
+	Message := 'Did not create a deep copy clone'
+);
+
+TEST_FINISHED();]]></ST>
+      </Implementation>
+    </Method>
+    <Method Name="TestGetArray" Id="{5f994165-719e-45bb-beea-843d26c7afdb}">
+      <Declaration><![CDATA[METHOD PUBLIC TestGetArray
+VAR
+    jsonDeserializer : JsonDeserializer;
+	arrayDeserializer : I_Deserializer;
+	elementDeserializer : I_Deserializer;
+    json : STRING := '[100,200,300]';
+    out : BYTE;
+	hasArrayDeserializer : BOOL;
+	hasElementDeserializer : BOOL;
+    expected : BYTE := 100;
+END_VAR
+]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[TEST('TestGetArray');
+
+jsonDeserializer.TryLoad(json);
+arrayDeserializer := jsonDeserializer.GetArray();
+
+hasArrayDeserializer := arrayDeserializer <> 0;
+
+IF hasArrayDeserializer THEN
+	elementDeserializer := arrayDeserializer.GetElementByIndex(0);
+END_IF
+
+AssertTrue(
+	Condition := hasArrayDeserializer,
+	Message := 'Did not return deserializer for array'
+);
+
+hasElementDeserializer := elementDeserializer <> 0;
+
+IF hasElementDeserializer THEN
+	elementDeserializer.TryGetByte(out);
+END_IF
+
+AssertTrue(
+	Condition := hasElementDeserializer,
+	Message := 'Did not return deserializer for element'
+);
+
+AssertEquals(
+    Expected := expected,
+    Actual := out,
+    Message := 'Did not produce the expected BYTE value from JSON array'
+);
+
+TEST_FINISHED();
+]]></ST>
+      </Implementation>
+    </Method>
+    <Method Name="TestReset" Id="{076e52f9-b7af-4fe7-96e2-cd97c20f33bb}">
+      <Declaration><![CDATA[METHOD PUBLIC TestReset
+VAR
+	jsonDeserializer : JsonDeserializer;
+    json : STRING := '100';
+    out : BYTE;
+    expected : BYTE := 0; 
+END_VAR]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[TEST('TestReset');
+
+jsonDeserializer.TryLoad(json);
+jsonDeserializer.Reset();
+jsonDeserializer.TryGetByte(out);
+
+AssertEquals(
+	Expected := expected,
+	Actual := out,
+	Message := 'Did not reset'
+);
+
+TEST_FINISHED();]]></ST>
+      </Implementation>
+    </Method>
+    <Method Name="TestTryGetBase64" Id="{d358480d-4a2e-4bde-a64c-7495b770c5ca}">
+      <Declaration><![CDATA[METHOD PUBLIC TestTryGetBase64
+VAR
+	jsonDeserializer : JsonDeserializer;
+	json : STRING := '"aGVsbG8="';
+	out : ARRAY[0..4] OF BYTE;
+	expected : ARRAY[0..4] OF BYTE := [104, 101, 108, 108, 111]; 
+END_VAR]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[TEST('TestTryGetBase64');
+
+jsonDeserializer.TryLoad(json);
+jsonDeserializer.TryGetBase64(ADR(out), SIZEOF(out));
+
+AssertEquals(
+	Expected := expected,
+	Actual := out,
+	Message := 'Did not produce the expected Base64 encoded "hello" from JSON'
+);
+
+TEST_FINISHED();]]></ST>
+      </Implementation>
+    </Method>
+    <Method Name="TestTryGetBoolWithFalseValue" Id="{aff2d09b-332e-4f7b-a0e7-e5ad1ccd40fe}">
+      <Declaration><![CDATA[METHOD PUBLIC TestTryGetBoolWithFalseValue
+VAR
+	jsonDeserializer : JsonDeserializer;
+	json : STRING := 'false';
+	out : BOOL;
+	expected : BOOL := FALSE;
+END_VAR]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[TEST('TestTryGetBoolWithFalseValue');
+
+jsonDeserializer.TryLoad(json);
+jsonDeserializer.TryGetBool(out);
+
+AssertEquals(
+	Expected := expected,
+	Actual := out,
+	Message := 'Did not produce the expected JSON string for a false value'
+);
+
+TEST_FINISHED();]]></ST>
+      </Implementation>
+    </Method>
+    <Method Name="TestTryGetBoolWithTrueValue" Id="{2ccfb697-01e5-4619-bd7e-331f27b04e94}">
+      <Declaration><![CDATA[METHOD PUBLIC TestTryGetBoolWithTrueValue
+VAR
+    jsonDeserializer : JsonDeserializer;
+    json : STRING := 'true';
+    out : BOOL;
+    expected : BOOL := TRUE; 
+END_VAR]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[TEST('TestTryGetBoolWithTrueValue');
+
+jsonDeserializer.TryLoad(json);
+jsonDeserializer.TryGetBool(out);
+
+AssertEquals(
+    Expected := expected,
+    Actual := out,
+    Message := 'Did not produce the expected true value from JSON'
+);
+
+TEST_FINISHED();]]></ST>
+      </Implementation>
+    </Method>
+    <Method Name="TestTryGetByte" Id="{07569c8c-6350-4ca8-8e1e-ba9d223521f7}">
+      <Declaration><![CDATA[METHOD PUBLIC TestTryGetByte
+VAR
+    jsonDeserializer : JsonDeserializer;
+    json : STRING := '100';
+    out : BYTE;
+    expected : BYTE := 100; 
+END_VAR]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[TEST('TestTryGetByte');
+
+jsonDeserializer.TryLoad(json);
+jsonDeserializer.TryGetByte(out);
+
+AssertEquals(
+    Expected := expected,
+    Actual := out,
+    Message := 'Did not produce the expected BYTE value from JSON'
+);
+
+TEST_FINISHED();]]></ST>
+      </Implementation>
+    </Method>
+    <Method Name="TestTryGetDateTime" Id="{240961c8-6fca-4787-9e0f-ec5736a28735}">
+      <Declaration><![CDATA[METHOD PUBLIC TestTryGetDateTime
+VAR
+    jsonDeserializer : JsonDeserializer;
+    json : STRING := '"2023-12-30T15:20:00"';
+    out : DATE_AND_TIME;
+    expected : DATE_AND_TIME := DT#2023-12-30-15:20:00; 
+END_VAR]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[TEST('TestTryGetDateTime');
+
+jsonDeserializer.TryLoad(json);
+jsonDeserializer.TryGetDateTime(out);
+
+AssertEquals(
+    Expected := expected,
+    Actual := out,
+    Message := 'Did not produce the expected DATE_AND_TIME value from JSON'
+);
+
+TEST_FINISHED();]]></ST>
+      </Implementation>
+    </Method>
+    <Method Name="TestTryGetDcTime" Id="{cb824e12-8cf5-4ebe-bc2a-b05a70f21fa7}">
+      <Declaration><![CDATA[METHOD PUBLIC TestTryGetDcTime
+VAR
+    jsonDeserializer : JsonDeserializer;
+    json : STRING := '"2000-01-01T00:00:00.012345678"';
+    out : DCTIME;
+    expected : DCTIME := 12345678;
+END_VAR
+]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[TEST('TestTryGetDcTime');
+
+jsonDeserializer.TryLoad(json);
+jsonDeserializer.TryGetDcTime(out);
+
+AssertEquals(
+    Expected := expected,
+    Actual := out,
+    Message := 'Did not produce the expected DCTIME value from JSON string'
+);
+
+TEST_FINISHED();
+]]></ST>
+      </Implementation>
+    </Method>
+    <Method Name="TestTryGetDint" Id="{53b13c02-d820-4b2e-b61f-8d4b7c29a7e7}">
+      <Declaration><![CDATA[METHOD PUBLIC TestTryGetDint
+VAR
+    jsonDeserializer : JsonDeserializer;
+    json : STRING := '12345';
+    out : DINT;
+    expected : DINT := 12345;
+END_VAR
+]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[TEST('TestTryGetDint');
+
+jsonDeserializer.TryLoad(json);
+jsonDeserializer.TryGetDint(out);
+
+AssertEquals(
+    Expected := expected,
+    Actual := out,
+    Message := 'Did not produce the expected DINT value from JSON'
+);
+
+TEST_FINISHED();
+]]></ST>
+      </Implementation>
+    </Method>
+    <Method Name="TestTryGetDword" Id="{af38fa6b-5636-4534-9df1-fef63a73692d}">
+      <Declaration><![CDATA[METHOD PUBLIC TestTryGetDword
+VAR
+    jsonDeserializer : JsonDeserializer;
+    json : STRING := '12345';
+    out : DWORD;
+    expected : DWORD := 12345;
+END_VAR
+]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[TEST('TestTryGetDword');
+
+jsonDeserializer.TryLoad(json);
+jsonDeserializer.TryGetDword(out);
+
+AssertEquals(
+    Expected := expected,
+    Actual := out,
+    Message := 'Did not produce the expected DWORD value from JSON'
+);
+
+TEST_FINISHED();
+]]></ST>
+      </Implementation>
+    </Method>
+    <Method Name="TestTryGetFileTime" Id="{dd9636d8-64a4-4ee7-acfd-cf00463ecb5e}">
+      <Declaration><![CDATA[METHOD PUBLIC TestTryGetFileTime
+VAR
+    jsonDeserializer : JsonDeserializer;
+    json : STRING := '"1601-01-01T00:00:01.2345678"';
+    out : FILETIME;
+    expected : FILETIME := 12345678; 
+END_VAR]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[TEST('TestTryGetFileTime');
+
+jsonDeserializer.TryLoad(json);
+jsonDeserializer.TryGetFileTime(out);
+
+AssertEquals(
+    Expected := expected,
+    Actual := out,
+    Message := 'Did not produce the expected FILETIME value from JSON'
+);
+
+TEST_FINISHED();]]></ST>
+      </Implementation>
+    </Method>
+    <Method Name="TestTryGetHexAsBytes" Id="{c2a599df-ac3c-4ed1-8454-8622af99690a}">
+      <Declaration><![CDATA[METHOD PUBLIC TestTryGetHexAsBytes
+VAR
+    jsonDeserializer : JsonDeserializer;
+    json : STRING := '"baadf00d"';
+    out : ARRAY[0..3] OF BYTE;
+    expected : ARRAY[0..3] OF BYTE := [16#BA, 16#AD, 16#F0, 16#0D];
+END_VAR
+]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[TEST('TestTryGetHexAsBytes');
+
+jsonDeserializer.TryLoad(json);
+jsonDeserializer.TryGetHexAsBytes(ADR(out), SIZEOF(out));
+
+AssertEquals(
+    Expected := expected,
+    Actual := out,
+    Message := 'Did not produce the expected binary data from JSON hexadecimal string'
+);
+
+TEST_FINISHED();
+]]></ST>
+      </Implementation>
+    </Method>
+    <Method Name="TestTryGetInt" Id="{a2872c73-f4ab-4170-a75e-685b14cf0db6}">
+      <Declaration><![CDATA[METHOD PUBLIC TestTryGetInt
+VAR
+    jsonDeserializer : JsonDeserializer;
+    json : STRING := '12345';
+    out : INT;
+    expected : INT := 12345;
+END_VAR
+]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[TEST('TestTryGetInt');
+
+jsonDeserializer.TryLoad(json);
+jsonDeserializer.TryGetInt(out);
+
+AssertEquals(
+    Expected := expected,
+    Actual := out,
+    Message := 'Did not produce the expected INT value from JSON'
+);
+
+TEST_FINISHED();
+]]></ST>
+      </Implementation>
+    </Method>
+    <Method Name="TestTryGetKey" Id="{b1d37243-9b7e-44c8-94b1-90e550191d65}">
+      <Declaration><![CDATA[METHOD PUBLIC TestTryGetKey
+VAR
+    jsonDeserializer : JsonDeserializer;
+	newDeserializer : I_Deserializer;
+    json : STRING := '{"data":100}';
+    out : BYTE;
+	hasDeserializer : BOOL;
+    expected : BYTE := 100;
+END_VAR
+]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[TEST('TestTryGetKey');
+
+jsonDeserializer.TryLoad(json);
+newDeserializer := jsonDeserializer.GetKey('data');
+
+hasDeserializer := newDeserializer <> 0;
+
+IF hasDeserializer THEN
+	newDeserializer.TryGetByte(out);
+END_IF
+
+AssertTrue(
+	Condition := hasDeserializer,
+	Message := 'Did not return deserializer for key'
+);
+
+AssertEquals(
+    Expected := expected,
+    Actual := out,
+    Message := 'Did not produce the expected BYTE value from JSON when using TryGetKey'
+);
+
+TEST_FINISHED();
+]]></ST>
+      </Implementation>
+    </Method>
+    <Method Name="TestTryGetKeyBase64" Id="{97fe35b1-6498-4644-9956-d27fb147bf9f}">
+      <Declaration><![CDATA[METHOD PUBLIC TestTryGetKeyBase64
+VAR
+    jsonDeserializer : JsonDeserializer;
+    json : STRING := '{"data":"aGVsbG8="}';
+    out : ARRAY[0..4] OF BYTE;
+    expected : ARRAY[0..4] OF BYTE := [104, 101, 108, 108, 111];
+END_VAR
+]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[TEST('TestTryGetKeyBase64');
+
+jsonDeserializer.TryLoad(json);
+jsonDeserializer.TryGetKeyBase64('data', ADR(out), SIZEOF(out));
+
+AssertEquals(
+    Expected := expected,
+    Actual := out,
+    Message := 'Did not produce the expected binary data from JSON Base64 encoded "hello"'
+);
+
+TEST_FINISHED();
+]]></ST>
+      </Implementation>
+    </Method>
+    <Method Name="TestTryGetKeyBoolWithFalseBoolVariable" Id="{aa2c3d6c-8a51-4910-9612-54be56979458}">
+      <Declaration><![CDATA[METHOD PUBLIC TestTryGetKeyBoolWithFalseBoolVariable
+VAR
+    jsonDeserializer : JsonDeserializer;
+    json : STRING := '{"data":false}';
+    out : BOOL;
+    expected : BOOL := FALSE;
+END_VAR
+]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[TEST('TestTryGetKeyBoolWithFalseBoolVariable');
+
+jsonDeserializer.TryLoad(json);
+jsonDeserializer.TryGetKeyBool('data', out);
+
+AssertEquals(
+    Expected := expected,
+    Actual := out,
+    Message := 'Did not produce the expected boolean value from JSON for a false value'
+);
+
+TEST_FINISHED();
+]]></ST>
+      </Implementation>
+    </Method>
+    <Method Name="TestTryGetKeyBoolWithTrueBoolVariable" Id="{597da172-0551-462b-8da3-47fffdbe5c92}">
+      <Declaration><![CDATA[METHOD PUBLIC TestTryGetKeyBoolWithTrueBoolVariable
+VAR
+    jsonDeserializer : JsonDeserializer;
+    json : STRING := '{"data":true}';
+    out : BOOL;
+    expected : BOOL := TRUE;
+END_VAR
+]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[TEST('TestTryGetKeyBoolWithTrueBoolVariable');
+
+jsonDeserializer.TryLoad(json);
+jsonDeserializer.TryGetKeyBool('data', out);
+
+AssertEquals(
+    Expected := expected,
+    Actual := out,
+    Message := 'Did not produce the expected boolean value from JSON for a true value'
+);
+
+TEST_FINISHED();
+]]></ST>
+      </Implementation>
+    </Method>
+    <Method Name="TestTryGetKeyByte" Id="{862c1d03-58eb-4314-9470-da7b75f0f373}">
+      <Declaration><![CDATA[METHOD PUBLIC TestTryGetKeyByte
+VAR
+    jsonDeserializer : JsonDeserializer;
+    json : STRING := '{"data":100}';
+    out : BYTE;
+    expected : BYTE := 100;
+END_VAR
+]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[TEST('TestTryGetKeyByte');
+
+jsonDeserializer.TryLoad(json);
+jsonDeserializer.TryGetKeyByte('data', out);
+
+AssertEquals(
+    Expected := expected,
+    Actual := out,
+    Message := 'Did not produce the expected BYTE value from JSON'
+);
+
+TEST_FINISHED();
+]]></ST>
+      </Implementation>
+    </Method>
+    <Method Name="TestTryGetKeyDateTime" Id="{ac8b20d5-52a6-4f6d-bcb4-0b11208c0039}">
+      <Declaration><![CDATA[METHOD PUBLIC TestTryGetKeyDateTime
+VAR
+    jsonDeserializer : JsonDeserializer;
+    json : STRING := '{"data":"2023-12-30T15:20:00"}';
+    out : DATE_AND_TIME;
+    expected : DATE_AND_TIME := DT#2023-12-30-15:20:00;
+END_VAR
+]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[TEST('TestTryGetKeyDateTime');
+
+jsonDeserializer.TryLoad(json);
+jsonDeserializer.TryGetKeyDateTime('data', out);
+
+AssertEquals(
+    Expected := expected,
+    Actual := out,
+    Message := 'Did not produce the expected DATE_AND_TIME value from JSON'
+);
+
+TEST_FINISHED();
+]]></ST>
+      </Implementation>
+    </Method>
+    <Method Name="TestTryGetKeyDcTime" Id="{6ad486ea-b7f8-4dfe-90fa-422976902a4c}">
+      <Declaration><![CDATA[METHOD PUBLIC TestTryGetKeyDcTime
+VAR
+    jsonDeserializer : JsonDeserializer;
+    json : STRING := '{"data":"2000-01-01T00:00:00.012345678"}';
+    out : DCTIME;
+    expected : DCTIME := 12345678;
+END_VAR
+]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[TEST('TestTryGetKeyDcTime');
+
+jsonDeserializer.TryLoad(json);
+jsonDeserializer.TryGetKeyDcTime('data', out);
+
+AssertEquals(
+    Expected := expected,
+    Actual := out,
+    Message := 'Did not produce the expected DCTIME value from JSON string'
+);
+
+TEST_FINISHED();
+]]></ST>
+      </Implementation>
+    </Method>
+    <Method Name="TestTryGetKeyDint" Id="{0027c39b-dabf-4ae7-b4ce-ff09911cb35c}">
+      <Declaration><![CDATA[METHOD PUBLIC TestTryGetKeyDint
+VAR
+    jsonDeserializer : JsonDeserializer;
+    json : STRING := '{"data":12345}';
+    out : DINT;
+    expected : DINT := 12345;
+END_VAR
+]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[TEST('TestTryGetKeyDint');
+
+jsonDeserializer.TryLoad(json);
+jsonDeserializer.TryGetKeyDint('data', out);
+
+AssertEquals(
+    Expected := expected,
+    Actual := out,
+    Message := 'Did not produce the expected DINT value from JSON'
+);
+
+TEST_FINISHED();
+]]></ST>
+      </Implementation>
+    </Method>
+    <Method Name="TestTryGetKeyDword" Id="{07a1c719-2282-44df-8239-985dc01d7f48}">
+      <Declaration><![CDATA[METHOD PUBLIC TestTryGetKeyDword
+VAR
+    jsonDeserializer : JsonDeserializer;
+    json : STRING := '{"data":12345}';
+    out : DWORD;
+    expected : DWORD := 12345;
+END_VAR
+]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[TEST('TestTryGetKeyDword');
+
+jsonDeserializer.TryLoad(json);
+jsonDeserializer.TryGetKeyDword('data', out);
+
+AssertEquals(
+    Expected := expected,
+    Actual := out,
+    Message := 'Did not produce the expected DWORD value from JSON'
+);
+
+TEST_FINISHED();
+]]></ST>
+      </Implementation>
+    </Method>
+    <Method Name="TestTryGetKeyFileTime" Id="{2623a869-2383-4b09-9019-8f6393e98a6d}">
+      <Declaration><![CDATA[METHOD PUBLIC TestTryGetKeyFileTime
+VAR
+    jsonDeserializer : JsonDeserializer;
+    json : STRING := '{"data":"1601-01-01T00:00:01.2345678"}';
+    out : FILETIME;
+    expected : FILETIME := 12345678;
+END_VAR
+]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[TEST('TestTryGetKeyFileTime');
+
+jsonDeserializer.TryLoad(json);
+jsonDeserializer.TryGetKeyFileTime('data', out);
+
+AssertEquals(
+    Expected := expected,
+    Actual := out,
+    Message := 'Did not produce the expected FILETIME value from JSON string'
+);
+
+TEST_FINISHED();
+]]></ST>
+      </Implementation>
+    </Method>
+    <Method Name="TestTryGetKeyHexAsBytes" Id="{79d8fcd4-f251-418e-839d-edac98bf07d8}">
+      <Declaration><![CDATA[METHOD PUBLIC TestTryGetKeyHexAsBytes
+VAR
+    jsonDeserializer : JsonDeserializer;
+    json : STRING := '{"data":"baadf00d"}';
+    out : ARRAY[0..3] OF BYTE;
+    expected : ARRAY[0..3] OF BYTE := [16#BA, 16#AD, 16#F0, 16#0D];
+END_VAR
+]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[TEST('TestTryGetKeyHexAsBytes');
+
+jsonDeserializer.TryLoad(json);
+jsonDeserializer.TryGetKeyHexAsBytes('data', ADR(out), SIZEOF(out));
+
+AssertEquals(
+    Expected := expected,
+    Actual := out,
+    Message := 'Did not produce the expected binary data from JSON hexadecimal string'
+);
+
+TEST_FINISHED();
+]]></ST>
+      </Implementation>
+    </Method>
+    <Method Name="TestTryGetKeyInt" Id="{506b1a2e-e919-4d4c-967e-1d032047db1f}">
+      <Declaration><![CDATA[METHOD PUBLIC TestTryGetKeyInt
+VAR
+    jsonDeserializer : JsonDeserializer;
+    json : STRING := '{"data":12345}';
+    out : INT;
+    expected : INT := 12345;
+END_VAR
+]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[TEST('TestTryGetKeyInt');
+
+jsonDeserializer.TryLoad(json);
+jsonDeserializer.TryGetKeyInt('data', out);
+
+AssertEquals(
+    Expected := expected,
+    Actual := out,
+    Message := 'Did not produce the expected INT value from JSON'
+);
+
+TEST_FINISHED();
+]]></ST>
+      </Implementation>
+    </Method>
+    <Method Name="TestTryGetKeyLint" Id="{ae0493e5-00bf-4eb2-8945-0a85f9c9ac9a}">
+      <Declaration><![CDATA[METHOD PUBLIC TestTryGetKeyLint
+VAR
+    jsonDeserializer : JsonDeserializer;
+    json : STRING := '{"data":9223372036854775807}';
+    out : LINT;
+    expected : LINT := 9223372036854775807;
+END_VAR
+]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[TEST('TestTryGetKeyLint');
+
+jsonDeserializer.TryLoad(json);
+jsonDeserializer.TryGetKeyLint('data', out);
+
+AssertEquals(
+    Expected := expected,
+    Actual := out,
+    Message := 'Did not produce the expected LINT value from JSON'
+);
+
+TEST_FINISHED();
+]]></ST>
+      </Implementation>
+    </Method>
+    <Method Name="TestTryGetKeyLreal" Id="{ce912b60-4e26-4a7c-bb74-797da785d5b6}">
+      <Declaration><![CDATA[METHOD PUBLIC TestTryGetKeyLreal
+VAR
+    jsonDeserializer : JsonDeserializer;
+    json : STRING := '{"data":123456.789}';
+    out : LREAL;
+    expected : LREAL := 123456.789;
+END_VAR
+]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[TEST('TestTryGetKeyLreal');
+
+jsonDeserializer.TryLoad(json);
+jsonDeserializer.TryGetKeyLreal('data', out);
+
+AssertEquals(
+    Expected := expected,
+    Actual := out,
+    Message := 'Did not produce the expected LREAL value from JSON'
+);
+
+TEST_FINISHED();
+]]></ST>
+      </Implementation>
+    </Method>
+    <Method Name="TestTryGetKeyLtime" Id="{b41069e7-5a8e-4106-96e3-03ed531349ee}">
+      <Declaration><![CDATA[METHOD PUBLIC TestTryGetKeyLtime
+VAR
+    jsonDeserializer : JsonDeserializer;
+    json : STRING := '{"data":"LTIME#100d2h30m40s500ms600us700ns"}';
+    out : LTIME;
+    expected : LTIME := LTIME#100D2H30M40S500MS600US700NS;
+END_VAR
+]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[TEST('TestTryGetKeyLtime');
+
+jsonDeserializer.TryLoad(json);
+jsonDeserializer.TryGetKeyLtime('data', out);
+
+AssertEquals(
+    Expected := expected,
+    Actual := out,
+    Message := 'Did not produce the expected LTIME value from JSON string'
+);
+
+TEST_FINISHED();
+]]></ST>
+      </Implementation>
+    </Method>
+    <Method Name="TestTryGetKeyLword" Id="{509fa066-4fdf-47a2-a224-4a07533d414f}">
+      <Declaration><![CDATA[METHOD PUBLIC TestTryGetKeyLword
+VAR
+    jsonDeserializer : JsonDeserializer;
+    json : STRING := '{"data":9223372036854775807}';
+    out : LWORD;
+    expected : LWORD := 9223372036854775807;
+END_VAR
+]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[TEST('TestTryGetKeyLword');
+
+jsonDeserializer.TryLoad(json);
+jsonDeserializer.TryGetKeyLword('data', out);
+
+AssertEquals(
+    Expected := expected,
+    Actual := out,
+    Message := 'Did not produce the expected LWORD value from JSON'
+);
+
+TEST_FINISHED();
+]]></ST>
+      </Implementation>
+    </Method>
+    <Method Name="TestTryGetKeyObject" Id="{6bdd018c-a0cb-419e-b993-5b9208606545}">
+      <Declaration><![CDATA[METHOD PUBLIC TestTryGetKeyObject
+VAR
+    jsonDeserializer : JsonDeserializer;
+    json : STRING := '{"data":{"Name":"alice","Age":40}}';
+    out : MockDeserializableUserObject;
+    expectedName : STRING := 'alice';
+	expectedAge : INT := 40;
+	actualName : STRING;
+	actualAge : INT;
+END_VAR
+]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[TEST('TestTryGetKeyObject');
+
+jsonDeserializer.TryLoad(json);
+jsonDeserializer.TryGetKeyObject('data', out);
+
+actualName := out.Name;
+actualAge := out.Age;
+
+AssertEquals(
+    Expected := expectedName,
+    Actual := actualName,
+    Message := 'Did not produce the expected Object values from JSON'
+);
+
+AssertEquals(
+    Expected := expectedAge,
+    Actual := actualAge,
+    Message := 'Did not produce the expected Object values from JSON'
+);
+
+TEST_FINISHED();
+]]></ST>
+      </Implementation>
+    </Method>
+    <Method Name="TestTryGetKeyReal" Id="{5e404505-afce-4f49-b4bd-98aeb35a4d1e}">
+      <Declaration><![CDATA[METHOD PUBLIC TestTryGetKeyReal
+VAR
+    jsonDeserializer : JsonDeserializer;
+    json : STRING := '{"data":123.4}';
+    out : REAL;
+    expected : REAL := 123.4;
+END_VAR
+]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[TEST('TestTryGetKeyReal');
+
+jsonDeserializer.TryLoad(json);
+jsonDeserializer.TryGetKeyReal('data', out);
+
+AssertEquals(
+    Expected := expected,
+    Actual := out,
+    Message := 'Did not produce the expected REAL value from JSON'
+);
+
+TEST_FINISHED();
+]]></ST>
+      </Implementation>
+    </Method>
+    <Method Name="TestTryGetKeySint" Id="{8571cd06-5f66-4cfa-9106-aa3821c5a682}">
+      <Declaration><![CDATA[METHOD PUBLIC TestTryGetKeySint
+VAR
+    jsonDeserializer : JsonDeserializer;
+    json : STRING := '{"data":123}';
+    out : SINT;
+    expected : SINT := 123;
+END_VAR
+]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[TEST('TestTryGetKeySint');
+
+jsonDeserializer.TryLoad(json);
+jsonDeserializer.TryGetKeySint('data', out);
+
+AssertEquals(
+    Expected := expected,
+    Actual := out,
+    Message := 'Did not produce the expected SINT value from JSON'
+);
+
+TEST_FINISHED();
+]]></ST>
+      </Implementation>
+    </Method>
+    <Method Name="TestTryGetKeyString" Id="{006868e2-91b0-47b7-b426-14b744be906e}">
+      <Declaration><![CDATA[METHOD PUBLIC TestTryGetKeyString
+VAR
+    jsonDeserializer : JsonDeserializer;
+    json : STRING := '{"data":"foobar"}';
+    out : STRING;
+    expected : STRING := 'foobar';
+END_VAR
+]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[TEST('TestTryGetKeyString');
+
+jsonDeserializer.TryLoad(json);
+jsonDeserializer.TryGetKeyString('data', out);
+
+AssertEquals(
+    Expected := expected,
+    Actual := out,
+    Message := 'Did not produce the expected STRING value from JSON'
+);
+
+TEST_FINISHED();
+]]></ST>
+      </Implementation>
+    </Method>
+    <Method Name="TestTryGetKeyTime" Id="{b0de9253-b16a-48d5-9670-e725d90667bc}">
+      <Declaration><![CDATA[METHOD PUBLIC TestTryGetKeyTime
+VAR
+    jsonDeserializer : JsonDeserializer;
+    json : STRING := '{"data":"T#49d17h2m47s295ms"}';
+    out : TIME;
+    expected : TIME := T#49D17H2M47S295MS;
+END_VAR
+]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[TEST('TestTryGetKeyTime');
+
+jsonDeserializer.TryLoad(json);
+jsonDeserializer.TryGetKeyTime('data', out);
+
+AssertEquals(
+    Expected := expected,
+    Actual := out,
+    Message := 'Did not produce the expected TIME value from JSON'
+);
+
+TEST_FINISHED();
+]]></ST>
+      </Implementation>
+    </Method>
+    <Method Name="TestTryGetKeyTod" Id="{516eaafd-8dda-4900-a128-f79542c61fa1}">
+      <Declaration><![CDATA[METHOD PUBLIC TestTryGetKeyTod
+VAR
+    jsonDeserializer : JsonDeserializer;
+    json : STRING := '{"data":"TOD#23:01:23.456"}';
+    out : TOD;
+    expected : TOD := TOD#23:01:23.456;
+END_VAR
+]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[TEST('TestTryGetKeyTod');
+
+jsonDeserializer.TryLoad(json);
+jsonDeserializer.TryGetKeyTod('data', out);
+
+AssertEquals(
+    Expected := expected,
+    Actual := out,
+    Message := 'Did not produce the expected TOD value from JSON'
+);
+
+TEST_FINISHED();
+]]></ST>
+      </Implementation>
+    </Method>
+    <Method Name="TestTryGetKeyUdint" Id="{d7594fcd-2c0d-4d74-ad97-9999b3f708dd}">
+      <Declaration><![CDATA[METHOD PUBLIC TestTryGetKeyUdint
+VAR
+    jsonDeserializer : JsonDeserializer;
+    json : STRING := '{"data":123456}';
+    out : UDINT;
+    expected : UDINT := 123456;
+END_VAR
+]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[TEST('TestTryGetKeyUdint');
+
+jsonDeserializer.TryLoad(json);
+jsonDeserializer.TryGetKeyUdint('data', out);
+
+AssertEquals(
+    Expected := expected,
+    Actual := out,
+    Message := 'Did not produce the expected UDINT value from JSON'
+);
+
+TEST_FINISHED();
+]]></ST>
+      </Implementation>
+    </Method>
+    <Method Name="TestTryGetKeyUint" Id="{1a5a0583-fd5a-49b8-9f35-be6328863a91}">
+      <Declaration><![CDATA[METHOD PUBLIC TestTryGetKeyUint
+VAR
+    jsonDeserializer : JsonDeserializer;
+    json : STRING := '{"data":12345}';
+    out : UINT;
+    expected : UINT := 12345;
+END_VAR
+]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[TEST('TestTryGetKeyUint');
+
+jsonDeserializer.TryLoad(json);
+jsonDeserializer.TryGetKeyUint('data', out);
+
+AssertEquals(
+    Expected := expected,
+    Actual := out,
+    Message := 'Did not produce the expected UINT value from JSON'
+);
+
+TEST_FINISHED();
+]]></ST>
+      </Implementation>
+    </Method>
+    <Method Name="TestTryGetKeyUlint" Id="{6a110c25-ea59-4e9e-a50a-4ce6da739d5d}">
+      <Declaration><![CDATA[METHOD PUBLIC TestTryGetKeyUlint
+VAR
+    jsonDeserializer : JsonDeserializer;
+    json : STRING := '{"data":9223372036854775807}';
+    out : ULINT;
+    expected : ULINT := 9223372036854775807;
+END_VAR
+]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[TEST('TestTryGetKeyUlint');
+
+jsonDeserializer.TryLoad(json);
+jsonDeserializer.TryGetKeyUlint('data', out);
+
+AssertEquals(
+    Expected := expected,
+    Actual := out,
+    Message := 'Did not produce the expected ULINT value from JSON'
+);
+
+TEST_FINISHED();
+]]></ST>
+      </Implementation>
+    </Method>
+    <Method Name="TestTryGetKeyUsint" Id="{1af34b9a-7b86-40c6-9131-2d8f64a8211f}">
+      <Declaration><![CDATA[METHOD PUBLIC TestTryGetKeyUsint
+VAR
+    jsonDeserializer : JsonDeserializer;
+    json : STRING := '{"data":123}';
+    out : USINT;
+    expected : USINT := 123;
+END_VAR
+]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[TEST('TestTryGetKeyUsint');
+
+jsonDeserializer.TryLoad(json);
+jsonDeserializer.TryGetKeyUsint('data', out);
+
+AssertEquals(
+    Expected := expected,
+    Actual := out,
+    Message := 'Did not produce the expected USINT value from JSON'
+);
+
+TEST_FINISHED();
+]]></ST>
+      </Implementation>
+    </Method>
+    <Method Name="TestTryGetKeyWord" Id="{728bf23c-539e-448a-90b2-f45e56b57dca}">
+      <Declaration><![CDATA[METHOD PUBLIC TestTryGetKeyWord
+VAR
+    jsonDeserializer : JsonDeserializer;
+    json : STRING := '{"data":12345}';
+    out : WORD;
+    expected : WORD := 12345;
+END_VAR
+]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[TEST('TestTryGetKeyWord');
+
+jsonDeserializer.TryLoad(json);
+jsonDeserializer.TryGetKeyWord('data', out);
+
+AssertEquals(
+    Expected := expected,
+    Actual := out,
+    Message := 'Did not produce the expected WORD value from JSON'
+);
+
+TEST_FINISHED();
+]]></ST>
+      </Implementation>
+    </Method>
+    <Method Name="TestTryGetLint" Id="{8cd877ad-0b37-4a05-a0bb-d342dff4a405}">
+      <Declaration><![CDATA[METHOD PUBLIC TestTryGetLint
+VAR
+    jsonDeserializer : JsonDeserializer;
+    json : STRING := '9223372036854775807';
+    out : LINT;
+    expected : LINT := 9223372036854775807;
+END_VAR
+]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[TEST('TestTryGetLint');
+
+jsonDeserializer.TryLoad(json);
+jsonDeserializer.TryGetLint(out);
+
+AssertEquals(
+    Expected := expected,
+    Actual := out,
+    Message := 'Did not produce the expected LINT value from JSON'
+);
+
+TEST_FINISHED();
+]]></ST>
+      </Implementation>
+    </Method>
+    <Method Name="TestTryGetLreal" Id="{0258eee0-3e2f-489f-8694-0ad15db83892}">
+      <Declaration><![CDATA[METHOD PUBLIC TestTryGetLreal
+VAR
+    jsonDeserializer : JsonDeserializer;
+    json : STRING := '123456.789';
+    out : LREAL;
+    expected : LREAL := 123456.789;
+END_VAR
+]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[TEST('TestTryGetLreal');
+
+jsonDeserializer.TryLoad(json);
+jsonDeserializer.TryGetLreal(out);
+
+AssertEquals(
+    Expected := expected,
+    Actual := out,
+    Message := 'Did not produce the expected LREAL value from JSON'
+);
+
+TEST_FINISHED();
+]]></ST>
+      </Implementation>
+    </Method>
+    <Method Name="TestTryGetLtime" Id="{7cd89917-9f3d-4e04-b374-f6c6eceecc73}">
+      <Declaration><![CDATA[METHOD PUBLIC TestTryGetLtime
+VAR
+    jsonDeserializer : JsonDeserializer;
+    json : STRING := '"LTIME#100d2h30m40s500ms600us700ns"';
+    out : LTIME;
+    expected : LTIME := LTIME#100D2H30M40S500MS600US700NS;
+END_VAR
+]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[TEST('TestTryGetLtime');
+
+jsonDeserializer.TryLoad(json);
+jsonDeserializer.TryGetLtime(out);
+
+AssertEquals(
+    Expected := expected,
+    Actual := out,
+    Message := 'Did not produce the expected LTIME value from JSON string'
+);
+
+TEST_FINISHED();
+]]></ST>
+      </Implementation>
+    </Method>
+    <Method Name="TestTryGetLword" Id="{729ee115-d16e-4555-8241-5c68cb15bfdf}">
+      <Declaration><![CDATA[METHOD PUBLIC TestTryGetLword
+VAR
+    jsonDeserializer : JsonDeserializer;
+    json : STRING := '9223372036854775807';
+    out : LWORD;
+    expected : LWORD := 9223372036854775807;
+END_VAR
+]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[TEST('TestTryGetLword');
+
+jsonDeserializer.TryLoad(json);
+jsonDeserializer.TryGetLword(out);
+
+AssertEquals(
+    Expected := expected,
+    Actual := out,
+    Message := 'Did not produce the expected LWORD value from JSON'
+);
+
+TEST_FINISHED();
+]]></ST>
+      </Implementation>
+    </Method>
+    <Method Name="TestTryGetObject" Id="{cfdf2641-abc6-4b40-972a-a68725eed961}">
+      <Declaration><![CDATA[METHOD PUBLIC TestTryGetObject
+VAR
+    jsonDeserializer : JsonDeserializer;
+    json : STRING := '{"Name":"alice","Age":40}';
+    out : MockDeserializableUserObject;
+    expectedName : STRING := 'alice';
+	expectedAge : INT := 40;
+	actualName : STRING;
+	actualAge : INT;
+END_VAR
+]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[TEST('TestTryGetObject');
+
+jsonDeserializer.TryLoad(json);
+jsonDeserializer.TryGetObject(out);
+
+actualName := out.Name;
+actualAge := out.Age;
+
+AssertEquals(
+    Expected := expectedName,
+    Actual := actualName,
+    Message := 'Did not produce the expected Object values from JSON'
+);
+
+AssertEquals(
+    Expected := expectedAge,
+    Actual := actualAge,
+    Message := 'Did not produce the expected Object values from JSON'
+);
+
+TEST_FINISHED();
+]]></ST>
+      </Implementation>
+    </Method>
+    <Method Name="TestTryGetReal" Id="{adb62929-fcc2-4c5e-956e-2b2bd286e5be}">
+      <Declaration><![CDATA[METHOD PUBLIC TestTryGetReal
+VAR
+    jsonDeserializer : JsonDeserializer;
+    json : STRING := '123.4';
+    out : REAL;
+    expected : REAL := 123.4;
+END_VAR
+]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[TEST('TestTryGetReal');
+
+jsonDeserializer.TryLoad(json);
+jsonDeserializer.TryGetReal(out);
+
+AssertEquals(
+    Expected := expected,
+    Actual := out,
+    Message := 'Did not produce the expected REAL value from JSON'
+);
+
+TEST_FINISHED();
+]]></ST>
+      </Implementation>
+    </Method>
+    <Method Name="TestTryGetSint" Id="{d64d10bd-4732-4861-b373-2655994ffabe}">
+      <Declaration><![CDATA[METHOD PUBLIC TestTryGetSint
+VAR
+    jsonDeserializer : JsonDeserializer;
+    json : STRING := '123';
+    out : SINT;
+    expected : SINT := 123;
+END_VAR
+]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[TEST('TestTryGetSint');
+
+jsonDeserializer.TryLoad(json);
+jsonDeserializer.TryGetSint(out);
+
+AssertEquals(
+    Expected := expected,
+    Actual := out,
+    Message := 'Did not produce the expected SINT value from JSON'
+);
+
+TEST_FINISHED();
+]]></ST>
+      </Implementation>
+    </Method>
+    <Method Name="TestTryGetString" Id="{de2d9c30-7eba-42f6-b352-c094fd4b523f}">
+      <Declaration><![CDATA[METHOD PUBLIC TestTryGetString
+VAR
+    jsonDeserializer : JsonDeserializer;
+    json : STRING := '"foobar"';
+    out : STRING;
+    expected : STRING := 'foobar';
+END_VAR
+]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[TEST('TestTryGetString');
+
+jsonDeserializer.TryLoad(json);
+jsonDeserializer.TryGetString(out);
+
+AssertEquals(
+    Expected := expected,
+    Actual := out,
+    Message := 'Did not produce the expected STRING value from JSON "foobar"'
+);
+
+TEST_FINISHED();
+]]></ST>
+      </Implementation>
+    </Method>
+    <Method Name="TestTryGetTime" Id="{0c2e7b28-e014-40cc-a460-dd94d3c3ee78}">
+      <Declaration><![CDATA[METHOD PUBLIC TestTryGetTime
+VAR
+    jsonDeserializer : JsonDeserializer;
+    json : STRING := '"T#49d17h2m47s295ms"';
+    out : TIME;
+    expected : TIME := T#49D17H2M47S295MS;
+END_VAR
+]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[TEST('TestTryGetTime');
+
+jsonDeserializer.TryLoad(json);
+jsonDeserializer.TryGetTime(out);
+
+AssertEquals(
+    Expected := expected,
+    Actual := out,
+    Message := 'Did not produce the expected TIME value from JSON'
+);
+
+TEST_FINISHED();
+]]></ST>
+      </Implementation>
+    </Method>
+    <Method Name="TestTryGetTod" Id="{6faf7262-46e4-45c3-9a8a-6ae09f936a96}">
+      <Declaration><![CDATA[METHOD PUBLIC TestTryGetTod
+VAR
+    jsonDeserializer : JsonDeserializer;
+    json : STRING := '"TOD#23:01:23.456"';
+    out : TOD;
+    expected : TOD := TOD#23:01:23.456;
+END_VAR
+]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[TEST('TestTryGetTod');
+
+jsonDeserializer.TryLoad(json);
+jsonDeserializer.TryGetTod(out);
+
+AssertEquals(
+    Expected := expected,
+    Actual := out,
+    Message := 'Did not produce the expected TOD value from JSON string'
+);
+
+TEST_FINISHED();
+]]></ST>
+      </Implementation>
+    </Method>
+    <Method Name="TestTryGetUdint" Id="{68740412-f757-4a34-a690-b7041344e259}">
+      <Declaration><![CDATA[METHOD PUBLIC TestTryGetUdint
+VAR
+    jsonDeserializer : JsonDeserializer;
+    json : STRING := '123456';
+    out : UDINT;
+    expected : UDINT := 123456;
+END_VAR
+]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[TEST('TestTryGetUdint');
+
+jsonDeserializer.TryLoad(json);
+jsonDeserializer.TryGetUdint(out);
+
+AssertEquals(
+    Expected := expected,
+    Actual := out,
+    Message := 'Did not produce the expected UDINT value from JSON'
+);
+
+TEST_FINISHED();
+]]></ST>
+      </Implementation>
+    </Method>
+    <Method Name="TestTryGetUint" Id="{1f8037ba-5128-4983-81f3-fc0498eda1e4}">
+      <Declaration><![CDATA[METHOD PUBLIC TestTryGetUint
+VAR
+    jsonDeserializer : JsonDeserializer;
+    json : STRING := '12345';
+    out : UINT;
+    expected : UINT := 12345;
+END_VAR
+]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[TEST('TestTryGetUint');
+
+jsonDeserializer.TryLoad(json);
+jsonDeserializer.TryGetUint(out);
+
+AssertEquals(
+    Expected := expected,
+    Actual := out,
+    Message := 'Did not produce the expected UINT value from JSON'
+);
+
+TEST_FINISHED();
+]]></ST>
+      </Implementation>
+    </Method>
+    <Method Name="TestTryGetUlint" Id="{b1d912c1-ec8e-44fb-9f82-33bdeaa09ee9}">
+      <Declaration><![CDATA[METHOD PUBLIC TestTryGetUlint
+VAR
+    jsonDeserializer : JsonDeserializer;
+    json : STRING := '9223372036854775807';
+    out : ULINT;
+    expected : ULINT := 9223372036854775807;
+END_VAR
+]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[TEST('TestTryGetUlint');
+
+jsonDeserializer.TryLoad(json);
+jsonDeserializer.TryGetUlint(out);
+
+AssertEquals(
+    Expected := expected,
+    Actual := out,
+    Message := 'Did not produce the expected ULINT value from JSON'
+);
+
+TEST_FINISHED();
+]]></ST>
+      </Implementation>
+    </Method>
+    <Method Name="TestTryGetUsint" Id="{017d828c-07ad-4598-b44d-a6071f19b90f}">
+      <Declaration><![CDATA[METHOD PUBLIC TestTryGetUsint
+VAR
+    jsonDeserializer : JsonDeserializer;
+    json : STRING := '123';
+    out : USINT;
+    expected : USINT := 123;
+END_VAR
+]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[TEST('TestTryGetUsint');
+
+jsonDeserializer.TryLoad(json);
+jsonDeserializer.TryGetUsint(out);
+
+AssertEquals(
+    Expected := expected,
+    Actual := out,
+    Message := 'Did not produce the expected USINT value from JSON'
+);
+
+TEST_FINISHED();
+]]></ST>
+      </Implementation>
+    </Method>
+    <Method Name="TestTryGetWord" Id="{7dbf9f89-d617-4ad6-b39d-0885404fb414}">
+      <Declaration><![CDATA[METHOD PUBLIC TestTryGetWord
+VAR
+    jsonDeserializer : JsonDeserializer;
+    json : STRING := '12345';
+    out : WORD;
+    expected : WORD := 12345;
+END_VAR]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[TEST('TestTryGetWord');
+
+jsonDeserializer.TryLoad(json);
+jsonDeserializer.TryGetWord(out);
+
+AssertEquals(
+    Expected := expected,
+    Actual := out,
+    Message := 'Did not produce the expected WORD value from JSON "12345"'
+);
+
+TEST_FINISHED();
+
+
+
+
+]]></ST>
+      </Implementation>
+    </Method>
+  </POU>
+</TcPlcObject>

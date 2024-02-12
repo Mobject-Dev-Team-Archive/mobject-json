@@ -29,10 +29,20 @@
     <Compile Include="Tests\JsonSerializer_TestSuite.TcPOU">
       <SubType>Code</SubType>
     </Compile>
+    <Compile Include="Tests\JsonDeserializer_TestSuite.TcPOU">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Tests\Mocks\MockSerializableUserObject.TcPOU">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Tests\Mocks\MockDeserializableUserObject.TcPOU">
+      <SubType>Code</SubType>
+    </Compile>
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Tests" />
     <Folder Include="POUs" />
+    <Folder Include="Tests\Mocks" />
   </ItemGroup>
   <ItemGroup>
     <PlaceholderReference Include="Tc2_Standard">
@@ -64,10 +74,10 @@
     </None>
   </ItemGroup>
   <ItemGroup>
-    <LibraryReference Include="mobject-json,1.1.0,mobject">
+    <LibraryReference Include="mobject-json,1.2.0,mobject">
       <Namespace>mobject_json</Namespace>
     </LibraryReference>
-    <LibraryReference Include="mobject-serialization,0.1.0,mobject">
+    <LibraryReference Include="mobject-serialization,0.3.0,mobject">
       <Namespace>mobject_serialization</Namespace>
     </LibraryReference>
   </ItemGroup>

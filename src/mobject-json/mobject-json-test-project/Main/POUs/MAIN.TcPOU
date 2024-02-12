@@ -5,6 +5,7 @@
 VAR
 	jsonDomParser_TestSuit : JsonDomParser_TestSuit;
 	jsonSerializer_TestSuite : JsonSerializer_TestSuite;
+	jsonDeserializer_TestSuite : JsonDeserializer_TestSuite;
 END_VAR
 ]]></Declaration>
     <Implementation>

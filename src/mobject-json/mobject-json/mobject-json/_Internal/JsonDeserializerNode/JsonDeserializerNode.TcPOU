@@ -1,0 +1,1303 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4024.12">
+  <POU Name="JsonDeserializerNode" Id="{36d9cef8-e448-4652-8bda-ac1557d1b800}" SpecialFunc="None">
+    <Declaration><![CDATA[{attribute 'linkalways'} 
+{attribute 'no_explicit_call' := 'This FB is a CLASS and must be accessed using methods or properties'}
+{attribute 'enable_dynamic_creation'}
+FUNCTION_BLOCK JsonDeserializerNode EXTENDS Disposable IMPLEMENTS I_Deserializer
+VAR	
+	jsonParser : REFERENCE TO JsonDomParser;
+	root : SJsonValue;
+	garbageCollector : I_DeserializerGarbageCollector;
+	nullNode : I_Deserializer;
+END_VAR
+]]></Declaration>
+    <Implementation>
+      <ST><![CDATA[]]></ST>
+    </Implementation>
+    <Folder Name="Constructor" Id="{c16c513e-7cdc-4351-bc31-bb37ff112bea}" />
+    <Folder Name="Protected" Id="{147e7384-d56c-495b-b6c8-53f03fb04e84}" />
+    <Method Name="Clone" Id="{166c0829-d880-4012-a63b-76089ace2ffa}">
+      <Declaration><![CDATA[METHOD PUBLIC Clone : I_Deserializer
+VAR
+	pClone : POINTER TO JsonDeserializer;
+	jsonSize : UDINT;
+	pJsonString : POINTER TO STRING;
+END_VAR]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[pClone := __NEW(JsonDeserializer);
+Clone := pClone^;
+
+jsonSize := jsonParser.GetJsonLength(root);
+
+IF jsonSize = 0 THEN
+	// no further cloning to do. 
+	RETURN;
+END_IF
+
+pJsonString := __NEW(BYTE, jsonSize);
+
+IF jsonParser.CopyJson(root, pJsonString^, jsonSize) = 0 THEN
+	__DELETE(pJsonString);
+	RETURN;
+END_IF
+
+pClone^.TryLoad(pJsonString^);
+__DELETE(pJsonString);]]></ST>
+      </Implementation>
+    </Method>
+    <Method Name="CreateDeserializer" Id="{6ae23e1b-155b-4b32-baf1-c39ac150c356}" FolderPath="Protected\">
+      <Declaration><![CDATA[METHOD PROTECTED CreateDeserializer : I_Deserializer
+VAR_INPUT
+	DeserializerRoot : SJsonValue;
+END_VAR
+VAR 
+	pNode : POINTER TO JsonDeserializerNode;
+END_VAR
+]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[pNode := __NEW(JsonDeserializerNode(ParentJsonDomParser := jsonParser, NodeRoot := DeserializerRoot, ParentGarbageCollector := garbageCollector, ParentNullDeserializer := nullNode));
+CreateDeserializer := pNode^;]]></ST>
+      </Implementation>
+    </Method>
+    <Method Name="Dispose" Id="{8e38b6cd-036e-4d8e-977b-6ac9ff634b1e}">
+      <Declaration><![CDATA[METHOD Dispose
+VAR
+END_VAR]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[garbageCollector.Deregister(THIS^);
+super^.Dispose();]]></ST>
+      </Implementation>
+    </Method>
+    <Method Name="FB_init" Id="{6b7be91d-3509-48e7-88eb-7a3d74fb473e}" FolderPath="Constructor\">
+      <Declaration><![CDATA[METHOD FB_init : BOOL
+VAR_INPUT
+	bInitRetains : BOOL; // if TRUE, the retain variables are initialized (warm start / cold start)
+	bInCopyCode : BOOL;  // if TRUE, the instance afterwards gets moved into the copy code (online change)
+	ParentJsonDomParser : REFERENCE TO JsonDomParser;
+	NodeRoot : SJsonValue;
+	ParentGarbageCollector : I_DeserializerGarbageCollector;
+	ParentNullDeserializer : I_Deserializer;
+END_VAR
+]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[THIS^.jsonParser REF= ParentJsonDomParser;
+THIS^.root := NodeRoot;
+THIS^.garbageCollector := ParentGarbageCollector;
+THIS^.nullNode := ParentNullDeserializer;
+
+ParentGarbageCollector.Register(THIS^);]]></ST>
+      </Implementation>
+    </Method>
+    <Method Name="GetArray" Id="{9bb8154f-4602-4227-bc52-0e66e760b35b}">
+      <Declaration><![CDATA[METHOD GetArray : I_Deserializer
+VAR
+	newRoot : SJsonValue;
+END_VAR]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[IF NOT jsonParser.IsArray(root) THEN
+	GetArray := nullNode;
+	RETURN;
+END_IF
+
+GetArray := CreateDeserializer(root);]]></ST>
+      </Implementation>
+    </Method>
+    <Method Name="GetElementByIndex" Id="{174747da-24a7-4fc5-8818-0f3b03ad0ece}">
+      <Declaration><![CDATA[METHOD GetElementByIndex : I_Deserializer
+VAR_INPUT
+	Index : UDINT;
+END_VAR
+VAR
+	newRoot : SJsonValue;
+END_VAR]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[IF NOT jsonParser.IsArray(root) THEN
+	GetElementByIndex := nullNode;
+	RETURN;
+END_IF
+
+newRoot := jsonParser.GetArrayValueByIdx(root, Index);
+
+IF newRoot = 0 THEN
+	GetElementByIndex := nullNode;
+	RETURN;
+END_IF
+
+GetElementByIndex := CreateDeserializer(newRoot);]]></ST>
+      </Implementation>
+    </Method>
+    <Method Name="GetKey" Id="{21ead7f6-33c6-47dd-b46a-ee87068775fc}">
+      <Declaration><![CDATA[METHOD GetKey : I_Deserializer
+VAR_INPUT
+	Key : T_MAXSTRING;
+END_VAR
+VAR
+	newRoot : SJsonValue;
+END_VAR]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[newRoot := jsonParser.FindMember(root, Key);
+
+IF newRoot = 0 THEN
+	GetKey := nullNode;
+	RETURN;
+END_IF
+
+GetKey := CreateDeserializer(newRoot);]]></ST>
+      </Implementation>
+    </Method>
+    <Method Name="GetKeyArray" Id="{e3ea14fa-c6b4-4db2-979b-6041e0114ce6}">
+      <Declaration><![CDATA[METHOD GetKeyArray : I_Deserializer
+VAR_INPUT
+	Key : T_MAXSTRING;
+END_VAR
+VAR
+	member : SJsonValue;
+END_VAR]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[IF key = '' THEN
+	RETURN;
+END_IF
+
+member := jsonParser.FindMember(root,Key);
+
+IF member = 0 THEN
+	GetKeyArray := nullNode;
+	RETURN;
+END_IF
+
+IF NOT jsonParser.IsArray(member) THEN
+	GetKeyArray := nullNode;
+	RETURN;
+END_IF
+
+GetKeyArray := CreateDeserializer(member);]]></ST>
+      </Implementation>
+    </Method>
+    <Method Name="GetObject" Id="{a46aff17-b68e-4057-a8ca-451faa9f7670}">
+      <Declaration><![CDATA[METHOD GetObject : I_Deserializer
+VAR
+	newRoot : SJsonValue;
+END_VAR]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[IF NOT jsonParser.IsObject(root) THEN
+	GetObject := nullNode;
+	RETURN;
+END_IF
+
+GetObject := CreateDeserializer(newRoot);]]></ST>
+      </Implementation>
+    </Method>
+    <Method Name="TryGetBase64" Id="{e6e67841-c921-4bf8-b895-2b93871a9309}">
+      <Declaration><![CDATA[METHOD TryGetBase64 : BOOL
+VAR_INPUT
+	pBytes : POINTER TO BYTE;
+	nBytes : DINT;
+END_VAR
+]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[IF NOT jsonParser.IsBase64(root) THEN
+	RETURN;
+END_IF
+
+jsonParser.GetBase64(root, pBytes, nBytes);
+TryGetBase64 := TRUE;]]></ST>
+      </Implementation>
+    </Method>
+    <Method Name="TryGetBool" Id="{857dcdef-8d65-491a-9dec-48ed4b58eca2}">
+      <Declaration><![CDATA[METHOD TryGetBool : BOOL
+VAR_INPUT
+	Destination : REFERENCE TO BOOL;
+END_VAR
+VAR
+	value : BOOL;
+END_VAR]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[IF NOT TryReadBool(root, value) THEN
+	RETURN;
+END_IF
+
+Destination := value;
+TryGetBool := TRUE;]]></ST>
+      </Implementation>
+    </Method>
+    <Method Name="TryGetByte" Id="{3ef3407e-a9b8-418d-bf61-15657794fb00}">
+      <Declaration><![CDATA[METHOD TryGetByte : BOOL
+VAR_INPUT
+	Destination : REFERENCE TO BYTE;
+END_VAR
+VAR
+	value : BYTE;
+END_VAR]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[IF NOT TryReadNumber(root, value) THEN
+	RETURN;
+END_IF
+
+Destination := value;
+TryGetByte := TRUE;]]></ST>
+      </Implementation>
+    </Method>
+    <Method Name="TryGetDateTime" Id="{a30d92d1-649e-4165-ba8c-91cb2748f549}">
+      <Declaration><![CDATA[METHOD TryGetDateTime : BOOL
+VAR_INPUT
+	Destination : REFERENCE TO DATE_AND_TIME;
+END_VAR]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[IF NOT jsonParser.IsISO8601TimeFormat(root) THEN
+	RETURN;
+END_IF
+
+Destination := jsonParser.GetDateTime(root);
+TryGetDateTime := TRUE;]]></ST>
+      </Implementation>
+    </Method>
+    <Method Name="TryGetDcTime" Id="{43ee641b-9084-4205-89ad-1d65be804e25}">
+      <Declaration><![CDATA[METHOD TryGetDcTime : BOOL
+VAR_INPUT
+	Destination : REFERENCE TO DCTIME;
+END_VAR]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[IF NOT jsonParser.IsISO8601TimeFormat(root) THEN
+	RETURN;
+END_IF
+
+Destination := jsonParser.GetDcTime(root);
+TryGetDcTime := TRUE;]]></ST>
+      </Implementation>
+    </Method>
+    <Method Name="TryGetDint" Id="{6f8835c3-fef1-4b28-a3f3-bab1c04d71a5}">
+      <Declaration><![CDATA[METHOD TryGetDint : BOOL
+VAR_INPUT
+	Destination : REFERENCE TO DINT;
+END_VAR
+VAR
+	value : DINT;
+END_VAR]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[IF NOT TryReadNumber(root, value) THEN
+	RETURN;
+END_IF
+
+Destination := value;
+TryGetDint := TRUE;]]></ST>
+      </Implementation>
+    </Method>
+    <Method Name="TryGetDword" Id="{4e14d611-dbae-49b9-af70-d9afae6a4978}">
+      <Declaration><![CDATA[METHOD TryGetDword : BOOL
+VAR_INPUT
+	Destination : REFERENCE TO DWORD;
+END_VAR
+VAR
+	value : DWORD;
+END_VAR]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[IF NOT TryReadNumber(root, value) THEN
+	RETURN;
+END_IF
+
+Destination := value;
+TryGetDword := TRUE;]]></ST>
+      </Implementation>
+    </Method>
+    <Method Name="TryGetFileTime" Id="{4909ccd3-3f89-43ff-89e8-2976425636a1}">
+      <Declaration><![CDATA[METHOD TryGetFileTime : BOOL
+VAR_INPUT
+	Destination : REFERENCE TO FILETIME;
+END_VAR]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[IF NOT jsonParser.IsISO8601TimeFormat(root) THEN
+	RETURN;
+END_IF
+
+Destination := jsonParser.GetFileTime(root);
+TryGetFileTime := TRUE;]]></ST>
+      </Implementation>
+    </Method>
+    <Method Name="TryGetHexAsBytes" Id="{d3663a9b-d557-482d-938d-b7a32705f3e3}">
+      <Declaration><![CDATA[METHOD TryGetHexAsBytes : BOOL
+VAR_INPUT
+	pBytes : POINTER TO BYTE;
+	nBytes : DINT;
+END_VAR
+]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[IF NOT jsonParser.IsHexBinary(root) THEN
+	RETURN;
+END_IF
+
+jsonParser.GetHexBinary(root, pBytes, nBytes);
+TryGetHexAsBytes := TRUE;]]></ST>
+      </Implementation>
+    </Method>
+    <Method Name="TryGetInt" Id="{2edb347a-a645-4a57-94d5-9457439e080b}">
+      <Declaration><![CDATA[METHOD TryGetInt : BOOL
+VAR_INPUT
+	Destination : REFERENCE TO INT;
+END_VAR
+VAR
+	value : INT;
+END_VAR]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[IF NOT TryReadNumber(root, value) THEN
+	RETURN;
+END_IF
+
+Destination := value;
+TryGetInt := TRUE;]]></ST>
+      </Implementation>
+    </Method>
+    <Method Name="TryGetKeyBase64" Id="{794f9325-2cc2-42c4-864b-12481793709b}">
+      <Declaration><![CDATA[METHOD TryGetKeyBase64 : BOOL
+VAR_INPUT
+	Key : T_MAXSTRING;
+	pBytes : POINTER TO BYTE;
+	nBytes : DINT;
+END_VAR
+VAR
+	member : SJsonValue;
+END_VAR]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[IF key = '' THEN
+	RETURN;
+END_IF
+
+member := jsonParser.FindMember(root,Key);
+
+IF member = 0 THEN
+	RETURN;
+END_IF
+
+IF NOT jsonParser.IsBase64(member) THEN
+	RETURN;
+END_IF
+
+jsonParser.GetBase64(member, pBytes, nBytes);
+TryGetKeyBase64 := TRUE;]]></ST>
+      </Implementation>
+    </Method>
+    <Method Name="TryGetKeyBool" Id="{5f9a9056-ac16-4a14-849c-8bf51b9537be}">
+      <Declaration><![CDATA[METHOD TryGetKeyBool : BOOL
+VAR_INPUT
+	Key : T_MAXSTRING;
+	Destination : REFERENCE TO BOOL;
+END_VAR
+VAR
+	value : BOOL;
+END_VAR]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[IF NOT TryMemberReadBool(key, value) THEN
+	RETURN;
+END_IF
+
+Destination := value;
+TryGetKeyBool := TRUE;]]></ST>
+      </Implementation>
+    </Method>
+    <Method Name="TryGetKeyByte" Id="{77484d03-6868-4466-8c37-45e2c05af87b}">
+      <Declaration><![CDATA[METHOD TryGetKeyByte : BOOL
+VAR_INPUT
+	Key : T_MAXSTRING;
+	Destination : REFERENCE TO BYTE;
+END_VAR
+VAR
+	value : BYTE;
+END_VAR]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[IF NOT TryMemberReadNumber(key, value) THEN
+	RETURN;
+END_IF
+
+Destination := value;
+TryGetKeyByte := TRUE;]]></ST>
+      </Implementation>
+    </Method>
+    <Method Name="TryGetKeyDateTime" Id="{d8e321ec-1b33-4d55-91f7-ec5c175d666c}">
+      <Declaration><![CDATA[METHOD TryGetKeyDateTime : BOOL
+VAR_INPUT
+	Key : T_MAXSTRING;
+	Destination : REFERENCE TO DATE_AND_TIME;
+END_VAR
+VAR
+	member : SJSonValue;
+END_VAR]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[IF key = '' THEN
+	RETURN;
+END_IF
+
+member := jsonParser.FindMember(root,Key);
+
+IF member = 0 THEN
+	RETURN;
+END_IF
+
+IF NOT jsonParser.IsISO8601TimeFormat(member) THEN
+	RETURN;
+END_IF
+
+Destination := jsonParser.GetDateTime(member);
+TryGetKeyDateTime := TRUE;]]></ST>
+      </Implementation>
+    </Method>
+    <Method Name="TryGetKeyDcTime" Id="{7823d474-3120-4b64-a147-dd285acbd885}">
+      <Declaration><![CDATA[METHOD TryGetKeyDcTime : BOOL
+VAR_INPUT
+	Key : T_MAXSTRING;
+	Destination : REFERENCE TO DCTIME;
+END_VAR
+VAR
+	member : SJSonValue;
+END_VAR]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[IF key = '' THEN
+	RETURN;
+END_IF
+
+member := jsonParser.FindMember(root,Key);
+
+IF member = 0 THEN
+	RETURN;
+END_IF
+
+IF NOT jsonParser.IsISO8601TimeFormat(member) THEN
+	RETURN;
+END_IF
+
+Destination := jsonParser.GetDcTime(member);
+TryGetKeyDcTime := TRUE;]]></ST>
+      </Implementation>
+    </Method>
+    <Method Name="TryGetKeyDint" Id="{9f141240-b3af-4675-9fd1-535f219b23a9}">
+      <Declaration><![CDATA[METHOD TryGetKeyDint : BOOL
+VAR_INPUT
+	Key : T_MAXSTRING;
+	Destination : REFERENCE TO DINT;
+END_VAR
+VAR
+	value : DINT;
+END_VAR]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[IF NOT TryMemberReadNumber(key, value) THEN
+	RETURN;
+END_IF
+
+Destination := value;
+TryGetKeyDint := TRUE;]]></ST>
+      </Implementation>
+    </Method>
+    <Method Name="TryGetKeyDword" Id="{44e39abc-e861-4b3b-9e4e-256167b746bf}">
+      <Declaration><![CDATA[METHOD TryGetKeyDword : BOOL
+VAR_INPUT
+	Key : T_MAXSTRING;
+	Destination : REFERENCE TO DWORD;
+END_VAR
+VAR
+	value : DWORD;
+END_VAR]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[IF NOT TryMemberReadNumber(key, value) THEN
+	RETURN;
+END_IF
+
+Destination := value;
+TryGetKeyDword := TRUE;]]></ST>
+      </Implementation>
+    </Method>
+    <Method Name="TryGetKeyFileTime" Id="{9dc70959-9059-4a6a-9fdd-a5361765e00d}">
+      <Declaration><![CDATA[METHOD TryGetKeyFileTime : BOOL
+VAR_INPUT
+	Key : T_MAXSTRING;
+	Destination : REFERENCE TO FILETIME;
+END_VAR
+VAR
+	member : SJSonValue;
+END_VAR]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[IF key = '' THEN
+	RETURN;
+END_IF
+
+member := jsonParser.FindMember(root,Key);
+
+IF member = 0 THEN
+	RETURN;
+END_IF
+
+IF NOT jsonParser.IsISO8601TimeFormat(member) THEN
+	RETURN;
+END_IF
+
+Destination := jsonParser.GetFileTime(member);
+TryGetKeyFileTime := TRUE;]]></ST>
+      </Implementation>
+    </Method>
+    <Method Name="TryGetKeyHexAsBytes" Id="{6c0faa6f-423e-4ee7-840b-7d837b15c5bc}">
+      <Declaration><![CDATA[METHOD TryGetKeyHexAsBytes : BOOL
+VAR_INPUT
+	Key : T_MAXSTRING;
+	pBytes : POINTER TO BYTE;
+	nBytes : DINT;
+END_VAR
+VAR
+	member : SJsonValue;
+END_VAR]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[IF key = '' THEN
+	RETURN;
+END_IF
+
+member := jsonParser.FindMember(root,Key);
+
+IF member = 0 THEN
+	RETURN;
+END_IF
+
+IF NOT jsonParser.IsHexBinary(member) THEN
+	RETURN;
+END_IF
+
+jsonParser.GetHexBinary(member, pBytes, nBytes);
+TryGetKeyHexAsBytes := TRUE;]]></ST>
+      </Implementation>
+    </Method>
+    <Method Name="TryGetKeyInt" Id="{9e0609e7-1252-457d-aaa0-738cf8ff40b1}">
+      <Declaration><![CDATA[METHOD TryGetKeyInt : BOOL
+VAR_INPUT
+	Key : T_MAXSTRING;
+	Destination : REFERENCE TO INT;
+END_VAR
+VAR
+	value : INT;
+END_VAR]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[IF NOT TryMemberReadNumber(key, value) THEN
+	RETURN;
+END_IF
+
+Destination := value;
+TryGetKeyInt := TRUE;]]></ST>
+      </Implementation>
+    </Method>
+    <Method Name="TryGetKeyLint" Id="{e3c4f035-a1ad-4723-9015-176e13949021}">
+      <Declaration><![CDATA[METHOD TryGetKeyLint : BOOL
+VAR_INPUT
+	Key : T_MAXSTRING;
+	Destination : REFERENCE TO LINT;
+END_VAR
+VAR
+	value : LINT;
+END_VAR]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[IF NOT TryMemberReadNumber(key, value) THEN
+	RETURN;
+END_IF
+
+Destination := value;
+TryGetKeyLint := TRUE;]]></ST>
+      </Implementation>
+    </Method>
+    <Method Name="TryGetKeyLreal" Id="{6d6b190b-031d-4e5e-abab-2df3e7e941ba}">
+      <Declaration><![CDATA[METHOD TryGetKeyLreal : BOOL
+VAR_INPUT
+	Key : T_MAXSTRING;
+	Destination : REFERENCE TO LREAL;
+END_VAR
+VAR
+	value : LREAL;
+END_VAR]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[IF NOT TryMemberReadNumber(key, value) THEN
+	RETURN;
+END_IF
+
+Destination := value;
+TryGetKeyLreal := TRUE;]]></ST>
+      </Implementation>
+    </Method>
+    <Method Name="TryGetKeyLtime" Id="{7dd2fd13-ac52-4e7b-a180-6b34cd0d71b8}">
+      <Declaration><![CDATA[METHOD TryGetKeyLtime : BOOL
+VAR_INPUT
+	Key : T_MAXSTRING;
+	Destination : REFERENCE TO LTIME;
+END_VAR
+VAR
+	member : SJsonValue;
+	timeAsString : T_MAXSTRING;
+END_VAR]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[IF key = '' THEN
+	RETURN;
+END_IF
+
+member := jsonParser.FindMember(root,Key);
+
+IF member = 0 THEN
+	RETURN;
+END_IF
+
+IF NOT jsonParser.IsString(member) THEN
+	RETURN;
+END_IF
+
+timeAsString := jsonParser.GetString(member);
+Destination := STRING_TO_LTIME(timeAsString);
+
+TryGetKeyLtime := TRUE;]]></ST>
+      </Implementation>
+    </Method>
+    <Method Name="TryGetKeyLword" Id="{2c38a5d5-ccc7-446b-8487-16a26399f9e0}">
+      <Declaration><![CDATA[METHOD TryGetKeyLword : BOOL
+VAR_INPUT
+	Key : T_MAXSTRING;
+	Destination : REFERENCE TO LWORD;
+END_VAR
+VAR
+	value : LWORD;
+END_VAR]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[IF NOT TryMemberReadNumber(key, value) THEN
+	RETURN;
+END_IF
+
+Destination := value;
+TryGetKeyLword := TRUE;]]></ST>
+      </Implementation>
+    </Method>
+    <Method Name="TryGetKeyObject" Id="{296749d0-adc3-4b76-8654-7c017064ade3}">
+      <Declaration><![CDATA[METHOD TryGetKeyObject : BOOL
+VAR_INPUT
+	Key : T_MAXSTRING;
+	Object : I_Deserializable;
+END_VAR
+VAR
+	member : SJsonValue;
+	deserializer : I_Deserializer;
+END_VAR]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[IF key = '' THEN
+	RETURN;
+END_IF
+
+member := jsonParser.FindMember(root,Key);
+
+IF member = 0 THEN
+	RETURN;
+END_IF
+
+deserializer := CreateDeserializer(member);
+TryGetKeyObject := Object.TryDeserializeFrom(deserializer);]]></ST>
+      </Implementation>
+    </Method>
+    <Method Name="TryGetKeyReal" Id="{0c2436d3-e926-462d-885d-4776062ab052}">
+      <Declaration><![CDATA[METHOD TryGetKeyReal : BOOL
+VAR_INPUT
+	Key : T_MAXSTRING;
+	Destination : REFERENCE TO REAL;
+END_VAR
+VAR
+	value : REAL;
+END_VAR]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[IF NOT TryMemberReadNumber(key, value) THEN
+	RETURN;
+END_IF
+
+Destination := value;
+TryGetKeyReal := TRUE;]]></ST>
+      </Implementation>
+    </Method>
+    <Method Name="TryGetKeySint" Id="{c7882481-da10-4128-8050-d89d68facda1}">
+      <Declaration><![CDATA[METHOD TryGetKeySint : BOOL
+VAR_INPUT
+	Key : T_MAXSTRING;
+	Destination : REFERENCE TO SINT;
+END_VAR
+VAR
+	value : SINT;
+END_VAR]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[IF NOT TryMemberReadNumber(key, value) THEN
+	RETURN;
+END_IF
+
+Destination := value;
+TryGetKeySint := TRUE;]]></ST>
+      </Implementation>
+    </Method>
+    <Method Name="TryGetKeyString" Id="{894c3bd7-5326-4ee9-8313-522fa4e2a194}">
+      <Declaration><![CDATA[METHOD TryGetKeyString : BOOL
+VAR_INPUT
+	Key : T_MAXSTRING;
+	Destination : REFERENCE TO STRING;
+END_VAR]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[IF NOT TryMemberReadString(Key, Destination) THEN
+	RETURN;
+END_IF
+
+TryGetKeyString := TRUE;]]></ST>
+      </Implementation>
+    </Method>
+    <Method Name="TryGetKeyTime" Id="{a088c942-f01b-4d63-b263-cc27d9cacdb0}">
+      <Declaration><![CDATA[METHOD TryGetKeyTime : BOOL
+VAR_INPUT
+	Key : T_MAXSTRING;
+	Destination : REFERENCE TO TIME;
+END_VAR
+VAR
+	member : SJsonValue;
+	timeAsString : T_MAXSTRING;
+END_VAR]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[IF key = '' THEN
+	RETURN;
+END_IF
+
+member := jsonParser.FindMember(root,Key);
+
+IF member = 0 THEN
+	RETURN;
+END_IF
+
+IF NOT jsonParser.IsString(member) THEN
+	RETURN;
+END_IF
+
+timeAsString := jsonParser.GetString(member);
+Destination := STRING_TO_TIME(timeAsString);
+
+TryGetKeyTime := TRUE;]]></ST>
+      </Implementation>
+    </Method>
+    <Method Name="TryGetKeyTod" Id="{8b96b1fa-43bc-423b-af2a-2723cece6f8d}">
+      <Declaration><![CDATA[METHOD TryGetKeyTod : BOOL
+VAR_INPUT
+	Key : T_MAXSTRING;
+	Destination : REFERENCE TO TOD;
+END_VAR
+VAR
+	member : SJsonValue;
+	timeAsString : T_MAXSTRING;
+END_VAR]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[IF key = '' THEN
+	RETURN;
+END_IF
+
+member := jsonParser.FindMember(root,Key);
+
+IF member = 0 THEN
+	RETURN;
+END_IF
+
+IF NOT jsonParser.IsString(member) THEN
+	RETURN;
+END_IF
+
+timeAsString := jsonParser.GetString(member);
+Destination := STRING_TO_TOD(timeAsString);
+
+TryGetKeyTod := TRUE;]]></ST>
+      </Implementation>
+    </Method>
+    <Method Name="TryGetKeyUdint" Id="{bd48910f-a853-4320-a4ad-6795e7693b94}">
+      <Declaration><![CDATA[METHOD TryGetKeyUdint : BOOL
+VAR_INPUT
+	Key : T_MAXSTRING;
+	Destination : REFERENCE TO UDINT;
+END_VAR
+VAR
+	value : UDINT;
+END_VAR]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[IF NOT TryMemberReadNumber(key, value) THEN
+	RETURN;
+END_IF
+
+Destination := value;
+TryGetKeyUdint := TRUE;]]></ST>
+      </Implementation>
+    </Method>
+    <Method Name="TryGetKeyUint" Id="{e14bb1a2-d9b3-4f38-85d8-4464849ffd55}">
+      <Declaration><![CDATA[METHOD TryGetKeyUint : BOOL
+VAR_INPUT
+	Key : T_MAXSTRING;
+	Destination : REFERENCE TO UINT;
+END_VAR
+VAR
+	value : UINT;
+END_VAR]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[IF NOT TryMemberReadNumber(key, value) THEN
+	RETURN;
+END_IF
+
+Destination := value;
+TryGetKeyUint := TRUE;]]></ST>
+      </Implementation>
+    </Method>
+    <Method Name="TryGetKeyUlint" Id="{31440a64-15f3-4d2b-9547-bbc66ad4214f}">
+      <Declaration><![CDATA[METHOD TryGetKeyUlint : BOOL
+VAR_INPUT
+	Key : T_MAXSTRING;
+	Destination : REFERENCE TO ULINT;
+END_VAR
+VAR
+	value : ULINT;
+END_VAR]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[IF NOT TryMemberReadNumber(key, value) THEN
+	RETURN;
+END_IF
+
+Destination := value;
+TryGetKeyUlint := TRUE;]]></ST>
+      </Implementation>
+    </Method>
+    <Method Name="TryGetKeyUsint" Id="{43653a38-dd97-4f00-ba8a-a62dcebbcf55}">
+      <Declaration><![CDATA[METHOD TryGetKeyUsint : BOOL
+VAR_INPUT
+	Key : T_MAXSTRING;
+	Destination : REFERENCE TO USINT;
+END_VAR
+VAR
+	value : USINT;
+END_VAR]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[IF NOT TryMemberReadNumber(key, value) THEN
+	RETURN;
+END_IF
+
+Destination := value;
+TryGetKeyUsint := TRUE;]]></ST>
+      </Implementation>
+    </Method>
+    <Method Name="TryGetKeyWord" Id="{bed3fe1d-95b0-4eef-a1d4-a25e70ce89bb}">
+      <Declaration><![CDATA[METHOD TryGetKeyWord : BOOL
+VAR_INPUT
+	Key : T_MAXSTRING;
+	Destination : REFERENCE TO WORD;
+END_VAR
+VAR
+	value : WORD;
+END_VAR]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[IF NOT TryMemberReadNumber(key, value) THEN
+	RETURN;
+END_IF
+
+Destination := value;
+TryGetKeyWord := TRUE;]]></ST>
+      </Implementation>
+    </Method>
+    <Method Name="TryGetLint" Id="{80bb845c-826f-4cef-b16c-b7c70e63a110}">
+      <Declaration><![CDATA[METHOD TryGetLint : BOOL
+VAR_INPUT
+	Destination : REFERENCE TO LINT;
+END_VAR
+VAR
+	value : LINT;
+END_VAR]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[IF NOT TryReadNumber(root, value) THEN
+	RETURN;
+END_IF
+
+Destination := value;
+TryGetLint := TRUE;]]></ST>
+      </Implementation>
+    </Method>
+    <Method Name="TryGetLreal" Id="{198b511f-18f0-473b-a9cb-3f7b7c6ad3ee}">
+      <Declaration><![CDATA[METHOD TryGetLreal : BOOL
+VAR_INPUT
+	Destination : REFERENCE TO LREAL;
+END_VAR
+VAR
+	value : LREAL;
+END_VAR]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[IF NOT TryReadNumber(root, value) THEN
+	RETURN;
+END_IF
+
+Destination := value;
+TryGetLreal := TRUE;]]></ST>
+      </Implementation>
+    </Method>
+    <Method Name="TryGetLtime" Id="{5ad8857a-a658-441c-bfa6-cce1b2f1e678}">
+      <Declaration><![CDATA[METHOD TryGetLtime : BOOL
+VAR_INPUT
+	Destination : REFERENCE TO LTIME;
+END_VAR
+VAR
+	timeAsString : T_MAXSTRING;
+END_VAR]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[IF NOT jsonParser.IsString(root) THEN
+	RETURN;
+END_IF
+
+timeAsString := jsonParser.GetString(root);
+Destination := STRING_TO_LTIME(timeAsString);
+
+TryGetLtime := TRUE;]]></ST>
+      </Implementation>
+    </Method>
+    <Method Name="TryGetLword" Id="{9d8f4da8-55aa-479b-b535-c9106bb1694e}">
+      <Declaration><![CDATA[METHOD TryGetLword : BOOL
+VAR_INPUT
+	Destination : REFERENCE TO LWORD;
+END_VAR
+VAR
+	value : LWORD;
+END_VAR]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[IF NOT TryReadNumber(root, value) THEN
+	RETURN;
+END_IF
+
+Destination := value;
+TryGetLword := TRUE;]]></ST>
+      </Implementation>
+    </Method>
+    <Method Name="TryGetObject" Id="{e78ac69f-ae34-4608-8de7-23629f7fedc7}">
+      <Declaration><![CDATA[METHOD TryGetObject : BOOL
+VAR_INPUT
+	Object : I_Deserializable;
+END_VAR]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[TryGetObject := Object.TryDeserializeFrom(this^);]]></ST>
+      </Implementation>
+    </Method>
+    <Method Name="TryGetReal" Id="{bbedb472-8ed5-4c1c-b5a4-0d0afb909a21}">
+      <Declaration><![CDATA[METHOD TryGetReal : BOOL
+VAR_INPUT
+	Destination : REFERENCE TO REAL;
+END_VAR
+VAR
+	value : REAL;
+END_VAR]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[IF NOT TryReadNumber(root, value) THEN
+	RETURN;
+END_IF
+
+Destination := value;
+TryGetReal := TRUE;]]></ST>
+      </Implementation>
+    </Method>
+    <Method Name="TryGetSint" Id="{f43478aa-7172-4705-a04f-3f6e844c33a3}">
+      <Declaration><![CDATA[METHOD TryGetSint : BOOL
+VAR_INPUT
+	Destination : REFERENCE TO SINT;
+END_VAR
+VAR
+	value : SINT;
+END_VAR]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[IF NOT TryReadNumber(root, value) THEN
+	RETURN;
+END_IF
+
+Destination := value;
+TryGetSint := TRUE;]]></ST>
+      </Implementation>
+    </Method>
+    <Method Name="TryGetString" Id="{a7b73140-d25f-4c2d-ab30-3de8c83173fe}">
+      <Declaration><![CDATA[METHOD TryGetString : BOOL
+VAR_INPUT
+	Destination : REFERENCE TO STRING;
+END_VAR]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[IF NOT jsonParser.IsString(root) THEN
+	RETURN;
+END_IF
+
+Destination := jsonParser.GetString(root);
+TryGetString := TRUE;]]></ST>
+      </Implementation>
+    </Method>
+    <Method Name="TryGetTime" Id="{b0fe8ca8-290d-43d5-b26e-a1a59ab86a32}">
+      <Declaration><![CDATA[METHOD TryGetTime : BOOL
+VAR_INPUT
+	Destination : REFERENCE TO TIME;
+END_VAR
+VAR
+	timeAsString : T_MAXSTRING;
+END_VAR]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[IF NOT jsonParser.IsString(root) THEN
+	RETURN;
+END_IF
+
+timeAsString := jsonParser.GetString(root);
+Destination := STRING_TO_TIME(timeAsString);
+
+TryGetTime := TRUE;]]></ST>
+      </Implementation>
+    </Method>
+    <Method Name="TryGetTod" Id="{9d320164-ecc7-447e-85c6-bbf577419f88}">
+      <Declaration><![CDATA[METHOD TryGetTod : BOOL
+VAR_INPUT
+	Destination : REFERENCE TO TOD;
+END_VAR
+VAR
+	timeAsString : T_MAXSTRING;
+END_VAR]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[IF NOT jsonParser.IsString(root) THEN
+	RETURN;
+END_IF
+
+timeAsString := jsonParser.GetString(root);
+Destination := STRING_TO_TOD(timeAsString);
+
+TryGetTod := TRUE;]]></ST>
+      </Implementation>
+    </Method>
+    <Method Name="TryGetUdint" Id="{a3c9aab2-4602-473b-bd01-f5399a9ae747}">
+      <Declaration><![CDATA[METHOD TryGetUdint : BOOL
+VAR_INPUT
+	Destination : REFERENCE TO UDINT;
+END_VAR
+VAR
+	value : UDINT;
+END_VAR]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[IF NOT TryReadNumber(root, value) THEN
+	RETURN;
+END_IF
+
+Destination := value;
+TryGetUdint := TRUE;]]></ST>
+      </Implementation>
+    </Method>
+    <Method Name="TryGetUint" Id="{472bbef5-dec7-45fa-91f8-4b5f3db42c67}">
+      <Declaration><![CDATA[METHOD TryGetUint : BOOL
+VAR_INPUT
+	Destination : REFERENCE TO UINT;
+END_VAR
+VAR
+	value : UINT;
+END_VAR]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[IF NOT TryReadNumber(root, value) THEN
+	RETURN;
+END_IF
+
+Destination := value;
+TryGetUint := TRUE;]]></ST>
+      </Implementation>
+    </Method>
+    <Method Name="TryGetUlint" Id="{5c34ab8e-0595-49be-9660-cc1c128056d1}">
+      <Declaration><![CDATA[METHOD TryGetUlint : BOOL
+VAR_INPUT
+	Destination : REFERENCE TO ULINT;
+END_VAR
+VAR
+	value : ULINT;
+END_VAR]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[IF NOT TryReadNumber(root, value) THEN
+	RETURN;
+END_IF
+
+Destination := value;
+TryGetUlint := TRUE;]]></ST>
+      </Implementation>
+    </Method>
+    <Method Name="TryGetUsint" Id="{0b7481c1-190a-4a35-bec4-9cfa9ec8e462}">
+      <Declaration><![CDATA[METHOD TryGetUsint : BOOL
+VAR_INPUT
+	Destination : REFERENCE TO USINT;
+END_VAR
+VAR
+	value : USINT;
+END_VAR]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[IF NOT TryReadNumber(root, value) THEN
+	RETURN;
+END_IF
+
+Destination := value;
+TryGetUsint := TRUE;]]></ST>
+      </Implementation>
+    </Method>
+    <Method Name="TryGetWord" Id="{f658e9b6-8e10-4ed1-aba6-b0742be7aaee}">
+      <Declaration><![CDATA[METHOD TryGetWord : BOOL
+VAR_INPUT
+	Destination : REFERENCE TO WORD;
+END_VAR
+VAR
+	value : WORD;
+END_VAR]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[IF NOT TryReadNumber(root, value) THEN
+	RETURN;
+END_IF
+
+Destination := value;
+TryGetWord := TRUE;]]></ST>
+      </Implementation>
+    </Method>
+    <Method Name="TryMemberReadBool" Id="{3fca3c1b-60aa-4fe3-8244-9475b0ad6574}" FolderPath="Protected\">
+      <Declaration><![CDATA[METHOD PROTECTED TryMemberReadBool : BOOL
+VAR_INPUT
+	MemberName : T_MAXSTRING;
+	Destination : ANY;
+END_VAR
+VAR
+	member : SJsonValue;
+END_VAR]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[IF MemberName = '' THEN
+	RETURN;
+END_IF
+
+member := jsonParser.FindMember(root, MemberName);
+
+IF member = 0 THEN
+	RETURN;
+END_IF
+
+TryMemberReadBool := TryReadBool(member, Destination);]]></ST>
+      </Implementation>
+    </Method>
+    <Method Name="TryMemberReadNumber" Id="{fcbeac93-fa66-4c57-8c93-bb4ce7ea29c4}" FolderPath="Protected\">
+      <Declaration><![CDATA[METHOD PROTECTED TryMemberReadNumber : BOOL
+VAR_INPUT
+	MemberName : T_MAXSTRING;
+	Destination : ANY;
+END_VAR
+VAR
+	member : SJsonValue;
+END_VAR]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[IF MemberName = '' THEN
+	RETURN;
+END_IF
+
+member := jsonParser.FindMember(root, MemberName);
+
+IF member = 0 THEN
+	RETURN;
+END_IF
+
+TryMemberReadNumber := TryReadNumber(member, Destination);]]></ST>
+      </Implementation>
+    </Method>
+    <Method Name="TryMemberReadString" Id="{339c6e8c-1ad5-4d13-81f3-d1852025ad06}" FolderPath="Protected\">
+      <Declaration><![CDATA[METHOD PROTECTED TryMemberReadString : BOOL
+VAR_INPUT
+	MemberName : T_MAXSTRING;
+	Destination : REFERENCE TO STRING;
+END_VAR
+VAR
+	member : SJsonValue;
+END_VAR]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[IF MemberName = '' THEN
+	RETURN;
+END_IF
+
+member := jsonParser.FindMember(root, MemberName);
+
+IF member = 0 THEN
+	RETURN;
+END_IF
+
+TryMemberReadString := TryReadString(member, Destination);]]></ST>
+      </Implementation>
+    </Method>
+    <Method Name="TryReadBool" Id="{54f48498-7f0f-43fa-810d-7b15705c54d0}" FolderPath="Protected\">
+      <Declaration><![CDATA[METHOD PROTECTED TryReadBool : BOOL
+VAR_INPUT
+	JsonValue : SJsonValue;
+	Destination : ANY;
+END_VAR
+VAR
+	_BOOL : BOOL;
+END_VAR]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[IF jsonValue = 0 THEN
+	RETURN;
+END_IF
+
+IF jsonParser.IsBool(jsonValue) THEN
+	_BOOL := jsonParser.GetBool(jsonValue);
+	TryReadBool := TryConvert_BOOL_TO_DESTINATION(_BOOL,Destination);
+	RETURN;
+END_IF]]></ST>
+      </Implementation>
+    </Method>
+    <Method Name="TryReadNumber" Id="{01723ee5-eee6-402a-b879-258736900d8b}" FolderPath="Protected\">
+      <Declaration><![CDATA[METHOD PROTECTED TryReadNumber : BOOL
+VAR_INPUT
+	JsonValue : SJsonValue;
+	Destination : ANY;
+END_VAR
+VAR
+	_DINT : DINT;
+	_LINT : LINT;
+	_UDINT : UDINT;
+	_ULINT : ULINT;
+	_LREAL : LREAL;
+END_VAR]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[IF jsonValue = 0 THEN
+	RETURN;
+END_IF
+
+IF jsonParser.IsInt(jsonValue) THEN
+	_DINT := jsonParser.GetInt(jsonValue);
+	TryReadNumber := TryConvert_DINT_TO_DESTINATION(_DINT,Destination);
+	RETURN;
+END_IF
+
+IF jsonParser.IsInt64(jsonValue) THEN
+	_LINT := jsonParser.GetInt64(jsonValue);
+	TryReadNumber := TryConvert_LINT_TO_DESTINATION(_LINT,Destination);
+	RETURN;
+END_IF
+
+IF jsonParser.IsUInt(jsonValue) THEN
+	_UDINT := jsonParser.GetUInt(jsonValue);
+	TryReadNumber := TryConvert_UDINT_TO_DESTINATION(_UDINT,Destination);
+	RETURN;
+END_IF
+
+IF jsonParser.IsUInt64(jsonValue) THEN
+	_ULINT := jsonParser.GetUInt64(jsonValue);
+	TryReadNumber := TryConvert_ULINT_TO_DESTINATION(_ULINT,Destination);
+	RETURN;
+END_IF
+
+IF jsonParser.IsDouble(jsonValue) THEN
+	_LREAL := jsonParser.GetDouble(jsonValue);
+	TryReadNumber := TryConvert_LREAL_TO_DESTINATION(_LREAL,Destination);
+	RETURN;
+END_IF]]></ST>
+      </Implementation>
+    </Method>
+    <Method Name="TryReadString" Id="{ba399e32-de30-43f6-b15b-d3840d9e1de3}" FolderPath="Protected\">
+      <Declaration><![CDATA[METHOD PROTECTED TryReadString : BOOL
+VAR_INPUT
+	JsonValue : SJsonValue;
+	Destination : REFERENCE TO STRING;
+END_VAR]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[IF jsonValue = 0 THEN
+	RETURN;
+END_IF
+
+IF jsonParser.IsString(jsonValue) THEN
+	IF (jsonParser.CopyString(jsonValue,Destination,DINT_TO_UDINT(SIZEOF(Destination))) > 0) THEN;
+		TryReadString := TRUE;
+		RETURN;
+	END_IF
+END_IF]]></ST>
+      </Implementation>
+    </Method>
+  </POU>
+</TcPlcObject>

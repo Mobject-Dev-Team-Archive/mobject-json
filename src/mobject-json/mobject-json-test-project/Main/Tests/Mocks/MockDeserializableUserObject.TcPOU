@@ -1,0 +1,65 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4024.12">
+  <POU Name="MockDeserializableUserObject" Id="{ecd607bb-83a9-4d79-a8ab-363938f57e03}" SpecialFunc="None">
+    <Declaration><![CDATA[FUNCTION_BLOCK MockDeserializableUserObject IMPLEMENTS I_Deserializable
+VAR
+	_name : STRING;
+	_age : INT;
+END_VAR
+]]></Declaration>
+    <Implementation>
+      <ST><![CDATA[]]></ST>
+    </Implementation>
+    <Property Name="Age" Id="{bfc899d7-b9b5-43a3-b21c-921d9cb41d78}">
+      <Declaration><![CDATA[PROPERTY PUBLIC Age : INT]]></Declaration>
+      <Get Name="Get" Id="{8b729a3d-1d76-409c-8a9f-bdac2d562b4f}">
+        <Declaration><![CDATA[VAR
+END_VAR
+]]></Declaration>
+        <Implementation>
+          <ST><![CDATA[Age := _age;]]></ST>
+        </Implementation>
+      </Get>
+      <Set Name="Set" Id="{b445f0fa-29e2-473e-95a1-e92418b1fd6e}">
+        <Declaration><![CDATA[VAR
+END_VAR
+]]></Declaration>
+        <Implementation>
+          <ST><![CDATA[_age := Age;]]></ST>
+        </Implementation>
+      </Set>
+    </Property>
+    <Property Name="Name" Id="{8c5e2a62-b93f-4d2f-bf42-ec984f3a59c9}">
+      <Declaration><![CDATA[PROPERTY PUBLIC Name : STRING]]></Declaration>
+      <Get Name="Get" Id="{6f1599e5-a554-42cd-8e65-078b3108d65d}">
+        <Declaration><![CDATA[VAR
+END_VAR
+]]></Declaration>
+        <Implementation>
+          <ST><![CDATA[Name := _name;]]></ST>
+        </Implementation>
+      </Get>
+      <Set Name="Set" Id="{77a98b9d-145d-460f-9c55-6c4834ef40c6}">
+        <Declaration><![CDATA[VAR
+END_VAR
+]]></Declaration>
+        <Implementation>
+          <ST><![CDATA[_name := Name;]]></ST>
+        </Implementation>
+      </Set>
+    </Property>
+    <Method Name="TryDeserializeFrom" Id="{1c9b47aa-03bf-4aca-bfd2-63a3b957b556}">
+      <Declaration><![CDATA[METHOD TryDeserializeFrom : BOOL
+VAR_INPUT
+	Deserializer : I_Deserializer;
+END_VAR
+]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[TryDeserializeFrom := 
+	Deserializer.TryGetKeyString('Name',_name) AND
+	Deserializer.TryGetKeyInt('Age',_age);
+]]></ST>
+      </Implementation>
+    </Method>
+  </POU>
+</TcPlcObject>
