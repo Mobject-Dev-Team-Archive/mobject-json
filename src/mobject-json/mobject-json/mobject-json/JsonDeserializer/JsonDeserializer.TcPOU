@@ -4,13 +4,14 @@
     <Declaration><![CDATA[{attribute 'linkalways'} 
 {attribute 'no_explicit_call' := 'This FB is a CLASS and must be accessed using methods or properties'}
 {attribute 'enable_dynamic_creation'}
-FUNCTION_BLOCK JsonDeserializer EXTENDS Disposable IMPLEMENTS I_Deserializer
+FUNCTION_BLOCK JsonDeserializer EXTENDS Disposable IMPLEMENTS I_JsonDeserializer
 VAR
 	jsonParser : JsonDomParser;
 	root : SJsonValue;
 	garbageCollector : DeserializerGarbageCollector;
-	nullNode : JsonDeserializerNullNode;
+	nullNode : JsonDeserializerNullNode(THIS^);
 	rootNode : I_Deserializer := nullNode;
+	eventEmitter : EventEmitter;
 END_VAR
 ]]></Declaration>
     <Implementation>
@@ -57,8 +58,37 @@ VAR
 END_VAR
 ]]></Declaration>
       <Implementation>
-        <ST><![CDATA[pNode := __NEW(JsonDeserializerNode(ParentJsonDomParser := jsonParser, NodeRoot := DeserializerRoot, ParentGarbageCollector := garbageCollector, ParentNullDeserializer := nullNode));
+        <ST><![CDATA[pNode := __NEW(JsonDeserializerNode(
+	ParentJsonDeserializer := THIS^,
+	ParentJsonDomParser := jsonParser, 
+	NodeRoot := DeserializerRoot, 
+	ParentGarbageCollector := garbageCollector, 
+	ParentNullDeserializer := nullNode)
+);
+
 CreateDeserializer := pNode^;]]></ST>
+      </Implementation>
+    </Method>
+    <Method Name="EmitChangedEvent" Id="{3292f357-a850-4b07-84b8-6ac1bcad29c4}" FolderPath="Protected\">
+      <Declaration><![CDATA[METHOD PRIVATE EmitChangedEvent
+VAR
+	pJsonDeserializerChangedEvent : POINTER TO JsonDeserializerChangedEvent;
+END_VAR]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[pJsonDeserializerChangedEvent := __NEW(JsonDeserializerChangedEvent(Target := THIS^));
+eventEmitter.Emit('OnChanged', pJsonDeserializerChangedEvent^);
+pJsonDeserializerChangedEvent^.Dispose();]]></ST>
+      </Implementation>
+    </Method>
+    <Method Name="EmitDisposedEvent" Id="{d5c30bcb-5159-4f97-8dde-50d1098331ac}" FolderPath="Protected\">
+      <Declaration><![CDATA[METHOD PRIVATE EmitDisposedEvent
+VAR
+	pJsonDeserializerDisposedEvent : POINTER TO JsonDeserializerDisposedEvent;
+END_VAR]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[pJsonDeserializerDisposedEvent := __NEW(JsonDeserializerDisposedEvent(Target := THIS^));
+eventEmitter.Emit('OnDisposed', pJsonDeserializerDisposedEvent^);
+pJsonDeserializerDisposedEvent^.Dispose();]]></ST>
       </Implementation>
     </Method>
     <Method Name="FB_exit" Id="{d9f286cf-0a82-45b5-9661-1cb5706a832d}" FolderPath="Destructor\">
@@ -72,7 +102,8 @@ END_VAR
 	RETURN;
 END_IF
 
-Reset();]]></ST>
+Reset();
+EmitDisposedEvent();]]></ST>
       </Implementation>
     </Method>
     <Method Name="GetArray" Id="{a8b524f2-5f76-4824-97b5-f83f0e1611cd}">
@@ -81,6 +112,14 @@ VAR_INPUT
 END_VAR]]></Declaration>
       <Implementation>
         <ST><![CDATA[GetArray := rootNode.GetArray();]]></ST>
+      </Implementation>
+    </Method>
+    <Method Name="GetArrayElementEnumerator" Id="{296bee65-3702-4f89-b62c-79e4d6cff36a}">
+      <Declaration><![CDATA[METHOD GetArrayElementEnumerator : I_DeserializerForwardEnumerator
+VAR_INPUT
+END_VAR]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[GetArrayElementEnumerator := rootNode.GetArrayElementEnumerator();]]></ST>
       </Implementation>
     </Method>
     <Method Name="GetElementByIndex" Id="{adfb94ab-88ff-476c-a549-f0880b6a7e45}">
@@ -110,6 +149,44 @@ END_VAR]]></Declaration>
         <ST><![CDATA[GetKeyArray := rootNode.GetKeyArray(Key);]]></ST>
       </Implementation>
     </Method>
+    <Method Name="GetObjectKeyEnumerator" Id="{4e8516b1-abeb-410a-ac04-583c396c626e}">
+      <Declaration><![CDATA[METHOD GetObjectKeyEnumerator : I_DeserializerForwardEnumerator
+VAR_INPUT
+END_VAR]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[GetObjectKeyEnumerator := rootNode.GetObjectKeyEnumerator();]]></ST>
+      </Implementation>
+    </Method>
+    <Method Name="OffEvent" Id="{95eb9567-cd9f-4891-914f-5f286298bc6f}">
+      <Declaration><![CDATA[METHOD PUBLIC OffEvent
+VAR_INPUT
+	EventName : T_MaxString;
+	EventHandler : I_EventHandler;
+END_VAR]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[eventEmitter.OffEvent(EventName, EventHandler);]]></ST>
+      </Implementation>
+    </Method>
+    <Method Name="OnceEvent" Id="{c2492a02-8428-4e20-b3a6-aace55b5e0c8}">
+      <Declaration><![CDATA[METHOD PUBLIC OnceEvent
+VAR_INPUT
+	EventName : T_MaxString;
+	EventHandler : I_EventHandler;
+END_VAR]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[eventEmitter.OnceEvent(EventName, EventHandler);]]></ST>
+      </Implementation>
+    </Method>
+    <Method Name="OnEvent" Id="{7a0112ed-3061-4b02-a40e-eb2b9c06830c}">
+      <Declaration><![CDATA[METHOD PUBLIC OnEvent
+VAR_INPUT
+	EventName : T_MaxString;
+	EventHandler : I_EventHandler;
+END_VAR]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[eventEmitter.OnEvent(EventName, EventHandler);]]></ST>
+      </Implementation>
+    </Method>
     <Method Name="Reset" Id="{ff410b24-6bd3-4b0b-b181-8baf610127fb}">
       <Declaration><![CDATA[METHOD PUBLIC Reset
 VAR_INPUT
@@ -119,7 +196,8 @@ END_VAR
         <ST><![CDATA[jsonParser.NewDocument();
 garbageCollector.Execute();
 root := 0;
-rootNode := nullNode;]]></ST>
+rootNode := nullNode;
+EmitChangedEvent();]]></ST>
       </Implementation>
     </Method>
     <Method Name="TryGetBase64" Id="{fe295ea1-6385-4c90-8c1e-0130d0abea78}">
@@ -507,6 +585,15 @@ END_VAR
         <ST><![CDATA[TryGetLword := rootNode.TryGetLword(Destination);]]></ST>
       </Implementation>
     </Method>
+    <Method Name="TryGetName" Id="{167e96da-9e8b-4f7c-a4cb-517d334a2f17}">
+      <Declaration><![CDATA[METHOD TryGetName : BOOL
+VAR_INPUT
+	Destination : REFERENCE TO STRING;
+END_VAR]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[TryGetName := rootNode.TryGetName(Destination);]]></ST>
+      </Implementation>
+    </Method>
     <Method Name="TryGetObject" Id="{4a3bb941-939c-4dd6-bed5-5312803ff942}">
       <Declaration><![CDATA[METHOD TryGetObject : BOOL
 VAR_INPUT
@@ -614,6 +701,7 @@ END_VAR
 ]]></Declaration>
       <Implementation>
         <ST><![CDATA[Reset();
+EmitChangedEvent();
 
 root := jsonParser.ParseDocument(SerializedData);
 IF root = 0 THEN

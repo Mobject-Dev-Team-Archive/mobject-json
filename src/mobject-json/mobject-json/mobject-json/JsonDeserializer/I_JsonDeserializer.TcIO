@@ -1,0 +1,6 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4024.12">
+  <Itf Name="I_JsonDeserializer" Id="{d05503df-3652-420f-b9ee-30db40601b1a}">
+    <Declaration><![CDATA[INTERFACE I_JsonDeserializer EXTENDS I_Deserializer, I_EventEmitter, I_Disposable]]></Declaration>
+  </Itf>
+</TcPlcObject>

@@ -6,6 +6,8 @@ VAR
 	jsonDomParser_TestSuit : JsonDomParser_TestSuit;
 	jsonSerializer_TestSuite : JsonSerializer_TestSuite;
 	jsonDeserializer_TestSuite : JsonDeserializer_TestSuite;
+	jsonDeserializerArrayForwardEnumerator_TestSuite : JsonDeserializerArrayForwardEnumerator_TestSuite;
+	jsonDeserializerObjectForwardEnumerator_TestSuite : JsonDeserializerObjectForwardEnumerator_TestSuite;
 END_VAR
 ]]></Declaration>
     <Implementation>
