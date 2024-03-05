@@ -44,6 +44,9 @@
     <Compile Include="Tests\Mocks\MockDeserializableUserObject.TcPOU">
       <SubType>Code</SubType>
     </Compile>
+    <Compile Include="Tests\Mocks\MockSerializableArray.TcPOU">
+      <SubType>Code</SubType>
+    </Compile>
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Tests" />

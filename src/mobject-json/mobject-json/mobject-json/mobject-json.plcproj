@@ -110,7 +110,10 @@
     <Compile Include="_Internal\JsonDeserializerForwardEnumerator\JsonDeserializerArrayForwardEnumerator.TcPOU">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="_Internal\JsonDeserializerForwardEnumerator\JsonDeserializerNullForwardEnumerator.TcPOU">
+    <Compile Include="_Internal\JsonDeserializerForwardEnumerator\JsonDeserializerNullArrayForwardEnumerator.TcPOU">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="_Internal\JsonDeserializerForwardEnumerator\JsonDeserializerNullObjectForwardEnumerator.TcPOU">
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="_Internal\JsonDeserializerForwardEnumerator\JsonDeserializerObjectForwardEnumerator.TcPOU">

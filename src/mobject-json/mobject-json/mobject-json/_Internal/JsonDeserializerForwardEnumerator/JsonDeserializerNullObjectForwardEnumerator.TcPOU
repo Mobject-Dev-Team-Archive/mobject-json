@@ -1,10 +1,10 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4024.12">
-  <POU Name="JsonDeserializerNullForwardEnumerator" Id="{4b41bc8b-64b2-4cd3-9060-f1d807de7f77}" SpecialFunc="None">
+  <POU Name="JsonDeserializerNullObjectForwardEnumerator" Id="{440a46ff-f73d-4d01-9040-a9c98f96408a}" SpecialFunc="None">
     <Declaration><![CDATA[{attribute 'linkalways'} 
 {attribute 'no_explicit_call' := 'This FB is a CLASS and must be accessed using methods or properties'}
 {attribute 'enable_dynamic_creation'}
-FUNCTION_BLOCK JsonDeserializerNullForwardEnumerator EXTENDS Disposable IMPLEMENTS I_DeserializerForwardEnumerator, I_EventHandler
+FUNCTION_BLOCK JsonDeserializerNullObjectForwardEnumerator EXTENDS Disposable IMPLEMENTS I_DeserializerObjectForwardEnumerator, I_EventHandler
 VAR
 	parent : I_JsonDeserializer;
 	nullNode : I_Deserializer;
@@ -14,11 +14,11 @@ END_VAR
     <Implementation>
       <ST><![CDATA[]]></ST>
     </Implementation>
-    <Folder Name="Constructor" Id="{88b2836c-eeab-4bac-aae5-9a63247a59a6}" />
-    <Folder Name="Destructor" Id="{5282575f-0f93-4db0-b9d2-b246199d0e1e}" />
-    <Property Name="Current" Id="{e3529165-dd2e-4849-b130-ef058fb4d0e0}">
+    <Folder Name="Constructor" Id="{83bd1184-d4f9-45f8-8f71-123c780cd078}" />
+    <Folder Name="Destructor" Id="{7503838f-4a7b-4e61-9d11-e9f44aab5d26}" />
+    <Property Name="Current" Id="{820971fd-bfd9-4a6f-b18b-b0336a053862}">
       <Declaration><![CDATA[PROPERTY PUBLIC Current : I_Deserializer]]></Declaration>
-      <Get Name="Get" Id="{e7c613a0-aef5-4ab2-b61a-454c5a17cf45}">
+      <Get Name="Get" Id="{c7b7e92a-646b-4cf6-928d-a45ffb60cfb8}">
         <Declaration><![CDATA[VAR
 END_VAR
 ]]></Declaration>
@@ -27,7 +27,7 @@ END_VAR
         </Implementation>
       </Get>
     </Property>
-    <Method Name="FB_exit" Id="{1728a714-3970-4279-9e23-4955746f5f4f}" FolderPath="Destructor\">
+    <Method Name="FB_exit" Id="{77a71383-53ec-477e-8933-e4482a2cb87d}" FolderPath="Destructor\">
       <Declaration><![CDATA[METHOD FB_exit : BOOL
 VAR_INPUT
 	bInCopyCode : BOOL; // if TRUE, the exit method is called for exiting an instance that is copied afterwards (online change).
@@ -45,7 +45,7 @@ parent.OffEvent('OnChanged',THIS^);
 parent.OffEvent('OnDisposed',THIS^);]]></ST>
       </Implementation>
     </Method>
-    <Method Name="FB_init" Id="{75ad03d8-a36c-4ab3-83a3-faef44a28444}" FolderPath="Constructor\">
+    <Method Name="FB_init" Id="{c35f5e0e-5c93-4301-984d-9c4784ce7cb8}" FolderPath="Constructor\">
       <Declaration><![CDATA[METHOD FB_init : BOOL
 VAR_INPUT
 	bInitRetains : BOOL; // if TRUE, the retain variables are initialized (warm start / cold start)
@@ -61,7 +61,7 @@ parent.OnEvent('OnChanged',THIS^);
 parent.OnEvent('OnDisposed',THIS^);]]></ST>
       </Implementation>
     </Method>
-    <Method Name="HandleEvent" Id="{1d9eb21a-9ac6-4ccf-b98d-04e926feb837}">
+    <Method Name="HandleEvent" Id="{edf032b9-7fd0-4a47-beeb-599ec2bf3cc5}">
       <Declaration><![CDATA[METHOD PUBLIC HandleEvent
 VAR_INPUT
 	Event : I_Event;
@@ -78,16 +78,27 @@ ELSIF __QUERYINTERFACE(Event, disposedEvent) THEN
 END_IF]]></ST>
       </Implementation>
     </Method>
-    <Property Name="IsValid" Id="{b55a7fa5-ccf0-4128-b055-89be113f083e}">
+    <Property Name="IsValid" Id="{8092d6fd-dac2-4d24-8c5c-a33aabe14a99}">
       <Declaration><![CDATA[PROPERTY PUBLIC IsValid : BOOL]]></Declaration>
-      <Get Name="Get" Id="{74f269be-2365-40f7-acce-b865ef79ad42}">
+      <Get Name="Get" Id="{8316cb57-1a90-4072-a384-f0014b61dac7}">
         <Declaration><![CDATA[PUBLIC]]></Declaration>
         <Implementation>
           <ST><![CDATA[IsValid := (NOT invalid AND parent <> 0);]]></ST>
         </Implementation>
       </Get>
     </Property>
-    <Method Name="MoveNext" Id="{b9dd9ade-fbdf-49f0-996a-e2e8b20500b9}">
+    <Property Name="Key" Id="{d4c1d814-9a91-4d62-9f38-302eaa5eedcb}">
+      <Declaration><![CDATA[PROPERTY Key : T_MAXSTRING]]></Declaration>
+      <Get Name="Get" Id="{20381df7-b3ca-4183-a77b-640a764100e6}">
+        <Declaration><![CDATA[VAR
+END_VAR
+]]></Declaration>
+        <Implementation>
+          <ST><![CDATA[]]></ST>
+        </Implementation>
+      </Get>
+    </Property>
+    <Method Name="MoveNext" Id="{bd9acc61-d4a4-49b4-8b96-5c83d726b708}">
       <Declaration><![CDATA[METHOD PUBLIC MoveNext : BOOL]]></Declaration>
       <Implementation>
         <ST><![CDATA[MoveNext := FALSE;]]></ST>

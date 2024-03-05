@@ -19,7 +19,7 @@ TestEnumerateThroughKeys();]]></ST>
       <Declaration><![CDATA[METHOD PRIVATE TestEnumerateThroughKeys
 VAR
 	jsonDeserializer : JsonDeserializer;
-	enumerator : I_DeserializerForwardEnumerator;
+	enumerator : I_DeserializerObjectForwardEnumerator;
     json : STRING := '{"key1":"value1", "key2":"value2", "key3":"value3"}';
 	out1, out2, out3 : STRING;
 	expected1 : STRING := 'key1';
@@ -32,16 +32,16 @@ END_VAR
         <ST><![CDATA[TEST('TestEnumerateThroughKeys');
 
 jsonDeserializer.TryLoad(json);
-enumerator := jsonDeserializer.GetObjectKeyEnumerator();
+enumerator := jsonDeserializer.GetObjectEnumerator();
 
 enumerator.MoveNext();
-enumerator.Current.TryGetName(out1);
+out1 := enumerator.Key;
 
 enumerator.MoveNext();
-enumerator.Current.TryGetName(out2);
+out2 := enumerator.Key;
 
 enumerator.MoveNext();
-enumerator.Current.TryGetName(out3);
+out3 := enumerator.Key;
 
 enumerator.Dispose();
 
@@ -70,7 +70,7 @@ TEST_FINISHED();]]></ST>
       <Declaration><![CDATA[METHOD PRIVATE TestIsNotValidAfterParentDispose
 VAR
 	pJsonDeserializer : POINTER TO JsonDeserializer;
-	enumerator : I_DeserializerForwardEnumerator;
+	enumerator : I_DeserializerObjectForwardEnumerator;
 	result : BOOL;
 END_VAR
 ]]></Declaration>
@@ -78,7 +78,7 @@ END_VAR
         <ST><![CDATA[TEST('TestIsNotValidAfterParentDispose');
 
 pJsonDeserializer := __NEW(JsonDeserializer);
-enumerator := pJsonDeserializer^.GetObjectKeyEnumerator();
+enumerator := pJsonDeserializer^.GetObjectEnumerator();
 
 pJsonDeserializer^.Dispose();
 result := enumerator.IsValid;
@@ -97,14 +97,14 @@ TEST_FINISHED();]]></ST>
       <Declaration><![CDATA[METHOD PRIVATE TestIsNotValidAfterParentReset
 VAR
 	jsonDeserializer : JsonDeserializer;
-	enumerator : I_DeserializerForwardEnumerator;
+	enumerator : I_DeserializerObjectForwardEnumerator;
 	result : BOOL;
 END_VAR
 ]]></Declaration>
       <Implementation>
         <ST><![CDATA[TEST('TestIsNotValidAfterParentReset');
 
-enumerator := jsonDeserializer.GetObjectKeyEnumerator();
+enumerator := jsonDeserializer.GetObjectEnumerator();
 
 jsonDeserializer.Reset();
 result := enumerator.IsValid;
@@ -123,14 +123,14 @@ TEST_FINISHED();]]></ST>
       <Declaration><![CDATA[METHOD PRIVATE TestIsValidAtStart
 VAR
 	jsonDeserializer : JsonDeserializer;
-	enumerator : I_DeserializerForwardEnumerator;
+	enumerator : I_DeserializerObjectForwardEnumerator;
 	result : BOOL;
 END_VAR
 ]]></Declaration>
       <Implementation>
         <ST><![CDATA[TEST('TestIsValidAtStart');
 
-enumerator := jsonDeserializer.GetObjectKeyEnumerator();
+enumerator := jsonDeserializer.GetObjectEnumerator();
 
 result := enumerator.IsValid;
 enumerator.Dispose();
@@ -147,7 +147,7 @@ TEST_FINISHED();]]></ST>
       <Declaration><![CDATA[METHOD PRIVATE TestMoveNextReturnsFalseAtTheEnd
 VAR
 	jsonDeserializer : JsonDeserializer;
-	enumerator : I_DeserializerForwardEnumerator;
+	enumerator : I_DeserializerObjectForwardEnumerator;
     json : STRING := '{"key1":"value1"}';
 	result : BOOL;
 END_VAR
@@ -156,7 +156,7 @@ END_VAR
         <ST><![CDATA[TEST('CheckMoveNextReturnsFalseAtTheEnd');
 
 jsonDeserializer.TryLoad(json);
-enumerator := jsonDeserializer.GetObjectKeyEnumerator();
+enumerator := jsonDeserializer.GetObjectEnumerator();
 
 enumerator.MoveNext();
 result := enumerator.MoveNext();
@@ -173,7 +173,7 @@ TEST_FINISHED();]]></ST>
       <Declaration><![CDATA[METHOD PRIVATE TestMoveNextReturnsFalseWhenEmpty
 VAR
 	jsonDeserializer : JsonDeserializer;
-	enumerator : I_DeserializerForwardEnumerator;
+	enumerator : I_DeserializerObjectForwardEnumerator;
     json : STRING := '{}';
 	result : BOOL;
 END_VAR
@@ -182,7 +182,7 @@ END_VAR
         <ST><![CDATA[TEST('CheckMoveNextReturnsFalseWhenEmpty');
 
 jsonDeserializer.TryLoad(json);
-enumerator := jsonDeserializer.GetObjectKeyEnumerator();
+enumerator := jsonDeserializer.GetObjectEnumerator();
 
 result := enumerator.MoveNext();
 
@@ -198,7 +198,7 @@ TEST_FINISHED();]]></ST>
       <Declaration><![CDATA[METHOD PRIVATE TestMoveNextReturnsTrueMultipleItems
 VAR
 	jsonDeserializer : JsonDeserializer;
-	enumerator : I_DeserializerForwardEnumerator;
+	enumerator : I_DeserializerObjectForwardEnumerator;
     json : STRING := '{"key1":"value1", "key2":"value2"}';
 	result : BOOL;
 END_VAR
@@ -207,7 +207,7 @@ END_VAR
         <ST><![CDATA[TEST('CheckMoveNextReturnsTrueMultipleItems');
 
 jsonDeserializer.TryLoad(json);
-enumerator := jsonDeserializer.GetObjectKeyEnumerator();
+enumerator := jsonDeserializer.GetObjectEnumerator();
 
 enumerator.MoveNext();
 result := enumerator.MoveNext();
@@ -226,7 +226,7 @@ TEST_FINISHED();]]></ST>
       <Declaration><![CDATA[METHOD PRIVATE TestMoveNextReturnsTrueSingleItem
 VAR
 	jsonDeserializer : JsonDeserializer;
-	enumerator : I_DeserializerForwardEnumerator;
+	enumerator : I_DeserializerObjectForwardEnumerator;
     json : STRING := '{"key1":"value1"}';
 	result : BOOL;
 END_VAR
@@ -235,7 +235,7 @@ END_VAR
         <ST><![CDATA[TEST('CheckMoveNextReturnsTrueSingleItem');
 
 jsonDeserializer.TryLoad(json);
-enumerator := jsonDeserializer.GetObjectKeyEnumerator();
+enumerator := jsonDeserializer.GetObjectEnumerator();
 
 result := enumerator.MoveNext();
 

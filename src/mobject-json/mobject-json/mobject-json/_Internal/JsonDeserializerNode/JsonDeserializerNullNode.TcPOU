@@ -23,16 +23,28 @@ END_VAR]]></Declaration>
 Clone := pClone^;]]></ST>
       </Implementation>
     </Method>
-    <Method Name="CreateNullEnumerator" Id="{cb2fe48b-2345-4050-8de9-290676488da6}" FolderPath="Protected\">
-      <Declaration><![CDATA[METHOD PROTECTED CreateNullEnumerator : I_DeserializerForwardEnumerator
+    <Method Name="CreateNullArrayEnumerator" Id="{cb2fe48b-2345-4050-8de9-290676488da6}" FolderPath="Protected\">
+      <Declaration><![CDATA[METHOD PROTECTED CreateNullArrayEnumerator : I_DeserializerArrayForwardEnumerator
 VAR_INPUT
 END_VAR
 VAR
-	pForwardEnumerator : POINTER TO JsonDeserializerNullForwardEnumerator;
+	pForwardEnumerator : POINTER TO JsonDeserializerNullArrayForwardEnumerator;
 END_VAR]]></Declaration>
       <Implementation>
-        <ST><![CDATA[pForwardEnumerator := __NEW(JsonDeserializerNullForwardEnumerator(ParentJsonDeserializer := parent, ParentNullDeserializer := THIS^));
-CreateNullEnumerator := pForwardEnumerator^;]]></ST>
+        <ST><![CDATA[pForwardEnumerator := __NEW(JsonDeserializerNullArrayForwardEnumerator(ParentJsonDeserializer := parent, ParentNullDeserializer := THIS^));
+CreateNullArrayEnumerator := pForwardEnumerator^;]]></ST>
+      </Implementation>
+    </Method>
+    <Method Name="CreateNullObjectEnumerator" Id="{28b9f8a9-d08b-4107-acd4-2d64cda8e14b}" FolderPath="Protected\">
+      <Declaration><![CDATA[METHOD PROTECTED CreateNullObjectEnumerator : I_DeserializerObjectForwardEnumerator
+VAR_INPUT
+END_VAR
+VAR
+	pForwardEnumerator : POINTER TO JsonDeserializerNullObjectForwardEnumerator;
+END_VAR]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[pForwardEnumerator := __NEW(JsonDeserializerNullObjectForwardEnumerator(ParentJsonDeserializer := parent, ParentNullDeserializer := THIS^));
+CreateNullObjectEnumerator := pForwardEnumerator^;]]></ST>
       </Implementation>
     </Method>
     <Method Name="FB_init" Id="{1e7296e9-f185-4ade-9915-6f5f29e97c6c}" FolderPath="Constructor\">
@@ -55,12 +67,12 @@ END_VAR]]></Declaration>
         <ST><![CDATA[GetArray := this^;]]></ST>
       </Implementation>
     </Method>
-    <Method Name="GetArrayElementEnumerator" Id="{a88ad026-4ec7-4218-9ece-bf13af031698}">
-      <Declaration><![CDATA[METHOD GetArrayElementEnumerator : I_DeserializerForwardEnumerator
+    <Method Name="GetArrayEnumerator" Id="{a88ad026-4ec7-4218-9ece-bf13af031698}">
+      <Declaration><![CDATA[METHOD GetArrayEnumerator : I_DeserializerArrayForwardEnumerator
 VAR_INPUT
 END_VAR]]></Declaration>
       <Implementation>
-        <ST><![CDATA[GetArrayElementEnumerator := CreateNullEnumerator();]]></ST>
+        <ST><![CDATA[GetArrayEnumerator := CreateNullArrayEnumerator();]]></ST>
       </Implementation>
     </Method>
     <Method Name="GetElementByIndex" Id="{4678a701-0ece-47f5-87d0-50c6ccbaaabd}">
@@ -72,15 +84,6 @@ END_VAR]]></Declaration>
         <ST><![CDATA[GetElementByIndex := this^;]]></ST>
       </Implementation>
     </Method>
-    <Method Name="GetKey" Id="{09b29dfb-1cd9-4ffc-8847-0eb0c4907f31}">
-      <Declaration><![CDATA[METHOD GetKey : I_Deserializer
-VAR_INPUT
-	Key : T_MAXSTRING;
-END_VAR]]></Declaration>
-      <Implementation>
-        <ST><![CDATA[GetKey := this^;]]></ST>
-      </Implementation>
-    </Method>
     <Method Name="GetKeyArray" Id="{13143476-2862-4c41-a794-22b9488d0f09}">
       <Declaration><![CDATA[METHOD GetKeyArray : I_Deserializer
 VAR_INPUT
@@ -90,12 +93,29 @@ END_VAR]]></Declaration>
         <ST><![CDATA[GetKeyArray := this^;]]></ST>
       </Implementation>
     </Method>
-    <Method Name="GetObjectKeyEnumerator" Id="{a7b69884-3b2b-4b72-863d-2e0e1feccd98}">
-      <Declaration><![CDATA[METHOD GetObjectKeyEnumerator : I_DeserializerForwardEnumerator
+    <Method Name="GetKeyObject" Id="{09b29dfb-1cd9-4ffc-8847-0eb0c4907f31}">
+      <Declaration><![CDATA[METHOD GetKeyObject : I_Deserializer
+VAR_INPUT
+	Key : T_MAXSTRING;
+END_VAR]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[GetKeyObject := this^;]]></ST>
+      </Implementation>
+    </Method>
+    <Method Name="GetObject" Id="{c921a466-93b2-4c80-8ffc-1a3e90b856cb}">
+      <Declaration><![CDATA[METHOD GetObject : I_Deserializer
 VAR_INPUT
 END_VAR]]></Declaration>
       <Implementation>
-        <ST><![CDATA[GetObjectKeyEnumerator := CreateNullEnumerator();]]></ST>
+        <ST><![CDATA[GetObject := this^;]]></ST>
+      </Implementation>
+    </Method>
+    <Method Name="GetObjectEnumerator" Id="{a7b69884-3b2b-4b72-863d-2e0e1feccd98}">
+      <Declaration><![CDATA[METHOD GetObjectEnumerator : I_DeserializerObjectForwardEnumerator
+VAR_INPUT
+END_VAR]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[GetObjectEnumerator := CreateNullObjectEnumerator();]]></ST>
       </Implementation>
     </Method>
     <Method Name="TryGetBase64" Id="{f75b94cc-09a1-46d1-96bc-828dc273232b}">
@@ -479,15 +499,6 @@ VAR_INPUT
 	Destination : REFERENCE TO LWORD;
 END_VAR
 ]]></Declaration>
-      <Implementation>
-        <ST><![CDATA[]]></ST>
-      </Implementation>
-    </Method>
-    <Method Name="TryGetName" Id="{10517808-4411-487f-8a6b-f34a550ffb2d}">
-      <Declaration><![CDATA[METHOD TryGetName : BOOL
-VAR_INPUT
-	Destination : REFERENCE TO STRING;
-END_VAR]]></Declaration>
       <Implementation>
         <ST><![CDATA[]]></ST>
       </Implementation>

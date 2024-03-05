@@ -114,12 +114,12 @@ END_VAR]]></Declaration>
         <ST><![CDATA[GetArray := rootNode.GetArray();]]></ST>
       </Implementation>
     </Method>
-    <Method Name="GetArrayElementEnumerator" Id="{296bee65-3702-4f89-b62c-79e4d6cff36a}">
-      <Declaration><![CDATA[METHOD GetArrayElementEnumerator : I_DeserializerForwardEnumerator
+    <Method Name="GetArrayEnumerator" Id="{296bee65-3702-4f89-b62c-79e4d6cff36a}">
+      <Declaration><![CDATA[METHOD GetArrayEnumerator : I_DeserializerArrayForwardEnumerator
 VAR_INPUT
 END_VAR]]></Declaration>
       <Implementation>
-        <ST><![CDATA[GetArrayElementEnumerator := rootNode.GetArrayElementEnumerator();]]></ST>
+        <ST><![CDATA[GetArrayEnumerator := rootNode.GetArrayEnumerator();]]></ST>
       </Implementation>
     </Method>
     <Method Name="GetElementByIndex" Id="{adfb94ab-88ff-476c-a549-f0880b6a7e45}">
@@ -131,15 +131,6 @@ END_VAR]]></Declaration>
         <ST><![CDATA[GetElementByIndex := rootNode.GetElementByIndex(Index);]]></ST>
       </Implementation>
     </Method>
-    <Method Name="GetKey" Id="{0f1075b2-7f5b-4f71-8323-87a91a30b569}">
-      <Declaration><![CDATA[METHOD GetKey : I_Deserializer
-VAR_INPUT
-	Key : T_MAXSTRING;
-END_VAR]]></Declaration>
-      <Implementation>
-        <ST><![CDATA[GetKey := rootNode.GetKey(Key);]]></ST>
-      </Implementation>
-    </Method>
     <Method Name="GetKeyArray" Id="{64ed3b17-47ab-402e-a2fe-0b75f40cb73a}">
       <Declaration><![CDATA[METHOD GetKeyArray : I_Deserializer
 VAR_INPUT
@@ -149,12 +140,29 @@ END_VAR]]></Declaration>
         <ST><![CDATA[GetKeyArray := rootNode.GetKeyArray(Key);]]></ST>
       </Implementation>
     </Method>
-    <Method Name="GetObjectKeyEnumerator" Id="{4e8516b1-abeb-410a-ac04-583c396c626e}">
-      <Declaration><![CDATA[METHOD GetObjectKeyEnumerator : I_DeserializerForwardEnumerator
+    <Method Name="GetKeyObject" Id="{0f1075b2-7f5b-4f71-8323-87a91a30b569}">
+      <Declaration><![CDATA[METHOD GetKeyObject : I_Deserializer
+VAR_INPUT
+	Key : T_MAXSTRING;
+END_VAR]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[GetKeyObject := rootNode.GetKeyObject(Key);]]></ST>
+      </Implementation>
+    </Method>
+    <Method Name="GetObject" Id="{41c747d7-9394-44e2-9d96-0f8c59e3b2b1}">
+      <Declaration><![CDATA[METHOD GetObject : I_Deserializer
 VAR_INPUT
 END_VAR]]></Declaration>
       <Implementation>
-        <ST><![CDATA[GetObjectKeyEnumerator := rootNode.GetObjectKeyEnumerator();]]></ST>
+        <ST><![CDATA[GetObject := rootNode.GetObject();]]></ST>
+      </Implementation>
+    </Method>
+    <Method Name="GetObjectEnumerator" Id="{4e8516b1-abeb-410a-ac04-583c396c626e}">
+      <Declaration><![CDATA[METHOD GetObjectEnumerator : I_DeserializerObjectForwardEnumerator
+VAR_INPUT
+END_VAR]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[GetObjectEnumerator := rootNode.GetObjectEnumerator();]]></ST>
       </Implementation>
     </Method>
     <Method Name="OffEvent" Id="{95eb9567-cd9f-4891-914f-5f286298bc6f}">
@@ -583,15 +591,6 @@ END_VAR
 ]]></Declaration>
       <Implementation>
         <ST><![CDATA[TryGetLword := rootNode.TryGetLword(Destination);]]></ST>
-      </Implementation>
-    </Method>
-    <Method Name="TryGetName" Id="{167e96da-9e8b-4f7c-a4cb-517d334a2f17}">
-      <Declaration><![CDATA[METHOD TryGetName : BOOL
-VAR_INPUT
-	Destination : REFERENCE TO STRING;
-END_VAR]]></Declaration>
-      <Implementation>
-        <ST><![CDATA[TryGetName := rootNode.TryGetName(Destination);]]></ST>
       </Implementation>
     </Method>
     <Method Name="TryGetObject" Id="{4a3bb941-939c-4dd6-bed5-5312803ff942}">

@@ -4,7 +4,7 @@
     <Declaration><![CDATA[{attribute 'linkalways'} 
 {attribute 'no_explicit_call' := 'This FB is a CLASS and must be accessed using methods or properties'}
 {attribute 'enable_dynamic_creation'}
-FUNCTION_BLOCK JsonDeserializerObjectForwardEnumerator EXTENDS Disposable IMPLEMENTS I_DeserializerForwardEnumerator, I_EventHandler
+FUNCTION_BLOCK JsonDeserializerObjectForwardEnumerator EXTENDS Disposable IMPLEMENTS I_DeserializerObjectForwardEnumerator, I_EventHandler
 VAR
 	parent : I_JsonDeserializer;
 	jsonParser : REFERENCE TO JsonDomParser;
@@ -17,6 +17,7 @@ VAR
 	memberBeginPosition : SJsonValue;
 	memberEndPosition : SJsonValue;
 	currentDeserializer : I_Deserializer;
+	currentKey : T_MAXSTRING;
 END_VAR
 ]]></Declaration>
     <Implementation>
@@ -168,6 +169,17 @@ IsValid := TRUE;]]></ST>
         </Implementation>
       </Get>
     </Property>
+    <Property Name="Key" Id="{f97a481e-19b2-41f7-ae9c-25e29162de2e}">
+      <Declaration><![CDATA[PROPERTY Key : T_MAXSTRING]]></Declaration>
+      <Get Name="Get" Id="{c627e47c-3840-4c15-ab21-3debadcbb797}">
+        <Declaration><![CDATA[VAR
+END_VAR
+]]></Declaration>
+        <Implementation>
+          <ST><![CDATA[Key := currentKey;]]></ST>
+        </Implementation>
+      </Get>
+    </Property>
     <Method Name="MoveNext" Id="{a6b67b7b-eaf1-4146-b778-5176de8dd0b8}">
       <Declaration><![CDATA[METHOD PUBLIC MoveNext : BOOL]]></Declaration>
       <Implementation>
@@ -196,6 +208,9 @@ END_IF]]></ST>
       <Declaration><![CDATA[METHOD PROTECTED UpdateCurrentDeserializer
 VAR_INPUT
 	Root : SJsonValue;
+END_VAR
+VAR
+	newRoot : SJsonValue;
 END_VAR]]></Declaration>
       <Implementation>
         <ST><![CDATA[IF currentDeserializer <> 0 THEN
@@ -207,11 +222,14 @@ IF invalid THEN
 	RETURN;
 END_IF
 
-IF Root = 0 THEN
+newRoot := jsonParser.GetMemberValue(Root);
+currentKey := jsonParser.GetMemberName(currentMemberPosition);
+
+IF newRoot = 0 THEN
 	RETURN;
 END_IF
 
-currentDeserializer := CreateDeserializer(Root);]]></ST>
+currentDeserializer := CreateDeserializer(newRoot);]]></ST>
       </Implementation>
     </Method>
   </POU>

@@ -4,7 +4,7 @@
     <Declaration><![CDATA[{attribute 'linkalways'} 
 {attribute 'no_explicit_call' := 'This FB is a CLASS and must be accessed using methods or properties'}
 {attribute 'enable_dynamic_creation'}
-FUNCTION_BLOCK JsonDeserializerArrayForwardEnumerator EXTENDS Disposable IMPLEMENTS I_DeserializerForwardEnumerator, I_EventHandler
+FUNCTION_BLOCK JsonDeserializerArrayForwardEnumerator EXTENDS Disposable IMPLEMENTS I_DeserializerArrayForwardEnumerator, I_EventHandler
 VAR
 	parent : I_JsonDeserializer;
 	jsonParser : REFERENCE TO JsonDomParser;
@@ -17,6 +17,7 @@ VAR
 	arrayBeginPosition : SJsonValue;
 	arrayEndPosition : SJsonValue;
 	currentDeserializer : I_Deserializer;
+	_index : DINT;
 END_VAR
 ]]></Declaration>
     <Implementation>
@@ -126,6 +127,17 @@ ELSIF __QUERYINTERFACE(Event, disposedEvent) THEN
 END_IF]]></ST>
       </Implementation>
     </Method>
+    <Property Name="Index" Id="{5760f693-3452-44a4-8bfc-b33dbdf396cf}">
+      <Declaration><![CDATA[PROPERTY Index : DINT]]></Declaration>
+      <Get Name="Get" Id="{02bfb3b9-101c-4c93-ae96-0e597618e7e9}">
+        <Declaration><![CDATA[VAR
+END_VAR
+]]></Declaration>
+        <Implementation>
+          <ST><![CDATA[Index := _index;]]></ST>
+        </Implementation>
+      </Get>
+    </Property>
     <Method Name="Initialize" Id="{ebcb0e63-842a-4d07-98bb-066bfc3fb500}" FolderPath="Protected\">
       <Declaration><![CDATA[METHOD PROTECTED Initialize
 VAR_INPUT
@@ -180,6 +192,7 @@ IF NOT moveNextCalled THEN
     currentArrayPosition := arrayBeginPosition;
     UpdateCurrentDeserializer(currentArrayPosition);
 	MoveNext := TRUE;
+	_index := index + 1;
     RETURN;
 END_IF
 
@@ -188,6 +201,7 @@ IF currentArrayPosition <> arrayEndPosition THEN
 	currentArrayPosition := jsonParser.NextArray(currentArrayPosition);
 	UpdateCurrentDeserializer(currentArrayPosition);
 	MoveNext := (currentArrayPosition <> arrayEndPosition);
+	_index := index + 1;
 END_IF
 ]]></ST>
       </Implementation>

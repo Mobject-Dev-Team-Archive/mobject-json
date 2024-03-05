@@ -48,7 +48,7 @@ __DELETE(pJsonString);]]></ST>
       </Implementation>
     </Method>
     <Method Name="CreateArrayForwardEnumerator" Id="{6030abba-e10d-46a1-a52b-2d76db284222}" FolderPath="Protected\">
-      <Declaration><![CDATA[METHOD PROTECTED CreateArrayForwardEnumerator : I_DeserializerForwardEnumerator
+      <Declaration><![CDATA[METHOD PROTECTED CreateArrayForwardEnumerator : I_DeserializerArrayForwardEnumerator
 VAR_INPUT
 	DeserializerRoot : SJsonValue;
 END_VAR
@@ -90,7 +90,7 @@ CreateDeserializer := pNode^;]]></ST>
       </Implementation>
     </Method>
     <Method Name="CreateObjectForwardEnumerator" Id="{38033401-a7f8-4d65-9236-90fa9fbaaf3e}" FolderPath="Protected\">
-      <Declaration><![CDATA[METHOD PROTECTED CreateObjectForwardEnumerator : I_DeserializerForwardEnumerator
+      <Declaration><![CDATA[METHOD PROTECTED CreateObjectForwardEnumerator : I_DeserializerObjectForwardEnumerator
 VAR_INPUT
 	DeserializerRoot : SJsonValue;
 END_VAR
@@ -142,10 +142,7 @@ ParentGarbageCollector.Register(THIS^);]]></ST>
       </Implementation>
     </Method>
     <Method Name="GetArray" Id="{9bb8154f-4602-4227-bc52-0e66e760b35b}">
-      <Declaration><![CDATA[METHOD GetArray : I_Deserializer
-VAR
-	newRoot : SJsonValue;
-END_VAR]]></Declaration>
+      <Declaration><![CDATA[METHOD GetArray : I_Deserializer]]></Declaration>
       <Implementation>
         <ST><![CDATA[IF NOT jsonParser.IsArray(root) THEN
 	GetArray := nullNode;
@@ -155,12 +152,12 @@ END_IF
 GetArray := CreateDeserializer(root);]]></ST>
       </Implementation>
     </Method>
-    <Method Name="GetArrayElementEnumerator" Id="{da6bc13c-a577-4023-87eb-f80628122f5a}">
-      <Declaration><![CDATA[METHOD GetArrayElementEnumerator : I_DeserializerForwardEnumerator
+    <Method Name="GetArrayEnumerator" Id="{da6bc13c-a577-4023-87eb-f80628122f5a}">
+      <Declaration><![CDATA[METHOD GetArrayEnumerator : I_DeserializerArrayForwardEnumerator
 VAR_INPUT
 END_VAR]]></Declaration>
       <Implementation>
-        <ST><![CDATA[GetArrayElementEnumerator := CreateArrayForwardEnumerator(root);]]></ST>
+        <ST><![CDATA[GetArrayEnumerator := CreateArrayForwardEnumerator(root);]]></ST>
       </Implementation>
     </Method>
     <Method Name="GetElementByIndex" Id="{174747da-24a7-4fc5-8818-0f3b03ad0ece}">
@@ -185,25 +182,6 @@ IF newRoot = 0 THEN
 END_IF
 
 GetElementByIndex := CreateDeserializer(newRoot);]]></ST>
-      </Implementation>
-    </Method>
-    <Method Name="GetKey" Id="{21ead7f6-33c6-47dd-b46a-ee87068775fc}">
-      <Declaration><![CDATA[METHOD GetKey : I_Deserializer
-VAR_INPUT
-	Key : T_MAXSTRING;
-END_VAR
-VAR
-	newRoot : SJsonValue;
-END_VAR]]></Declaration>
-      <Implementation>
-        <ST><![CDATA[newRoot := jsonParser.FindMember(root, Key);
-
-IF newRoot = 0 THEN
-	GetKey := nullNode;
-	RETURN;
-END_IF
-
-GetKey := CreateDeserializer(newRoot);]]></ST>
       </Implementation>
     </Method>
     <Method Name="GetKeyArray" Id="{e3ea14fa-c6b4-4db2-979b-6041e0114ce6}">
@@ -234,26 +212,59 @@ END_IF
 GetKeyArray := CreateDeserializer(member);]]></ST>
       </Implementation>
     </Method>
-    <Method Name="GetObject" Id="{a46aff17-b68e-4057-a8ca-451faa9f7670}">
-      <Declaration><![CDATA[METHOD GetObject : I_Deserializer
+    <Method Name="GetKeyObject" Id="{21ead7f6-33c6-47dd-b46a-ee87068775fc}">
+      <Declaration><![CDATA[METHOD GetKeyObject : I_Deserializer
+VAR_INPUT
+	Key : T_MAXSTRING;
+END_VAR
 VAR
 	newRoot : SJsonValue;
 END_VAR]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[newRoot := jsonParser.FindMember(root, Key);
+
+IF newRoot = 0 THEN
+	GetKeyObject := nullNode;
+	RETURN;
+END_IF
+
+GetKeyObject := CreateDeserializer(newRoot);]]></ST>
+      </Implementation>
+    </Method>
+    <Method Name="GetObject" Id="{a46aff17-b68e-4057-a8ca-451faa9f7670}">
+      <Declaration><![CDATA[METHOD GetObject : I_Deserializer
+]]></Declaration>
       <Implementation>
         <ST><![CDATA[IF NOT jsonParser.IsObject(root) THEN
 	GetObject := nullNode;
 	RETURN;
 END_IF
 
-GetObject := CreateDeserializer(newRoot);]]></ST>
+GetObject := CreateDeserializer(root);]]></ST>
       </Implementation>
     </Method>
-    <Method Name="GetObjectKeyEnumerator" Id="{9926b8fd-b9fc-4447-a102-5e8bd81b8fc8}">
-      <Declaration><![CDATA[METHOD GetObjectKeyEnumerator : I_DeserializerForwardEnumerator
+    <Method Name="GetObjectEnumerator" Id="{9926b8fd-b9fc-4447-a102-5e8bd81b8fc8}">
+      <Declaration><![CDATA[METHOD GetObjectEnumerator : I_DeserializerObjectForwardEnumerator
 VAR_INPUT
 END_VAR]]></Declaration>
       <Implementation>
-        <ST><![CDATA[GetObjectKeyEnumerator := CreateObjectForwardEnumerator(root);]]></ST>
+        <ST><![CDATA[GetObjectEnumerator := CreateObjectForwardEnumerator(root);]]></ST>
+      </Implementation>
+    </Method>
+    <Method Name="GetValue" Id="{144f4285-a3b3-40fd-b930-905837d16c4c}">
+      <Declaration><![CDATA[METHOD GetValue : I_Deserializer
+VAR
+	newRoot : SJsonValue;
+END_VAR]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[newRoot := jsonParser.GetMemberValue(root);
+
+IF newRoot = 0 THEN
+	GetValue := nullNode;
+	RETURN;
+END_IF
+
+GetValue := CreateDeserializer(newRoot);]]></ST>
       </Implementation>
     </Method>
     <Method Name="TryGetBase64" Id="{e6e67841-c921-4bf8-b895-2b93871a9309}">
@@ -1027,25 +1038,6 @@ END_IF
 
 Destination := value;
 TryGetLword := TRUE;]]></ST>
-      </Implementation>
-    </Method>
-    <Method Name="TryGetName" Id="{07b012a4-e6de-45bb-812e-56005cc171c4}">
-      <Declaration><![CDATA[METHOD TryGetName : BOOL
-VAR_INPUT
-	Destination : REFERENCE TO STRING;
-END_VAR
-VAR
-	name : T_MAXSTRING;
-END_VAR]]></Declaration>
-      <Implementation>
-        <ST><![CDATA[name := jsonparser.GetMemberName(root);
-
-IF name = '' THEN
-	RETURN;
-END_IF
-
-Destination := name; 
-TryGetName := TRUE;]]></ST>
       </Implementation>
     </Method>
     <Method Name="TryGetObject" Id="{e78ac69f-ae34-4608-8de7-23629f7fedc7}">

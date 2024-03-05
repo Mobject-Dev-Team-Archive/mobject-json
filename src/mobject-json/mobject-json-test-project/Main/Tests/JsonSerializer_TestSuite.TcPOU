@@ -32,6 +32,7 @@ TestAddKeyLtime();
 TestAddKeyLword();
 TestAddKeyNull();
 TestAddKeyObject();
+TestAddKeyObject_Array();
 TestAddKeyRawJson();
 TestAddKeyReal();
 TestAddKeySint();
@@ -774,6 +775,32 @@ VAR
 END_VAR]]></Declaration>
       <Implementation>
         <ST><![CDATA[TEST('TestAddKeyObject');
+
+jsonSerializer.StartObject();
+jsonSerializer.AddKeyObject('data',user);
+jsonSerializer.EndObject();
+
+jsonSerializer.TryGetSerialziedData(ADR(out),SIZEOF(out));
+
+AssertEquals(
+	Expected := expected,
+	Actual := out,
+	Message := 'Did not produce the expected JSON string for the Object value'
+);
+
+TEST_FINISHED();]]></ST>
+      </Implementation>
+    </Method>
+    <Method Name="TestAddKeyObject_Array" Id="{c4dfa31b-aeab-47d9-8158-12a46ff01c85}">
+      <Declaration><![CDATA[METHOD PUBLIC TestAddKeyObject_Array
+VAR
+	jsonSerializer : JsonSerializer;
+	user : MockSerializableArray(Name := 'alice', Age := 40);
+	out : STRING;
+	expected : STRING := '{"data":["alice",40]}';
+END_VAR]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[TEST('TestAddKeyObject_Array');
 
 jsonSerializer.StartObject();
 jsonSerializer.AddKeyObject('data',user);

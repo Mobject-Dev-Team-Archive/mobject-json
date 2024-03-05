@@ -6,6 +6,9 @@
       <ST><![CDATA[TestClone();
 TestReset();
 TestGetArray();
+TestGetKeyArray();
+TestGetKeyObject();
+TestGetObject();
 TestTryGetBase64();
 TestTryGetBoolWithFalseValue();
 TestTryGetBoolWithTrueValue();
@@ -17,7 +20,6 @@ TestTryGetDint();
 TestTryGetDword();
 TestTryGetFileTime();
 TestTryGetInt();
-TestTryGetKey();
 TestTryGetKeyBase64();
 TestTryGetKeyBoolWithFalseBoolVariable();
 TestTryGetKeyBoolWithTrueBoolVariable();
@@ -142,6 +144,133 @@ AssertEquals(
     Expected := expected,
     Actual := out,
     Message := 'Did not produce the expected BYTE value from JSON array'
+);
+
+TEST_FINISHED();
+]]></ST>
+      </Implementation>
+    </Method>
+    <Method Name="TestGetKeyArray" Id="{cfa7a7fb-c5d2-4334-afc4-a9b46f0f82c4}">
+      <Declaration><![CDATA[METHOD PUBLIC TestGetKeyArray
+VAR
+    jsonDeserializer : JsonDeserializer;
+	arrayDeserializer : I_Deserializer;
+	elementDeserializer : I_Deserializer;
+    json : STRING := '{"myArray":[100,200,300]}';
+    out : BYTE;
+	hasArrayDeserializer : BOOL;
+	hasElementDeserializer : BOOL;
+    expected : BYTE := 100;
+END_VAR
+]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[TEST('TestGetKeyArray');
+
+jsonDeserializer.TryLoad(json);
+arrayDeserializer := jsonDeserializer.GetKeyArray('myArray');
+
+hasArrayDeserializer := arrayDeserializer <> 0;
+
+IF hasArrayDeserializer THEN
+	elementDeserializer := arrayDeserializer.GetElementByIndex(0);
+END_IF
+
+AssertTrue(
+	Condition := hasArrayDeserializer,
+	Message := 'Did not return deserializer for array'
+);
+
+hasElementDeserializer := elementDeserializer <> 0;
+
+IF hasElementDeserializer THEN
+	elementDeserializer.TryGetByte(out);
+END_IF
+
+AssertTrue(
+	Condition := hasElementDeserializer,
+	Message := 'Did not return deserializer for element'
+);
+
+AssertEquals(
+    Expected := expected,
+    Actual := out,
+    Message := 'Did not produce the expected BYTE value from JSON array'
+);
+
+TEST_FINISHED();
+]]></ST>
+      </Implementation>
+    </Method>
+    <Method Name="TestGetKeyObject" Id="{92411e10-8b04-4e3b-8770-1b6bdd927cf2}">
+      <Declaration><![CDATA[METHOD PUBLIC TestGetKeyObject
+VAR
+    jsonDeserializer : JsonDeserializer;
+	objectDeserializer : I_Deserializer;
+    json : STRING := '{"data":100}';
+    out : BYTE;
+	hasObjectDeserializer : BOOL;
+    expected : BYTE := 100;
+END_VAR
+]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[TEST('TestGetKeyObject');
+
+jsonDeserializer.TryLoad(json);
+objectDeserializer := jsonDeserializer.GetKeyObject('data');
+
+hasObjectDeserializer := objectDeserializer <> 0;
+
+IF hasObjectDeserializer THEN
+	objectDeserializer.TryGetByte(out);
+END_IF
+
+AssertTrue(
+	Condition := hasObjectDeserializer,
+	Message := 'Did not return deserializer for object'
+);
+
+AssertEquals(
+    Expected := expected,
+    Actual := out,
+    Message := 'Did not produce the expected BYTE value from JSON'
+);
+
+TEST_FINISHED();
+]]></ST>
+      </Implementation>
+    </Method>
+    <Method Name="TestGetObject" Id="{59394502-a2de-468a-9231-09415dbae109}">
+      <Declaration><![CDATA[METHOD PUBLIC TestGetObject
+VAR
+    jsonDeserializer : JsonDeserializer;
+	objectDeserializer : I_Deserializer;
+    json : STRING := '{"data":100}';
+    out : BYTE;
+	hasObjectDeserializer : BOOL;
+    expected : BYTE := 100;
+END_VAR
+]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[TEST('TestGetObject');
+
+jsonDeserializer.TryLoad(json);
+objectDeserializer := jsonDeserializer.GetObject();
+
+hasObjectDeserializer := objectDeserializer <> 0;
+
+IF hasObjectDeserializer THEN
+	objectDeserializer.TryGetKeyByte('data',out);
+END_IF
+
+AssertTrue(
+	Condition := hasObjectDeserializer,
+	Message := 'Did not return deserializer for object'
+);
+
+AssertEquals(
+    Expected := expected,
+    Actual := out,
+    Message := 'Did not produce the expected BYTE value from JSON'
 );
 
 TEST_FINISHED();
@@ -429,44 +558,6 @@ AssertEquals(
     Expected := expected,
     Actual := out,
     Message := 'Did not produce the expected INT value from JSON'
-);
-
-TEST_FINISHED();
-]]></ST>
-      </Implementation>
-    </Method>
-    <Method Name="TestTryGetKey" Id="{b1d37243-9b7e-44c8-94b1-90e550191d65}">
-      <Declaration><![CDATA[METHOD PUBLIC TestTryGetKey
-VAR
-    jsonDeserializer : JsonDeserializer;
-	newDeserializer : I_Deserializer;
-    json : STRING := '{"data":100}';
-    out : BYTE;
-	hasDeserializer : BOOL;
-    expected : BYTE := 100;
-END_VAR
-]]></Declaration>
-      <Implementation>
-        <ST><![CDATA[TEST('TestTryGetKey');
-
-jsonDeserializer.TryLoad(json);
-newDeserializer := jsonDeserializer.GetKey('data');
-
-hasDeserializer := newDeserializer <> 0;
-
-IF hasDeserializer THEN
-	newDeserializer.TryGetByte(out);
-END_IF
-
-AssertTrue(
-	Condition := hasDeserializer,
-	Message := 'Did not return deserializer for key'
-);
-
-AssertEquals(
-    Expected := expected,
-    Actual := out,
-    Message := 'Did not produce the expected BYTE value from JSON when using TryGetKey'
 );
 
 TEST_FINISHED();
