@@ -83,7 +83,7 @@ END_VAR]]></Declaration>
         <ST><![CDATA[TEST('TestAddBase64');
 
 jsonSerializer.AddBase64(ADR(rawData), SIZEOF(rawData));
-jsonSerializer.TryGetSerialziedData(ADR(out),SIZEOF(out));
+jsonSerializer.TryGetSerializedData(ADR(out),SIZEOF(out));
 
 AssertEquals(
 	Expected := expected,
@@ -106,7 +106,7 @@ END_VAR]]></Declaration>
         <ST><![CDATA[TEST('TestAddBoolWithFalseBoolVariable');
 
 jsonSerializer.AddBool(value);
-jsonSerializer.TryGetSerialziedData(ADR(out),SIZEOF(out));
+jsonSerializer.TryGetSerializedData(ADR(out),SIZEOF(out));
 
 AssertEquals(
 	Expected := expected,
@@ -129,7 +129,7 @@ END_VAR]]></Declaration>
         <ST><![CDATA[TEST('TestAddBoolWithTrueBoolVariable');
 
 jsonSerializer.AddBool(value);
-jsonSerializer.TryGetSerialziedData(ADR(out),SIZEOF(out));
+jsonSerializer.TryGetSerializedData(ADR(out),SIZEOF(out));
 
 AssertEquals(
 	Expected := expected,
@@ -152,7 +152,7 @@ END_VAR]]></Declaration>
         <ST><![CDATA[TEST('TestAddByte');
 
 jsonSerializer.AddByte(byteValue);
-jsonSerializer.TryGetSerialziedData(ADR(out),SIZEOF(out));
+jsonSerializer.TryGetSerializedData(ADR(out),SIZEOF(out));
 
 AssertEquals(
 	Expected := expected,
@@ -175,7 +175,7 @@ END_VAR]]></Declaration>
         <ST><![CDATA[TEST('TestAddBytesAsHex');
 
 jsonSerializer.AddBytesAsHex(ADR(binaryData), SIZEOF(binaryData));
-jsonSerializer.TryGetSerialziedData(ADR(out),SIZEOF(out));
+jsonSerializer.TryGetSerializedData(ADR(out),SIZEOF(out));
 
 AssertEquals(
 	Expected := expected,
@@ -198,7 +198,7 @@ END_VAR]]></Declaration>
         <ST><![CDATA[TEST('TestAddDateTime');
 
 jsonSerializer.AddDateTime(dateTimeValue);
-jsonSerializer.TryGetSerialziedData(ADR(out),SIZEOF(out));
+jsonSerializer.TryGetSerializedData(ADR(out),SIZEOF(out));
 
 AssertEquals(
 	Expected := expected,
@@ -221,7 +221,7 @@ END_VAR]]></Declaration>
         <ST><![CDATA[TEST('TestAddDcTime');
 
 jsonSerializer.AddDcTime(dcTimeValue);
-jsonSerializer.TryGetSerialziedData(ADR(out),SIZEOF(out));
+jsonSerializer.TryGetSerializedData(ADR(out),SIZEOF(out));
 
 AssertEquals(
 	Expected := expected,
@@ -244,7 +244,7 @@ END_VAR]]></Declaration>
         <ST><![CDATA[TEST('TestAddDint');
 
 jsonSerializer.AddDint(dintValue);
-jsonSerializer.TryGetSerialziedData(ADR(out),SIZEOF(out));
+jsonSerializer.TryGetSerializedData(ADR(out),SIZEOF(out));
 
 AssertEquals(
 	Expected := expected,
@@ -267,7 +267,7 @@ END_VAR]]></Declaration>
         <ST><![CDATA[TEST('TestAddDword');
 
 jsonSerializer.AddDword(dwordValue);
-jsonSerializer.TryGetSerialziedData(ADR(out),SIZEOF(out));
+jsonSerializer.TryGetSerializedData(ADR(out),SIZEOF(out));
 
 AssertEquals(
 	Expected := expected,
@@ -290,7 +290,7 @@ END_VAR]]></Declaration>
         <ST><![CDATA[TEST('TestAddFileTime');
 
 jsonSerializer.AddFileTime(fileTimeValue);
-jsonSerializer.TryGetSerialziedData(ADR(out),SIZEOF(out));
+jsonSerializer.TryGetSerializedData(ADR(out),SIZEOF(out));
 
 AssertEquals(
 	Expected := expected,
@@ -313,7 +313,7 @@ END_VAR]]></Declaration>
         <ST><![CDATA[TEST('TestAddInt');
 
 jsonSerializer.AddInt(intValue);
-jsonSerializer.TryGetSerialziedData(ADR(out),SIZEOF(out));
+jsonSerializer.TryGetSerializedData(ADR(out),SIZEOF(out));
 
 AssertEquals(
 	Expected := expected,
@@ -339,7 +339,7 @@ jsonSerializer.AddKey('data');
 jsonSerializer.AddDint(123);
 jsonSerializer.EndObject();
 
-jsonSerializer.TryGetSerialziedData(ADR(out),SIZEOF(out));
+jsonSerializer.TryGetSerializedData(ADR(out),SIZEOF(out));
 
 AssertEquals(
 	Expected := expected,
@@ -365,7 +365,7 @@ jsonSerializer.StartObject();
 jsonSerializer.AddKeyBase64('data',ADR(rawData), SIZEOF(rawData));
 jsonSerializer.EndObject();
 
-jsonSerializer.TryGetSerialziedData(ADR(out),SIZEOF(out));
+jsonSerializer.TryGetSerializedData(ADR(out),SIZEOF(out));
 
 AssertEquals(
 	Expected := expected,
@@ -391,7 +391,7 @@ jsonSerializer.StartObject();
 jsonSerializer.AddKeyBool('data',value);
 jsonSerializer.EndObject();
 
-jsonSerializer.TryGetSerialziedData(ADR(out),SIZEOF(out));
+jsonSerializer.TryGetSerializedData(ADR(out),SIZEOF(out));
 
 AssertEquals(
 	Expected := expected,
@@ -417,7 +417,7 @@ jsonSerializer.StartObject();
 jsonSerializer.AddKeyBool('data',value);
 jsonSerializer.EndObject();
 
-jsonSerializer.TryGetSerialziedData(ADR(out),SIZEOF(out));
+jsonSerializer.TryGetSerializedData(ADR(out),SIZEOF(out));
 
 AssertEquals(
 	Expected := expected,
@@ -443,7 +443,7 @@ jsonSerializer.StartObject();
 jsonSerializer.AddKeyByte('data',byteValue);
 jsonSerializer.EndObject();
 
-jsonSerializer.TryGetSerialziedData(ADR(out),SIZEOF(out));
+jsonSerializer.TryGetSerializedData(ADR(out),SIZEOF(out));
 
 AssertEquals(
 	Expected := expected,
@@ -469,7 +469,7 @@ jsonSerializer.StartObject();
 jsonSerializer.AddKeyBytesAsHex('data',ADR(binaryData), SIZEOF(binaryData));
 jsonSerializer.EndObject();
 
-jsonSerializer.TryGetSerialziedData(ADR(out),SIZEOF(out));
+jsonSerializer.TryGetSerializedData(ADR(out),SIZEOF(out));
 
 AssertEquals(
 	Expected := expected,
@@ -495,7 +495,7 @@ jsonSerializer.StartObject();
 jsonSerializer.AddKeyDateTime('data',dateTimeValue);
 jsonSerializer.EndObject();
 
-jsonSerializer.TryGetSerialziedData(ADR(out),SIZEOF(out));
+jsonSerializer.TryGetSerializedData(ADR(out),SIZEOF(out));
 
 AssertEquals(
 	Expected := expected,
@@ -521,7 +521,7 @@ jsonSerializer.StartObject();
 jsonSerializer.AddKeyDcTime('data',dcTimeValue);
 jsonSerializer.EndObject();
 
-jsonSerializer.TryGetSerialziedData(ADR(out),SIZEOF(out));
+jsonSerializer.TryGetSerializedData(ADR(out),SIZEOF(out));
 
 AssertEquals(
 	Expected := expected,
@@ -547,7 +547,7 @@ jsonSerializer.StartObject();
 jsonSerializer.AddKeyDint('data',dintValue);
 jsonSerializer.EndObject();
 
-jsonSerializer.TryGetSerialziedData(ADR(out),SIZEOF(out));
+jsonSerializer.TryGetSerializedData(ADR(out),SIZEOF(out));
 
 AssertEquals(
 	Expected := expected,
@@ -573,7 +573,7 @@ jsonSerializer.StartObject();
 jsonSerializer.AddKeyDword('data',dwordValue);
 jsonSerializer.EndObject();
 
-jsonSerializer.TryGetSerialziedData(ADR(out),SIZEOF(out));
+jsonSerializer.TryGetSerializedData(ADR(out),SIZEOF(out));
 
 AssertEquals(
 	Expected := expected,
@@ -599,7 +599,7 @@ jsonSerializer.StartObject();
 jsonSerializer.AddKeyFileTime('data',fileTimeValue);
 jsonSerializer.EndObject();
 
-jsonSerializer.TryGetSerialziedData(ADR(out),SIZEOF(out));
+jsonSerializer.TryGetSerializedData(ADR(out),SIZEOF(out));
 
 AssertEquals(
 	Expected := expected,
@@ -625,7 +625,7 @@ jsonSerializer.StartObject();
 jsonSerializer.AddKeyInt('data',intValue);
 jsonSerializer.EndObject();
 
-jsonSerializer.TryGetSerialziedData(ADR(out),SIZEOF(out));
+jsonSerializer.TryGetSerializedData(ADR(out),SIZEOF(out));
 
 AssertEquals(
 	Expected := expected,
@@ -651,7 +651,7 @@ jsonSerializer.StartObject();
 jsonSerializer.AddKeyLint('data',lintValue);
 jsonSerializer.EndObject();
 
-jsonSerializer.TryGetSerialziedData(ADR(out),SIZEOF(out));
+jsonSerializer.TryGetSerializedData(ADR(out),SIZEOF(out));
 
 AssertEquals(
 	Expected := expected,
@@ -677,7 +677,7 @@ jsonSerializer.StartObject();
 jsonSerializer.AddKeyLreal('data',lrealValue);
 jsonSerializer.EndObject();
 
-jsonSerializer.TryGetSerialziedData(ADR(out),SIZEOF(out));
+jsonSerializer.TryGetSerializedData(ADR(out),SIZEOF(out));
 
 AssertEquals(
 	Expected := expected,
@@ -703,7 +703,7 @@ jsonSerializer.StartObject();
 jsonSerializer.AddKeyLtime('data',ltimeValue);
 jsonSerializer.EndObject();
 
-jsonSerializer.TryGetSerialziedData(ADR(out),SIZEOF(out));
+jsonSerializer.TryGetSerializedData(ADR(out),SIZEOF(out));
 
 AssertEquals(
 	Expected := expected,
@@ -729,7 +729,7 @@ jsonSerializer.StartObject();
 jsonSerializer.AddKeyLword('data',lwordValue);
 jsonSerializer.EndObject();
 
-jsonSerializer.TryGetSerialziedData(ADR(out),SIZEOF(out));
+jsonSerializer.TryGetSerializedData(ADR(out),SIZEOF(out));
 
 AssertEquals(
 	Expected := expected,
@@ -754,7 +754,7 @@ jsonSerializer.StartObject();
 jsonSerializer.AddKeyNull('data');
 jsonSerializer.EndObject();
 
-jsonSerializer.TryGetSerialziedData(ADR(out),SIZEOF(out));
+jsonSerializer.TryGetSerializedData(ADR(out),SIZEOF(out));
 
 AssertEquals(
 	Expected := expected,
@@ -780,7 +780,7 @@ jsonSerializer.StartObject();
 jsonSerializer.AddKeyObject('data',user);
 jsonSerializer.EndObject();
 
-jsonSerializer.TryGetSerialziedData(ADR(out),SIZEOF(out));
+jsonSerializer.TryGetSerializedData(ADR(out),SIZEOF(out));
 
 AssertEquals(
 	Expected := expected,
@@ -806,7 +806,7 @@ jsonSerializer.StartObject();
 jsonSerializer.AddKeyObject('data',user);
 jsonSerializer.EndObject();
 
-jsonSerializer.TryGetSerialziedData(ADR(out),SIZEOF(out));
+jsonSerializer.TryGetSerializedData(ADR(out),SIZEOF(out));
 
 AssertEquals(
 	Expected := expected,
@@ -832,7 +832,7 @@ jsonSerializer.StartObject();
 jsonSerializer.AddKeyRawJson('data',rawObject);
 jsonSerializer.EndObject();
 
-jsonSerializer.TryGetSerialziedData(ADR(out),SIZEOF(out));
+jsonSerializer.TryGetSerializedData(ADR(out),SIZEOF(out));
 
 AssertEquals(
 	Expected := expected,
@@ -858,7 +858,7 @@ jsonSerializer.StartObject();
 jsonSerializer.AddKeyReal('data',realValue);
 jsonSerializer.EndObject();
 
-jsonSerializer.TryGetSerialziedData(ADR(out),SIZEOF(out));
+jsonSerializer.TryGetSerializedData(ADR(out),SIZEOF(out));
 
 AssertEquals(
 	Expected := expected,
@@ -884,7 +884,7 @@ jsonSerializer.StartObject();
 jsonSerializer.AddKeySint('data',sintValue);
 jsonSerializer.EndObject();
 
-jsonSerializer.TryGetSerialziedData(ADR(out),SIZEOF(out));
+jsonSerializer.TryGetSerializedData(ADR(out),SIZEOF(out));
 
 AssertEquals(
 	Expected := expected,
@@ -910,7 +910,7 @@ jsonSerializer.StartObject();
 jsonSerializer.AddKeyString('data',stringValue);
 jsonSerializer.EndObject();
 
-jsonSerializer.TryGetSerialziedData(ADR(out),SIZEOF(out));
+jsonSerializer.TryGetSerializedData(ADR(out),SIZEOF(out));
 
 AssertEquals(
 	Expected := expected,
@@ -936,7 +936,7 @@ jsonSerializer.StartObject();
 jsonSerializer.AddKeyStringByRef('data',stringValue);
 jsonSerializer.EndObject();
 
-jsonSerializer.TryGetSerialziedData(ADR(out),SIZEOF(out));
+jsonSerializer.TryGetSerializedData(ADR(out),SIZEOF(out));
 
 AssertEquals(
 	Expected := expected,
@@ -962,7 +962,7 @@ jsonSerializer.StartObject();
 jsonSerializer.AddKeyTime('data',timeValue);
 jsonSerializer.EndObject();
 
-jsonSerializer.TryGetSerialziedData(ADR(out),SIZEOF(out));
+jsonSerializer.TryGetSerializedData(ADR(out),SIZEOF(out));
 
 AssertEquals(
 	Expected := expected,
@@ -988,7 +988,7 @@ jsonSerializer.StartObject();
 jsonSerializer.AddKeyTod('data',todValue);
 jsonSerializer.EndObject();
 
-jsonSerializer.TryGetSerialziedData(ADR(out),SIZEOF(out));
+jsonSerializer.TryGetSerializedData(ADR(out),SIZEOF(out));
 
 AssertEquals(
 	Expected := expected,
@@ -1014,7 +1014,7 @@ jsonSerializer.StartObject();
 jsonSerializer.AddKeyUdint('data',udintValue);
 jsonSerializer.EndObject();
 
-jsonSerializer.TryGetSerialziedData(ADR(out),SIZEOF(out));
+jsonSerializer.TryGetSerializedData(ADR(out),SIZEOF(out));
 
 AssertEquals(
 	Expected := expected,
@@ -1040,7 +1040,7 @@ jsonSerializer.StartObject();
 jsonSerializer.AddKeyUint('data',uintValue);
 jsonSerializer.EndObject();
 
-jsonSerializer.TryGetSerialziedData(ADR(out),SIZEOF(out));
+jsonSerializer.TryGetSerializedData(ADR(out),SIZEOF(out));
 
 AssertEquals(
 	Expected := expected,
@@ -1066,7 +1066,7 @@ jsonSerializer.StartObject();
 jsonSerializer.AddKeyUlint('data',ulintValue);
 jsonSerializer.EndObject();
 
-jsonSerializer.TryGetSerialziedData(ADR(out),SIZEOF(out));
+jsonSerializer.TryGetSerializedData(ADR(out),SIZEOF(out));
 
 AssertEquals(
 	Expected := expected,
@@ -1092,7 +1092,7 @@ jsonSerializer.StartObject();
 jsonSerializer.AddKeyUsint('data',usintValue);
 jsonSerializer.EndObject();
 
-jsonSerializer.TryGetSerialziedData(ADR(out),SIZEOF(out));
+jsonSerializer.TryGetSerializedData(ADR(out),SIZEOF(out));
 
 AssertEquals(
 	Expected := expected,
@@ -1118,7 +1118,7 @@ jsonSerializer.StartObject();
 jsonSerializer.AddKeyWord('data',wordValue);
 jsonSerializer.EndObject();
 
-jsonSerializer.TryGetSerialziedData(ADR(out),SIZEOF(out));
+jsonSerializer.TryGetSerializedData(ADR(out),SIZEOF(out));
 
 AssertEquals(
 	Expected := expected,
@@ -1141,7 +1141,7 @@ END_VAR]]></Declaration>
         <ST><![CDATA[TEST('TestAddLint');
 
 jsonSerializer.AddLint(lintValue);
-jsonSerializer.TryGetSerialziedData(ADR(out),SIZEOF(out));
+jsonSerializer.TryGetSerializedData(ADR(out),SIZEOF(out));
 
 AssertEquals(
 	Expected := expected,
@@ -1164,7 +1164,7 @@ END_VAR]]></Declaration>
         <ST><![CDATA[TEST('TestAddLReal');
 
 jsonSerializer.AddLreal(lrealValue);
-jsonSerializer.TryGetSerialziedData(ADR(out),SIZEOF(out));
+jsonSerializer.TryGetSerializedData(ADR(out),SIZEOF(out));
 
 AssertEquals(
 	Expected := expected,
@@ -1187,7 +1187,7 @@ END_VAR]]></Declaration>
         <ST><![CDATA[TEST('TestAddLtime');
 
 jsonSerializer.AddLtime(ltimeValue);
-jsonSerializer.TryGetSerialziedData(ADR(out),SIZEOF(out));
+jsonSerializer.TryGetSerializedData(ADR(out),SIZEOF(out));
 
 AssertEquals(
 	Expected := expected,
@@ -1210,7 +1210,7 @@ END_VAR]]></Declaration>
         <ST><![CDATA[TEST('TestAddLword');
 
 jsonSerializer.AddLword(lwordValue);
-jsonSerializer.TryGetSerialziedData(ADR(out),SIZEOF(out));
+jsonSerializer.TryGetSerializedData(ADR(out),SIZEOF(out));
 
 AssertEquals(
 	Expected := expected,
@@ -1232,7 +1232,7 @@ END_VAR]]></Declaration>
         <ST><![CDATA[TEST('TestAddNull');
 
 jsonSerializer.AddNull();
-jsonSerializer.TryGetSerialziedData(ADR(out),SIZEOF(out));
+jsonSerializer.TryGetSerializedData(ADR(out),SIZEOF(out));
 
 AssertEquals(
 	Expected := expected,
@@ -1255,7 +1255,7 @@ END_VAR]]></Declaration>
         <ST><![CDATA[TEST('TestAddObject');
 
 jsonSerializer.AddObject(user);
-jsonSerializer.TryGetSerialziedData(ADR(out),SIZEOF(out));
+jsonSerializer.TryGetSerializedData(ADR(out),SIZEOF(out));
 
 AssertEquals(
 	Expected := expected,
@@ -1278,7 +1278,7 @@ END_VAR]]></Declaration>
         <ST><![CDATA[TEST('TestAddRawJson');
 
 jsonSerializer.AddRawJson(rawObject);
-jsonSerializer.TryGetSerialziedData(ADR(out),SIZEOF(out));
+jsonSerializer.TryGetSerializedData(ADR(out),SIZEOF(out));
 
 AssertEquals(
 	Expected := expected,
@@ -1301,7 +1301,7 @@ END_VAR]]></Declaration>
         <ST><![CDATA[TEST('TestAddReal');
 
 jsonSerializer.AddReal(realValue);
-jsonSerializer.TryGetSerialziedData(ADR(out),SIZEOF(out));
+jsonSerializer.TryGetSerializedData(ADR(out),SIZEOF(out));
 
 AssertEquals(
 	Expected := expected,
@@ -1324,7 +1324,7 @@ END_VAR]]></Declaration>
         <ST><![CDATA[TEST('TestAddSint');
 
 jsonSerializer.AddSint(intValue);
-jsonSerializer.TryGetSerialziedData(ADR(out),SIZEOF(out));
+jsonSerializer.TryGetSerializedData(ADR(out),SIZEOF(out));
 
 AssertEquals(
 	Expected := expected,
@@ -1347,7 +1347,7 @@ END_VAR]]></Declaration>
         <ST><![CDATA[TEST('TestAddString');
 
 jsonSerializer.AddString(stringValue);
-jsonSerializer.TryGetSerialziedData(ADR(out),SIZEOF(out));
+jsonSerializer.TryGetSerializedData(ADR(out),SIZEOF(out));
 
 AssertEquals(
 	Expected := expected,
@@ -1370,7 +1370,7 @@ END_VAR]]></Declaration>
         <ST><![CDATA[TEST('TestAddStringByRef');
 
 jsonSerializer.AddStringByRef(stringValue);
-jsonSerializer.TryGetSerialziedData(ADR(out),SIZEOF(out));
+jsonSerializer.TryGetSerializedData(ADR(out),SIZEOF(out));
 
 AssertEquals(
 	Expected := expected,
@@ -1393,7 +1393,7 @@ END_VAR]]></Declaration>
         <ST><![CDATA[TEST('TestAddTime');
 
 jsonSerializer.AddTime(timeValue);
-jsonSerializer.TryGetSerialziedData(ADR(out),SIZEOF(out));
+jsonSerializer.TryGetSerializedData(ADR(out),SIZEOF(out));
 
 AssertEquals(
 	Expected := expected,
@@ -1416,7 +1416,7 @@ END_VAR]]></Declaration>
         <ST><![CDATA[TEST('TestAddTod');
 
 jsonSerializer.AddTod(todValue);
-jsonSerializer.TryGetSerialziedData(ADR(out),SIZEOF(out));
+jsonSerializer.TryGetSerializedData(ADR(out),SIZEOF(out));
 
 AssertEquals(
 	Expected := expected,
@@ -1439,7 +1439,7 @@ END_VAR]]></Declaration>
         <ST><![CDATA[TEST('TestAddUdint');
 
 jsonSerializer.AddUdint(udintValue);
-jsonSerializer.TryGetSerialziedData(ADR(out),SIZEOF(out));
+jsonSerializer.TryGetSerializedData(ADR(out),SIZEOF(out));
 
 AssertEquals(
 	Expected := expected,
@@ -1463,7 +1463,7 @@ END_VAR]]></Declaration>
 
 
 jsonSerializer.AddUint(uintValue);
-jsonSerializer.TryGetSerialziedData(ADR(out),SIZEOF(out));
+jsonSerializer.TryGetSerializedData(ADR(out),SIZEOF(out));
 
 AssertEquals(
 	Expected := expected,
@@ -1486,7 +1486,7 @@ END_VAR]]></Declaration>
         <ST><![CDATA[TEST('TestAddUlint');
 
 jsonSerializer.AddUlint(ulintValue);
-jsonSerializer.TryGetSerialziedData(ADR(out),SIZEOF(out));
+jsonSerializer.TryGetSerializedData(ADR(out),SIZEOF(out));
 
 AssertEquals(
 	Expected := expected,
@@ -1509,7 +1509,7 @@ END_VAR]]></Declaration>
         <ST><![CDATA[TEST('TestAddUsint');
 
 jsonSerializer.AddUsint(usintValue);
-jsonSerializer.TryGetSerialziedData(ADR(out),SIZEOF(out));
+jsonSerializer.TryGetSerializedData(ADR(out),SIZEOF(out));
 
 AssertEquals(
 	Expected := expected,
@@ -1532,7 +1532,7 @@ END_VAR]]></Declaration>
         <ST><![CDATA[TEST('TestAddWord');
 
 jsonSerializer.AddWord(wordValue);
-jsonSerializer.TryGetSerialziedData(ADR(out),SIZEOF(out));
+jsonSerializer.TryGetSerializedData(ADR(out),SIZEOF(out));
 
 AssertEquals(
 	Expected := expected,
@@ -1565,7 +1565,7 @@ clone := jsonSerializer.Clone();
 jsonSerializer.Reset();
 
 // retreive the data from the clone
-clone.TryGetSerialziedData(ADR(out),SIZEOF(out));
+clone.TryGetSerializedData(ADR(out),SIZEOF(out));
 
 // clones are __NEW so must be disposed
 clone.Dispose();
@@ -1590,7 +1590,7 @@ END_VAR]]></Declaration>
       <Implementation>
         <ST><![CDATA[TEST('TestGetSerializedDataLengthEmpty');
 
-length := jsonSerializer.GetSeralizedDataLength();
+length := jsonSerializer.GetSerializedDataLength();
 
 AssertEquals(
 	Expected := expected,
@@ -1613,7 +1613,7 @@ END_VAR]]></Declaration>
         <ST><![CDATA[TEST('TestGetSerializedDataLengthWithEmptyObject');
 
 jsonSerializer.AddRawJson(rawObject);
-length := jsonSerializer.GetSeralizedDataLength();
+length := jsonSerializer.GetSerializedDataLength();
 
 AssertEquals(
 	Expected := expected,
@@ -1636,7 +1636,7 @@ END_VAR]]></Declaration>
         <ST><![CDATA[TEST('TestGetSerializedDataLength');
 
 jsonSerializer.AddRawJson(rawObject);
-length := jsonSerializer.GetSeralizedDataLength();
+length := jsonSerializer.GetSerializedDataLength();
 
 AssertEquals(
 	Expected := expected,
@@ -1660,7 +1660,7 @@ END_VAR]]></Declaration>
 
 jsonSerializer.AddRawJson(rawObject);
 jsonSerializer.Reset();
-jsonSerializer.TryGetSerialziedData(ADR(out),SIZEOF(out));
+jsonSerializer.TryGetSerializedData(ADR(out),SIZEOF(out));
 
 AssertEquals(
 	Expected := expected,
@@ -1688,7 +1688,7 @@ jsonSerializer.AddString('foobar');
 jsonSerializer.AddNull();
 jsonSerializer.EndArray();
 
-jsonSerializer.TryGetSerialziedData(ADR(out),SIZEOF(out));
+jsonSerializer.TryGetSerializedData(ADR(out),SIZEOF(out));
 
 AssertEquals(
 	Expected := expected,
@@ -1716,7 +1716,7 @@ jsonSerializer.AddKeyString('string','foobar');
 jsonSerializer.AddKeyNull('null');
 jsonSerializer.EndObject();
 
-jsonSerializer.TryGetSerialziedData(ADR(out),SIZEOF(out));
+jsonSerializer.TryGetSerializedData(ADR(out),SIZEOF(out));
 
 AssertEquals(
 	Expected := expected,

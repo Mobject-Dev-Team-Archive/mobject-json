@@ -24,6 +24,7 @@ VAR
 	enumerator : I_DeserializerArrayForwardEnumerator;
     json : STRING := '[1, 2, 3]';
 	out1, out2, out3 : INT;
+	feedback1, feedback2, feedback3 : ErrorLogger;
 	expected1 : INT := 1;
 	expected2 : INT := 2;
 	expected3 : INT := 3;
@@ -37,13 +38,13 @@ jsonDeserializer.TryLoad(json);
 enumerator := jsonDeserializer.GetArrayEnumerator();
 
 enumerator.MoveNext();
-enumerator.Current.TryGetInt(out1);
+enumerator.Current.TryGetInt(out1, feedback1);
 
 enumerator.MoveNext();
-enumerator.Current.TryGetInt(out2);
+enumerator.Current.TryGetInt(out2, feedback2);
 
 enumerator.MoveNext();
-enumerator.Current.TryGetInt(out3);
+enumerator.Current.TryGetInt(out3, feedback3);
 
 enumerator.Dispose();
 
@@ -75,6 +76,7 @@ VAR
 	enumerator : I_DeserializerArrayForwardEnumerator;
     json : STRING := '[{"name":"hello"}, {"name":"world"}, {"name":"foobar"}]';
 	out1, out2, out3 : STRING;
+	feedback1, feedback2, feedback3 : ErrorLogger;
 	expected1 : STRING := 'hello';
 	expected2 : STRING := 'world';
 	expected3 : STRING := 'foobar';
@@ -88,13 +90,13 @@ jsonDeserializer.TryLoad(json);
 enumerator := jsonDeserializer.GetArrayEnumerator();
 
 enumerator.MoveNext();
-enumerator.Current.TryGetKeyString('name', out1);
+enumerator.Current.TryGetKeyString('name', out1, feedback1);
 
 enumerator.MoveNext();
-enumerator.Current.TryGetKeyString('name', out2);
+enumerator.Current.TryGetKeyString('name', out2, feedback2);
 
 enumerator.MoveNext();
-enumerator.Current.TryGetKeyString('name', out3);
+enumerator.Current.TryGetKeyString('name', out3, feedback3);
 
 enumerator.Dispose();
 
@@ -126,6 +128,7 @@ VAR
 	enumerator : I_DeserializerArrayForwardEnumerator;
     json : STRING := '["one", "two", "three"]';
 	out1, out2, out3 : STRING;
+	feedback1, feedback2, feedback3 : ErrorLogger;
 	expected1 : STRING := 'one';
 	expected2 : STRING := 'two';
 	expected3 : STRING := 'three';
@@ -139,13 +142,13 @@ jsonDeserializer.TryLoad(json);
 enumerator := jsonDeserializer.GetArrayEnumerator();
 
 enumerator.MoveNext();
-enumerator.Current.TryGetString(out1);
+enumerator.Current.TryGetString(out1, feedback1);
 
 enumerator.MoveNext();
-enumerator.Current.TryGetString(out2);
+enumerator.Current.TryGetString(out2, feedback2);
 
 enumerator.MoveNext();
-enumerator.Current.TryGetString(out3);
+enumerator.Current.TryGetString(out3, feedback3);
 
 enumerator.Dispose();
 

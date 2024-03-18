@@ -208,77 +208,106 @@ rootNode := nullNode;
 EmitChangedEvent();]]></ST>
       </Implementation>
     </Method>
+    <Method Name="TryDeserializeKeyToObject" Id="{62ed7c8c-f671-47eb-b767-f4d091a68ae9}">
+      <Declaration><![CDATA[METHOD TryDeserializeKeyToObject : BOOL
+VAR_INPUT
+	Key : T_MAXSTRING;
+	Object : I_Deserializable;
+	Feedback : I_ErrorLogger;
+END_VAR]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[TryDeserializeKeyToObject := rootNode.TryDeserializeKeyToObject(Key,Object, Feedback);]]></ST>
+      </Implementation>
+    </Method>
+    <Method Name="TryDeserializeToObject" Id="{4a3bb941-939c-4dd6-bed5-5312803ff942}">
+      <Declaration><![CDATA[METHOD TryDeserializeToObject : BOOL
+VAR_INPUT
+	Object : I_Deserializable;
+	Feedback : I_ErrorLogger;
+END_VAR]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[TryDeserializeToObject := rootNode.TryDeserializeToObject(Object, Feedback);]]></ST>
+      </Implementation>
+    </Method>
     <Method Name="TryGetBase64" Id="{fe295ea1-6385-4c90-8c1e-0130d0abea78}">
       <Declaration><![CDATA[METHOD TryGetBase64 : BOOL
 VAR_INPUT
 	pBytes : POINTER TO BYTE;
 	nBytes : DINT;
+	Feedback : I_ErrorLogger;
 END_VAR]]></Declaration>
       <Implementation>
-        <ST><![CDATA[TryGetBase64 := rootNode.TryGetBase64(pBytes, nBytes);]]></ST>
+        <ST><![CDATA[TryGetBase64 := rootNode.TryGetBase64(pBytes, nBytes, Feedback);]]></ST>
       </Implementation>
     </Method>
     <Method Name="TryGetBool" Id="{6ec60297-fc78-4e42-8c9b-b797b172a63d}">
       <Declaration><![CDATA[METHOD TryGetBool : BOOL
 VAR_INPUT
 	Destination : REFERENCE TO BOOL;
+	Feedback : I_ErrorLogger;
 END_VAR]]></Declaration>
       <Implementation>
-        <ST><![CDATA[TryGetBool := rootNode.TryGetBool(Destination);]]></ST>
+        <ST><![CDATA[TryGetBool := rootNode.TryGetBool(Destination, Feedback);]]></ST>
       </Implementation>
     </Method>
     <Method Name="TryGetByte" Id="{7f56b251-eee0-4e1f-94af-df45fa90da48}">
       <Declaration><![CDATA[METHOD TryGetByte : BOOL
 VAR_INPUT
 	Destination : REFERENCE TO BYTE;
+	Feedback : I_ErrorLogger;
 END_VAR]]></Declaration>
       <Implementation>
-        <ST><![CDATA[TryGetByte := rootNode.TryGetByte(Destination);]]></ST>
+        <ST><![CDATA[TryGetByte := rootNode.TryGetByte(Destination, Feedback);]]></ST>
       </Implementation>
     </Method>
     <Method Name="TryGetDateTime" Id="{0eefca34-6e86-480c-bd80-cca9f9d6217f}">
       <Declaration><![CDATA[METHOD TryGetDateTime : BOOL
 VAR_INPUT
 	Destination : REFERENCE TO DATE_AND_TIME;
+	Feedback : I_ErrorLogger;
 END_VAR]]></Declaration>
       <Implementation>
-        <ST><![CDATA[TryGetDateTime := rootNode.TryGetDateTime(Destination);]]></ST>
+        <ST><![CDATA[TryGetDateTime := rootNode.TryGetDateTime(Destination, Feedback);]]></ST>
       </Implementation>
     </Method>
     <Method Name="TryGetDcTime" Id="{822c1511-2a5b-4b36-a7ac-0e7bb0382e3f}">
       <Declaration><![CDATA[METHOD TryGetDcTime : BOOL
 VAR_INPUT
 	Destination : REFERENCE TO DCTIME;
+	Feedback : I_ErrorLogger;
 END_VAR]]></Declaration>
       <Implementation>
-        <ST><![CDATA[TryGetDcTime := rootNode.TryGetDcTime(Destination);]]></ST>
+        <ST><![CDATA[TryGetDcTime := rootNode.TryGetDcTime(Destination, Feedback);]]></ST>
       </Implementation>
     </Method>
     <Method Name="TryGetDint" Id="{72d1a2f6-6d1c-43bc-8260-7a62f2ef0180}">
       <Declaration><![CDATA[METHOD TryGetDint : BOOL
 VAR_INPUT
 	Destination : REFERENCE TO DINT;
+	Feedback : I_ErrorLogger;
 END_VAR]]></Declaration>
       <Implementation>
-        <ST><![CDATA[TryGetDint := rootNode.TryGetDint(Destination);]]></ST>
+        <ST><![CDATA[TryGetDint := rootNode.TryGetDint(Destination, Feedback);]]></ST>
       </Implementation>
     </Method>
     <Method Name="TryGetDword" Id="{92993be7-2fb3-49bb-aa8c-994491f8b23c}">
       <Declaration><![CDATA[METHOD TryGetDword : BOOL
 VAR_INPUT
 	Destination : REFERENCE TO DWORD;
+	Feedback : I_ErrorLogger;
 END_VAR]]></Declaration>
       <Implementation>
-        <ST><![CDATA[TryGetDword := rootNode.TryGetDword(Destination);]]></ST>
+        <ST><![CDATA[TryGetDword := rootNode.TryGetDword(Destination, Feedback);]]></ST>
       </Implementation>
     </Method>
     <Method Name="TryGetFileTime" Id="{6f985b02-908a-4e9a-8047-f818f837fe22}">
       <Declaration><![CDATA[METHOD TryGetFileTime : BOOL
 VAR_INPUT
 	Destination : REFERENCE TO FILETIME;
+	Feedback : I_ErrorLogger;
 END_VAR]]></Declaration>
       <Implementation>
-        <ST><![CDATA[TryGetFileTime := rootNode.TryGetFileTime(Destination);]]></ST>
+        <ST><![CDATA[TryGetFileTime := rootNode.TryGetFileTime(Destination, Feedback);]]></ST>
       </Implementation>
     </Method>
     <Method Name="TryGetHexAsBytes" Id="{57725d6f-7769-44f1-b87a-65ec295b3672}">
@@ -286,19 +315,21 @@ END_VAR]]></Declaration>
 VAR_INPUT
 	pBytes : POINTER TO BYTE;
 	nBytes : DINT;
+	Feedback : I_ErrorLogger;
 END_VAR
 ]]></Declaration>
       <Implementation>
-        <ST><![CDATA[TryGetHexAsBytes := rootNode.TryGetHexAsBytes(pBytes, nBytes);]]></ST>
+        <ST><![CDATA[TryGetHexAsBytes := rootNode.TryGetHexAsBytes(pBytes, nBytes, Feedback);]]></ST>
       </Implementation>
     </Method>
     <Method Name="TryGetInt" Id="{2fdf166b-5700-40ee-b8b0-abadc2efc46c}">
       <Declaration><![CDATA[METHOD TryGetInt : BOOL
 VAR_INPUT
 	Destination : REFERENCE TO INT;
+	Feedback : I_ErrorLogger;
 END_VAR]]></Declaration>
       <Implementation>
-        <ST><![CDATA[TryGetInt := rootNode.TryGetInt(Destination);]]></ST>
+        <ST><![CDATA[TryGetInt := rootNode.TryGetInt(Destination, Feedback);]]></ST>
       </Implementation>
     </Method>
     <Method Name="TryGetKeyBase64" Id="{e2e97d9b-41bc-414a-9d61-b71ea3e26097}">
@@ -307,9 +338,10 @@ VAR_INPUT
 	Key : T_MAXSTRING;
 	pBytes : POINTER TO BYTE;
 	nBytes : DINT;
+	Feedback : I_ErrorLogger;
 END_VAR]]></Declaration>
       <Implementation>
-        <ST><![CDATA[TryGetKeyBase64 := rootNode.TryGetKeyBase64(Key, pBytes, nBytes);]]></ST>
+        <ST><![CDATA[TryGetKeyBase64 := rootNode.TryGetKeyBase64(Key, pBytes, nBytes, Feedback);]]></ST>
       </Implementation>
     </Method>
     <Method Name="TryGetKeyBool" Id="{5f267a8c-ebc4-4c51-b0f0-4a95026c8a3f}">
@@ -317,9 +349,10 @@ END_VAR]]></Declaration>
 VAR_INPUT
 	Key : T_MAXSTRING;
 	Destination : REFERENCE TO BOOL;
+	Feedback : I_ErrorLogger;
 END_VAR]]></Declaration>
       <Implementation>
-        <ST><![CDATA[TryGetKeyBool := rootNode.TryGetKeyBool(Key, Destination);]]></ST>
+        <ST><![CDATA[TryGetKeyBool := rootNode.TryGetKeyBool(Key, Destination, Feedback);]]></ST>
       </Implementation>
     </Method>
     <Method Name="TryGetKeyByte" Id="{1c43e54c-ee47-4d7b-bcae-5f660a8fcad5}">
@@ -327,9 +360,10 @@ END_VAR]]></Declaration>
 VAR_INPUT
 	Key : T_MAXSTRING;
 	Destination : REFERENCE TO BYTE;
+	Feedback : I_ErrorLogger;
 END_VAR]]></Declaration>
       <Implementation>
-        <ST><![CDATA[TryGetKeyByte := rootNode.TryGetKeyByte(Key, Destination);]]></ST>
+        <ST><![CDATA[TryGetKeyByte := rootNode.TryGetKeyByte(Key, Destination, Feedback);]]></ST>
       </Implementation>
     </Method>
     <Method Name="TryGetKeyDateTime" Id="{c22b8398-2c86-4d72-9120-e789b40c9718}">
@@ -337,9 +371,10 @@ END_VAR]]></Declaration>
 VAR_INPUT
 	Key : T_MAXSTRING;
 	Destination : REFERENCE TO DATE_AND_TIME;
+	Feedback : I_ErrorLogger;
 END_VAR]]></Declaration>
       <Implementation>
-        <ST><![CDATA[TryGetKeyDateTime := rootNode.TryGetKeyDateTime(Key, Destination);]]></ST>
+        <ST><![CDATA[TryGetKeyDateTime := rootNode.TryGetKeyDateTime(Key, Destination, Feedback);]]></ST>
       </Implementation>
     </Method>
     <Method Name="TryGetKeyDcTime" Id="{38227bfb-4cf2-495f-acbb-91f5f470f11e}">
@@ -347,9 +382,10 @@ END_VAR]]></Declaration>
 VAR_INPUT
 	Key : T_MAXSTRING;
 	Destination : REFERENCE TO DCTIME;
+	Feedback : I_ErrorLogger;
 END_VAR]]></Declaration>
       <Implementation>
-        <ST><![CDATA[TryGetKeyDcTime := rootNode.TryGetKeyDcTime(Key, Destination);]]></ST>
+        <ST><![CDATA[TryGetKeyDcTime := rootNode.TryGetKeyDcTime(Key, Destination, Feedback);]]></ST>
       </Implementation>
     </Method>
     <Method Name="TryGetKeyDint" Id="{82fdf3a0-94c2-4a8e-923d-cf45ec507d72}">
@@ -357,9 +393,10 @@ END_VAR]]></Declaration>
 VAR_INPUT
 	Key : T_MAXSTRING;
 	Destination : REFERENCE TO DINT;
+	Feedback : I_ErrorLogger;
 END_VAR]]></Declaration>
       <Implementation>
-        <ST><![CDATA[TryGetKeyDint := rootNode.TryGetKeyDint(Key, Destination);]]></ST>
+        <ST><![CDATA[TryGetKeyDint := rootNode.TryGetKeyDint(Key, Destination, Feedback);]]></ST>
       </Implementation>
     </Method>
     <Method Name="TryGetKeyDword" Id="{5a45d2b3-e2ba-457e-a3e4-d79c9082fa74}">
@@ -367,9 +404,10 @@ END_VAR]]></Declaration>
 VAR_INPUT
 	Key : T_MAXSTRING;
 	Destination : REFERENCE TO DWORD;
+	Feedback : I_ErrorLogger;
 END_VAR]]></Declaration>
       <Implementation>
-        <ST><![CDATA[TryGetKeyDword := rootNode.TryGetKeyDword(Key, Destination);]]></ST>
+        <ST><![CDATA[TryGetKeyDword := rootNode.TryGetKeyDword(Key, Destination, Feedback);]]></ST>
       </Implementation>
     </Method>
     <Method Name="TryGetKeyFileTime" Id="{ce1ac8be-a887-4bce-96e2-9b3a4179a8cb}">
@@ -377,9 +415,10 @@ END_VAR]]></Declaration>
 VAR_INPUT
 	Key : T_MAXSTRING;
 	Destination : REFERENCE TO FILETIME;
+	Feedback : I_ErrorLogger;
 END_VAR]]></Declaration>
       <Implementation>
-        <ST><![CDATA[TryGetKeyFileTime := rootNode.TryGetKeyFileTime(Key, Destination);]]></ST>
+        <ST><![CDATA[TryGetKeyFileTime := rootNode.TryGetKeyFileTime(Key, Destination, Feedback);]]></ST>
       </Implementation>
     </Method>
     <Method Name="TryGetKeyHexAsBytes" Id="{6d3a64ed-e904-4405-97e8-629172119dae}">
@@ -388,9 +427,10 @@ VAR_INPUT
 	Key : T_MAXSTRING;
 	pBytes : POINTER TO BYTE;
 	nBytes : DINT;
+	Feedback : I_ErrorLogger;
 END_VAR]]></Declaration>
       <Implementation>
-        <ST><![CDATA[TryGetKeyHexAsBytes := rootNode.TryGetKeyHexAsBytes(Key, pBytes, nBytes);]]></ST>
+        <ST><![CDATA[TryGetKeyHexAsBytes := rootNode.TryGetKeyHexAsBytes(Key, pBytes, nBytes, Feedback);]]></ST>
       </Implementation>
     </Method>
     <Method Name="TryGetKeyInt" Id="{9d78e31a-c0cd-4dc2-a6c9-cc7bb2a5aeb5}">
@@ -398,9 +438,10 @@ END_VAR]]></Declaration>
 VAR_INPUT
 	Key : T_MAXSTRING;
 	Destination : REFERENCE TO INT;
+	Feedback : I_ErrorLogger;
 END_VAR]]></Declaration>
       <Implementation>
-        <ST><![CDATA[TryGetKeyInt := rootNode.TryGetKeyInt(Key, Destination);]]></ST>
+        <ST><![CDATA[TryGetKeyInt := rootNode.TryGetKeyInt(Key, Destination, Feedback);]]></ST>
       </Implementation>
     </Method>
     <Method Name="TryGetKeyLint" Id="{d12995f5-5579-4299-9a40-19fd2107eff5}">
@@ -408,9 +449,10 @@ END_VAR]]></Declaration>
 VAR_INPUT
 	Key : T_MAXSTRING;
 	Destination : REFERENCE TO LINT;
+	Feedback : I_ErrorLogger;
 END_VAR]]></Declaration>
       <Implementation>
-        <ST><![CDATA[TryGetKeyLint := rootNode.TryGetKeyLint(Key, Destination);]]></ST>
+        <ST><![CDATA[TryGetKeyLint := rootNode.TryGetKeyLint(Key, Destination, Feedback);]]></ST>
       </Implementation>
     </Method>
     <Method Name="TryGetKeyLreal" Id="{92c3eaf3-71df-4e2f-ba93-315676c41524}">
@@ -418,10 +460,11 @@ END_VAR]]></Declaration>
 VAR_INPUT
 	Key : T_MAXSTRING;
 	Destination : REFERENCE TO LREAL;
+	Feedback : I_ErrorLogger;
 END_VAR
 ]]></Declaration>
       <Implementation>
-        <ST><![CDATA[TryGetKeyLreal := rootNode.TryGetKeyLreal(Key, Destination);]]></ST>
+        <ST><![CDATA[TryGetKeyLreal := rootNode.TryGetKeyLreal(Key, Destination, Feedback);]]></ST>
       </Implementation>
     </Method>
     <Method Name="TryGetKeyLtime" Id="{f0eafc1e-bf4b-4ceb-bdeb-6ae313a3df89}">
@@ -429,10 +472,11 @@ END_VAR
 VAR_INPUT
 	Key : T_MAXSTRING;
 	Destination : REFERENCE TO LTIME;
+	Feedback : I_ErrorLogger;
 END_VAR
 ]]></Declaration>
       <Implementation>
-        <ST><![CDATA[TryGetKeyLtime := rootNode.TryGetKeyLtime(Key, Destination);]]></ST>
+        <ST><![CDATA[TryGetKeyLtime := rootNode.TryGetKeyLtime(Key, Destination, Feedback);]]></ST>
       </Implementation>
     </Method>
     <Method Name="TryGetKeyLword" Id="{65ebf9c9-8746-4bf0-9897-02e88608bc54}">
@@ -440,19 +484,10 @@ END_VAR
 VAR_INPUT
 	Key : T_MAXSTRING;
 	Destination : REFERENCE TO LWORD;
+	Feedback : I_ErrorLogger;
 END_VAR]]></Declaration>
       <Implementation>
-        <ST><![CDATA[TryGetKeyLword := rootNode.TryGetKeyLword(Key, Destination);]]></ST>
-      </Implementation>
-    </Method>
-    <Method Name="TryGetKeyObject" Id="{62ed7c8c-f671-47eb-b767-f4d091a68ae9}">
-      <Declaration><![CDATA[METHOD TryGetKeyObject : BOOL
-VAR_INPUT
-	Key : T_MAXSTRING;
-	Object : I_Deserializable;
-END_VAR]]></Declaration>
-      <Implementation>
-        <ST><![CDATA[TryGetKeyObject := rootNode.TryGetKeyObject(Key,Object);]]></ST>
+        <ST><![CDATA[TryGetKeyLword := rootNode.TryGetKeyLword(Key, Destination, Feedback);]]></ST>
       </Implementation>
     </Method>
     <Method Name="TryGetKeyReal" Id="{ba9c869b-cf53-471e-bda6-414ea929fcfa}">
@@ -460,9 +495,10 @@ END_VAR]]></Declaration>
 VAR_INPUT
 	Key : T_MAXSTRING;
 	Destination : REFERENCE TO REAL;
+	Feedback : I_ErrorLogger;
 END_VAR]]></Declaration>
       <Implementation>
-        <ST><![CDATA[TryGetKeyReal := rootNode.TryGetKeyReal(Key, Destination);]]></ST>
+        <ST><![CDATA[TryGetKeyReal := rootNode.TryGetKeyReal(Key, Destination, Feedback);]]></ST>
       </Implementation>
     </Method>
     <Method Name="TryGetKeySint" Id="{9c210d46-b2cf-4e87-b34c-9c31c974981c}">
@@ -470,9 +506,10 @@ END_VAR]]></Declaration>
 VAR_INPUT
 	Key : T_MAXSTRING;
 	Destination : REFERENCE TO SINT;
+	Feedback : I_ErrorLogger;
 END_VAR]]></Declaration>
       <Implementation>
-        <ST><![CDATA[TryGetKeySint := rootNode.TryGetKeySint(Key, Destination);]]></ST>
+        <ST><![CDATA[TryGetKeySint := rootNode.TryGetKeySint(Key, Destination, Feedback);]]></ST>
       </Implementation>
     </Method>
     <Method Name="TryGetKeyString" Id="{145e945a-6148-465d-8d1e-78bff0346911}">
@@ -480,9 +517,10 @@ END_VAR]]></Declaration>
 VAR_INPUT
 	Key : T_MAXSTRING;
 	Destination : REFERENCE TO STRING;
+	Feedback : I_ErrorLogger;
 END_VAR]]></Declaration>
       <Implementation>
-        <ST><![CDATA[TryGetKeyString := rootNode.TryGetKeyString(Key, Destination);]]></ST>
+        <ST><![CDATA[TryGetKeyString := rootNode.TryGetKeyString(Key, Destination, Feedback);]]></ST>
       </Implementation>
     </Method>
     <Method Name="TryGetKeyTime" Id="{ac1c2336-2654-4ecb-9c0d-cdf530414a88}">
@@ -490,9 +528,10 @@ END_VAR]]></Declaration>
 VAR_INPUT
 	Key : T_MAXSTRING;
 	Destination : REFERENCE TO TIME;
+	Feedback : I_ErrorLogger;
 END_VAR]]></Declaration>
       <Implementation>
-        <ST><![CDATA[TryGetKeyTime := rootNode.TryGetKeyTime(Key, Destination);]]></ST>
+        <ST><![CDATA[TryGetKeyTime := rootNode.TryGetKeyTime(Key, Destination, Feedback);]]></ST>
       </Implementation>
     </Method>
     <Method Name="TryGetKeyTod" Id="{bde0ce6f-cd97-4fe6-9b33-f96250f01eed}">
@@ -500,10 +539,11 @@ END_VAR]]></Declaration>
 VAR_INPUT
 	Key : T_MAXSTRING;
 	Destination : REFERENCE TO TOD;
+	Feedback : I_ErrorLogger;
 END_VAR
 ]]></Declaration>
       <Implementation>
-        <ST><![CDATA[TryGetKeyTod := rootNode.TryGetKeyTod(Key, Destination);]]></ST>
+        <ST><![CDATA[TryGetKeyTod := rootNode.TryGetKeyTod(Key, Destination, Feedback);]]></ST>
       </Implementation>
     </Method>
     <Method Name="TryGetKeyUdint" Id="{3f71ab6a-2c21-48ba-bea8-ac9c531c6a2f}">
@@ -511,9 +551,10 @@ END_VAR
 VAR_INPUT
 	Key : T_MAXSTRING;
 	Destination : REFERENCE TO UDINT;
+	Feedback : I_ErrorLogger;
 END_VAR]]></Declaration>
       <Implementation>
-        <ST><![CDATA[TryGetKeyUdint := rootNode.TryGetKeyUdint(Key, Destination);]]></ST>
+        <ST><![CDATA[TryGetKeyUdint := rootNode.TryGetKeyUdint(Key, Destination, Feedback);]]></ST>
       </Implementation>
     </Method>
     <Method Name="TryGetKeyUint" Id="{b09d8575-090d-49e4-a0ce-27fe71c91a45}">
@@ -521,9 +562,10 @@ END_VAR]]></Declaration>
 VAR_INPUT
 	Key : T_MAXSTRING;
 	Destination : REFERENCE TO UINT;
+	Feedback : I_ErrorLogger;
 END_VAR]]></Declaration>
       <Implementation>
-        <ST><![CDATA[TryGetKeyUint := rootNode.TryGetKeyUint(Key, Destination);]]></ST>
+        <ST><![CDATA[TryGetKeyUint := rootNode.TryGetKeyUint(Key, Destination, Feedback);]]></ST>
       </Implementation>
     </Method>
     <Method Name="TryGetKeyUlint" Id="{499ee358-c7a9-4f43-9581-abd422c87ec8}">
@@ -531,9 +573,10 @@ END_VAR]]></Declaration>
 VAR_INPUT
 	Key : T_MAXSTRING;
 	Destination : REFERENCE TO ULINT;
+	Feedback : I_ErrorLogger;
 END_VAR]]></Declaration>
       <Implementation>
-        <ST><![CDATA[TryGetKeyUlint := rootNode.TryGetKeyUlint(Key, Destination);]]></ST>
+        <ST><![CDATA[TryGetKeyUlint := rootNode.TryGetKeyUlint(Key, Destination, Feedback);]]></ST>
       </Implementation>
     </Method>
     <Method Name="TryGetKeyUsint" Id="{35f67b71-f2b8-4d86-9bb3-95ee1284ba30}">
@@ -541,9 +584,10 @@ END_VAR]]></Declaration>
 VAR_INPUT
 	Key : T_MAXSTRING;
 	Destination : REFERENCE TO USINT;
+	Feedback : I_ErrorLogger;
 END_VAR]]></Declaration>
       <Implementation>
-        <ST><![CDATA[TryGetKeyUsint := rootNode.TryGetKeyUsint(Key, Destination);]]></ST>
+        <ST><![CDATA[TryGetKeyUsint := rootNode.TryGetKeyUsint(Key, Destination, Feedback);]]></ST>
       </Implementation>
     </Method>
     <Method Name="TryGetKeyWord" Id="{7efab29f-f53c-471a-95c5-75e9be77a68f}">
@@ -551,145 +595,151 @@ END_VAR]]></Declaration>
 VAR_INPUT
 	Key : T_MAXSTRING;
 	Destination : REFERENCE TO WORD;
+	Feedback : I_ErrorLogger;
 END_VAR]]></Declaration>
       <Implementation>
-        <ST><![CDATA[TryGetKeyWord := rootNode.TryGetKeyWord(Key, Destination);]]></ST>
+        <ST><![CDATA[TryGetKeyWord := rootNode.TryGetKeyWord(Key, Destination, Feedback);]]></ST>
       </Implementation>
     </Method>
     <Method Name="TryGetLint" Id="{75731b5e-e042-400b-a3d1-9b9ba60506d8}">
       <Declaration><![CDATA[METHOD TryGetLint : BOOL
 VAR_INPUT
 	Destination : REFERENCE TO LINT;
+	Feedback : I_ErrorLogger;
 END_VAR]]></Declaration>
       <Implementation>
-        <ST><![CDATA[TryGetLint := rootNode.TryGetLint(Destination);]]></ST>
+        <ST><![CDATA[TryGetLint := rootNode.TryGetLint(Destination, Feedback);]]></ST>
       </Implementation>
     </Method>
     <Method Name="TryGetLreal" Id="{7b380507-57f2-4a93-985b-86be64078e31}">
       <Declaration><![CDATA[METHOD TryGetLreal : BOOL
 VAR_INPUT
 	Destination : REFERENCE TO LREAL;
+	Feedback : I_ErrorLogger;
 END_VAR]]></Declaration>
       <Implementation>
-        <ST><![CDATA[TryGetLreal := rootNode.TryGetLreal(Destination);]]></ST>
+        <ST><![CDATA[TryGetLreal := rootNode.TryGetLreal(Destination, Feedback);]]></ST>
       </Implementation>
     </Method>
     <Method Name="TryGetLtime" Id="{efd7f5a3-8843-4642-bc86-b9940affcca4}">
       <Declaration><![CDATA[METHOD TryGetLtime : BOOL
 VAR_INPUT
 	Destination : REFERENCE TO LTIME;
+	Feedback : I_ErrorLogger;
 END_VAR]]></Declaration>
       <Implementation>
-        <ST><![CDATA[TryGetLtime := rootNode.TryGetLtime(Destination);]]></ST>
+        <ST><![CDATA[TryGetLtime := rootNode.TryGetLtime(Destination, Feedback);]]></ST>
       </Implementation>
     </Method>
     <Method Name="TryGetLword" Id="{0295afb4-f050-4895-9c0b-6b9cdfa8b1ee}">
       <Declaration><![CDATA[METHOD TryGetLword : BOOL
 VAR_INPUT
 	Destination : REFERENCE TO LWORD;
+	Feedback : I_ErrorLogger;
 END_VAR
 ]]></Declaration>
       <Implementation>
-        <ST><![CDATA[TryGetLword := rootNode.TryGetLword(Destination);]]></ST>
-      </Implementation>
-    </Method>
-    <Method Name="TryGetObject" Id="{4a3bb941-939c-4dd6-bed5-5312803ff942}">
-      <Declaration><![CDATA[METHOD TryGetObject : BOOL
-VAR_INPUT
-	Object : I_Deserializable;
-END_VAR]]></Declaration>
-      <Implementation>
-        <ST><![CDATA[TryGetObject := rootNode.TryGetObject(Object);]]></ST>
+        <ST><![CDATA[TryGetLword := rootNode.TryGetLword(Destination, Feedback);]]></ST>
       </Implementation>
     </Method>
     <Method Name="TryGetReal" Id="{6c3290d3-fec4-47f7-a5d0-1861de90ccaf}">
       <Declaration><![CDATA[METHOD TryGetReal : BOOL
 VAR_INPUT
 	Destination : REFERENCE TO REAL;
+	Feedback : I_ErrorLogger;
 END_VAR]]></Declaration>
       <Implementation>
-        <ST><![CDATA[TryGetReal := rootNode.TryGetReal(Destination);]]></ST>
+        <ST><![CDATA[TryGetReal := rootNode.TryGetReal(Destination, Feedback);]]></ST>
       </Implementation>
     </Method>
     <Method Name="TryGetSint" Id="{e84565ff-7164-409c-9f95-c7b2be3fbcff}">
       <Declaration><![CDATA[METHOD TryGetSint : BOOL
 VAR_INPUT
 	Destination : REFERENCE TO SINT;
+	Feedback : I_ErrorLogger;
 END_VAR]]></Declaration>
       <Implementation>
-        <ST><![CDATA[TryGetSint := rootNode.TryGetSint(Destination);]]></ST>
+        <ST><![CDATA[TryGetSint := rootNode.TryGetSint(Destination, Feedback);]]></ST>
       </Implementation>
     </Method>
     <Method Name="TryGetString" Id="{44240e6f-9963-4706-910b-e5c87c3f8607}">
       <Declaration><![CDATA[METHOD TryGetString : BOOL
 VAR_INPUT
 	Destination : REFERENCE TO STRING;
+	Feedback : I_ErrorLogger;
 END_VAR]]></Declaration>
       <Implementation>
-        <ST><![CDATA[TryGetString := rootNode.TryGetString(Destination);]]></ST>
+        <ST><![CDATA[TryGetString := rootNode.TryGetString(Destination, Feedback);]]></ST>
       </Implementation>
     </Method>
     <Method Name="TryGetTime" Id="{80d80d87-f037-436c-8f8f-7f8fec352f39}">
       <Declaration><![CDATA[METHOD TryGetTime : BOOL
 VAR_INPUT
 	Destination : REFERENCE TO TIME;
+	Feedback : I_ErrorLogger;
 END_VAR]]></Declaration>
       <Implementation>
-        <ST><![CDATA[TryGetTime := rootNode.TryGetTime(Destination);]]></ST>
+        <ST><![CDATA[TryGetTime := rootNode.TryGetTime(Destination, Feedback);]]></ST>
       </Implementation>
     </Method>
     <Method Name="TryGetTod" Id="{9e042969-ff4a-4b34-89ea-b8144dd0d5ca}">
       <Declaration><![CDATA[METHOD TryGetTod : BOOL
 VAR_INPUT
 	Destination : REFERENCE TO TOD;
+	Feedback : I_ErrorLogger;
 END_VAR]]></Declaration>
       <Implementation>
-        <ST><![CDATA[TryGetTod := rootNode.TryGetTod(Destination);]]></ST>
+        <ST><![CDATA[TryGetTod := rootNode.TryGetTod(Destination, Feedback);]]></ST>
       </Implementation>
     </Method>
     <Method Name="TryGetUdint" Id="{751bec7e-3a00-432c-b241-6a6fad2970fb}">
       <Declaration><![CDATA[METHOD TryGetUdint : BOOL
 VAR_INPUT
 	Destination : REFERENCE TO UDINT;
+	Feedback : I_ErrorLogger;
 END_VAR]]></Declaration>
       <Implementation>
-        <ST><![CDATA[TryGetUdint := rootNode.TryGetUdint(Destination);]]></ST>
+        <ST><![CDATA[TryGetUdint := rootNode.TryGetUdint(Destination, Feedback);]]></ST>
       </Implementation>
     </Method>
     <Method Name="TryGetUint" Id="{972566ca-529a-4fb3-bb50-96a823c8709e}">
       <Declaration><![CDATA[METHOD TryGetUint : BOOL
 VAR_INPUT
 	Destination : REFERENCE TO UINT;
+	Feedback : I_ErrorLogger;
 END_VAR]]></Declaration>
       <Implementation>
-        <ST><![CDATA[TryGetUint := rootNode.TryGetUint(Destination);]]></ST>
+        <ST><![CDATA[TryGetUint := rootNode.TryGetUint(Destination, Feedback);]]></ST>
       </Implementation>
     </Method>
     <Method Name="TryGetUlint" Id="{3f4a2c33-9649-45c1-875c-327dc26bc3a5}">
       <Declaration><![CDATA[METHOD TryGetUlint : BOOL
 VAR_INPUT
 	Destination : REFERENCE TO ULINT;
+	Feedback : I_ErrorLogger;
 END_VAR]]></Declaration>
       <Implementation>
-        <ST><![CDATA[TryGetUlint := rootNode.TryGetUlint(Destination);]]></ST>
+        <ST><![CDATA[TryGetUlint := rootNode.TryGetUlint(Destination, Feedback);]]></ST>
       </Implementation>
     </Method>
     <Method Name="TryGetUsint" Id="{17108ee2-2a2f-480d-a20a-5a3943e8a7ad}">
       <Declaration><![CDATA[METHOD TryGetUsint : BOOL
 VAR_INPUT
 	Destination : REFERENCE TO USINT;
+	Feedback : I_ErrorLogger;
 END_VAR]]></Declaration>
       <Implementation>
-        <ST><![CDATA[TryGetUsint := rootNode.TryGetUsint(Destination);]]></ST>
+        <ST><![CDATA[TryGetUsint := rootNode.TryGetUsint(Destination, Feedback);]]></ST>
       </Implementation>
     </Method>
     <Method Name="TryGetWord" Id="{39e3134f-9f16-4677-84f1-71254c101d0e}">
       <Declaration><![CDATA[METHOD TryGetWord : BOOL
 VAR_INPUT
 	Destination : REFERENCE TO WORD;
+	Feedback : I_ErrorLogger;
 END_VAR]]></Declaration>
       <Implementation>
-        <ST><![CDATA[TryGetWord := rootNode.TryGetWord(Destination);]]></ST>
+        <ST><![CDATA[TryGetWord := rootNode.TryGetWord(Destination, Feedback);]]></ST>
       </Implementation>
     </Method>
     <Method Name="TryLoad" Id="{f075a62d-029d-4d3a-a33f-32a6021b89c2}">

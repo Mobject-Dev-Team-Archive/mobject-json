@@ -712,13 +712,13 @@ END_IF
 jsonSaxWriter.ResetDocument();]]></ST>
       </Implementation>
     </Method>
-    <Method Name="GetSeralizedDataLength" Id="{1c78c716-4a8c-0fc4-3c51-4fa2ff67c724}">
-      <Declaration><![CDATA[METHOD PUBLIC GetSeralizedDataLength : UDINT
+    <Method Name="GetSerializedDataLength" Id="{1c78c716-4a8c-0fc4-3c51-4fa2ff67c724}">
+      <Declaration><![CDATA[METHOD PUBLIC GetSerializedDataLength : UDINT
 VAR_INPUT
 END_VAR
 ]]></Declaration>
       <Implementation>
-        <ST><![CDATA[GetSeralizedDataLength := jsonSaxWriter.GetDocumentLength();]]></ST>
+        <ST><![CDATA[GetSerializedDataLength := jsonSaxWriter.GetDocumentLength();]]></ST>
       </Implementation>
     </Method>
     <Method Name="Reset" Id="{c56165be-9bab-04d2-305e-f6b63f631e33}">
@@ -748,8 +748,8 @@ END_VAR]]></Declaration>
 StartObject := THIS^;]]></ST>
       </Implementation>
     </Method>
-    <Method Name="TryCopySerialziedData" Id="{37c74c7b-1c2b-08a9-1aff-1f7d750f78ee}">
-      <Declaration><![CDATA[METHOD TryCopySerialziedData : BOOL
+    <Method Name="TryCopySerializedData" Id="{37c74c7b-1c2b-08a9-1aff-1f7d750f78ee}">
+      <Declaration><![CDATA[METHOD TryCopySerializedData : BOOL
 VAR_INPUT
 	DestinationAddress : PVOID;
 	DestinationSize : UDINT;
@@ -759,11 +759,11 @@ VAR
 END_VAR]]></Declaration>
       <Implementation>
         <ST><![CDATA[pString := DestinationAddress;
-TryCopySerialziedData := jsonSaxWriter.CopyDocument(pString^, DestinationSize) > 0;]]></ST>
+TryCopySerializedData := jsonSaxWriter.CopyDocument(pString^, DestinationSize) > 0;]]></ST>
       </Implementation>
     </Method>
-    <Method Name="TryGetSerialziedData" Id="{4c0f20e1-f625-0427-312a-8cd2e74bdfc6}">
-      <Declaration><![CDATA[METHOD TryGetSerialziedData : BOOL
+    <Method Name="TryGetSerializedData" Id="{4c0f20e1-f625-0427-312a-8cd2e74bdfc6}">
+      <Declaration><![CDATA[METHOD TryGetSerializedData : BOOL
 VAR_INPUT
 	DestinationAddress : PVOID;
 	DestinationSize : UDINT;
@@ -779,7 +779,7 @@ IF jsonSaxWriter.CopyDocument(pString^, DestinationSize) = 0 THEN
 END_IF
 
 jsonSaxWriter.ResetDocument();
-TryGetSerialziedData := TRUE;]]></ST>
+TryGetSerializedData := TRUE;]]></ST>
       </Implementation>
     </Method>
   </POU>

@@ -3,6 +3,7 @@
 ## v1.3.0-beta
 
 - Updated to support mobject-serialization v0.4.0-alpha.
+- Updated to support mobject-deserialization v0.1.0-alpha.
 - Added JsonDeserializerArrayForwardEnumerator
 - Added JsonDeserializerObjectForwardEnumerator
 

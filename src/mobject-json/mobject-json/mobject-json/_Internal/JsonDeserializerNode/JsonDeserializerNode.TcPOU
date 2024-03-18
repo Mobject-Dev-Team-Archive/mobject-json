@@ -267,15 +267,53 @@ END_IF
 GetValue := CreateDeserializer(newRoot);]]></ST>
       </Implementation>
     </Method>
+    <Method Name="TryDeserializeKeyToObject" Id="{296749d0-adc3-4b76-8654-7c017064ade3}">
+      <Declaration><![CDATA[METHOD TryDeserializeKeyToObject : BOOL
+VAR_INPUT
+	Key : T_MAXSTRING;
+	Object : I_Deserializable;
+	Feedback : I_ErrorLogger;
+END_VAR
+VAR
+	errorFactory : DeserializationErrorFactory;
+	error : I_Error;
+	member : SJsonValue;
+	deserializer : I_Deserializer;
+END_VAR]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[IF NOT TryGetMember(Key, member, Feedback) THEN
+	RETURN;
+END_IF
+
+deserializer := CreateDeserializer(member);
+TryDeserializeKeyToObject := Object.TryDeserializeFrom(deserializer, Feedback);]]></ST>
+      </Implementation>
+    </Method>
+    <Method Name="TryDeserializeToObject" Id="{e78ac69f-ae34-4608-8de7-23629f7fedc7}">
+      <Declaration><![CDATA[METHOD TryDeserializeToObject : BOOL
+VAR_INPUT
+	Object : I_Deserializable;
+	Feedback : I_ErrorLogger;
+END_VAR]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[TryDeserializeToObject := Object.TryDeserializeFrom(THIS^, Feedback);]]></ST>
+      </Implementation>
+    </Method>
     <Method Name="TryGetBase64" Id="{e6e67841-c921-4bf8-b895-2b93871a9309}">
       <Declaration><![CDATA[METHOD TryGetBase64 : BOOL
 VAR_INPUT
 	pBytes : POINTER TO BYTE;
 	nBytes : DINT;
+	Feedback : I_ErrorLogger;
 END_VAR
-]]></Declaration>
+VAR
+	errorFactory : DeserializationErrorFactory;
+	error : I_Error;
+END_VAR]]></Declaration>
       <Implementation>
         <ST><![CDATA[IF NOT jsonParser.IsBase64(root) THEN
+	error := errorFactory.CreateIncorrectTypeError('Base64');
+	Feedback.LogError(error);
 	RETURN;
 END_IF
 
@@ -287,12 +325,17 @@ TryGetBase64 := TRUE;]]></ST>
       <Declaration><![CDATA[METHOD TryGetBool : BOOL
 VAR_INPUT
 	Destination : REFERENCE TO BOOL;
+	Feedback : I_ErrorLogger;
 END_VAR
 VAR
 	value : BOOL;
+	errorFactory : DeserializationErrorFactory;
+	error : I_Error;
 END_VAR]]></Declaration>
       <Implementation>
         <ST><![CDATA[IF NOT TryReadBool(root, value) THEN
+	error := errorFactory.CreateIncorrectTypeError('BOOL');
+	Feedback.LogError(error);
 	RETURN;
 END_IF
 
@@ -304,12 +347,17 @@ TryGetBool := TRUE;]]></ST>
       <Declaration><![CDATA[METHOD TryGetByte : BOOL
 VAR_INPUT
 	Destination : REFERENCE TO BYTE;
+	Feedback : I_ErrorLogger;
 END_VAR
 VAR
 	value : BYTE;
+	errorFactory : DeserializationErrorFactory;
+	error : I_Error;
 END_VAR]]></Declaration>
       <Implementation>
         <ST><![CDATA[IF NOT TryReadNumber(root, value) THEN
+	error := errorFactory.CreateIncorrectTypeError('BYTE');
+	Feedback.LogError(error);
 	RETURN;
 END_IF
 
@@ -321,9 +369,16 @@ TryGetByte := TRUE;]]></ST>
       <Declaration><![CDATA[METHOD TryGetDateTime : BOOL
 VAR_INPUT
 	Destination : REFERENCE TO DATE_AND_TIME;
+	Feedback : I_ErrorLogger;
+END_VAR
+VAR
+	errorFactory : DeserializationErrorFactory;
+	error : I_Error;
 END_VAR]]></Declaration>
       <Implementation>
         <ST><![CDATA[IF NOT jsonParser.IsISO8601TimeFormat(root) THEN
+	error := errorFactory.CreateIncorrectTypeError('DATE_AND_TIME');
+	Feedback.LogError(error);
 	RETURN;
 END_IF
 
@@ -335,9 +390,16 @@ TryGetDateTime := TRUE;]]></ST>
       <Declaration><![CDATA[METHOD TryGetDcTime : BOOL
 VAR_INPUT
 	Destination : REFERENCE TO DCTIME;
+	Feedback : I_ErrorLogger;
+END_VAR
+VAR
+	errorFactory : DeserializationErrorFactory;
+	error : I_Error;
 END_VAR]]></Declaration>
       <Implementation>
         <ST><![CDATA[IF NOT jsonParser.IsISO8601TimeFormat(root) THEN
+	error := errorFactory.CreateIncorrectTypeError('DCTIME');
+	Feedback.LogError(error);
 	RETURN;
 END_IF
 
@@ -349,12 +411,17 @@ TryGetDcTime := TRUE;]]></ST>
       <Declaration><![CDATA[METHOD TryGetDint : BOOL
 VAR_INPUT
 	Destination : REFERENCE TO DINT;
+	Feedback : I_ErrorLogger;
 END_VAR
 VAR
 	value : DINT;
+	errorFactory : DeserializationErrorFactory;
+	error : I_Error;
 END_VAR]]></Declaration>
       <Implementation>
         <ST><![CDATA[IF NOT TryReadNumber(root, value) THEN
+	error := errorFactory.CreateIncorrectTypeError('DINT');
+	Feedback.LogError(error);
 	RETURN;
 END_IF
 
@@ -366,12 +433,17 @@ TryGetDint := TRUE;]]></ST>
       <Declaration><![CDATA[METHOD TryGetDword : BOOL
 VAR_INPUT
 	Destination : REFERENCE TO DWORD;
+	Feedback : I_ErrorLogger;
 END_VAR
 VAR
 	value : DWORD;
+	errorFactory : DeserializationErrorFactory;
+	error : I_Error;
 END_VAR]]></Declaration>
       <Implementation>
         <ST><![CDATA[IF NOT TryReadNumber(root, value) THEN
+	error := errorFactory.CreateIncorrectTypeError('DWORD');
+	Feedback.LogError(error);
 	RETURN;
 END_IF
 
@@ -383,9 +455,16 @@ TryGetDword := TRUE;]]></ST>
       <Declaration><![CDATA[METHOD TryGetFileTime : BOOL
 VAR_INPUT
 	Destination : REFERENCE TO FILETIME;
+	Feedback : I_ErrorLogger;
+END_VAR
+VAR
+	errorFactory : DeserializationErrorFactory;
+	error : I_Error;
 END_VAR]]></Declaration>
       <Implementation>
         <ST><![CDATA[IF NOT jsonParser.IsISO8601TimeFormat(root) THEN
+	error := errorFactory.CreateIncorrectTypeError('FILETIME');
+	Feedback.LogError(error);
 	RETURN;
 END_IF
 
@@ -398,10 +477,16 @@ TryGetFileTime := TRUE;]]></ST>
 VAR_INPUT
 	pBytes : POINTER TO BYTE;
 	nBytes : DINT;
+	Feedback : I_ErrorLogger;
 END_VAR
-]]></Declaration>
+VAR
+	errorFactory : DeserializationErrorFactory;
+	error : I_Error;
+END_VAR]]></Declaration>
       <Implementation>
         <ST><![CDATA[IF NOT jsonParser.IsHexBinary(root) THEN
+	error := errorFactory.CreateIncorrectTypeError('HexBinary');
+	Feedback.LogError(error);
 	RETURN;
 END_IF
 
@@ -413,12 +498,17 @@ TryGetHexAsBytes := TRUE;]]></ST>
       <Declaration><![CDATA[METHOD TryGetInt : BOOL
 VAR_INPUT
 	Destination : REFERENCE TO INT;
+	Feedback : I_ErrorLogger;
 END_VAR
 VAR
 	value : INT;
+	errorFactory : DeserializationErrorFactory;
+	error : I_Error;
 END_VAR]]></Declaration>
       <Implementation>
         <ST><![CDATA[IF NOT TryReadNumber(root, value) THEN
+	error := errorFactory.CreateIncorrectTypeError('INT');
+	Feedback.LogError(error);
 	RETURN;
 END_IF
 
@@ -432,22 +522,21 @@ VAR_INPUT
 	Key : T_MAXSTRING;
 	pBytes : POINTER TO BYTE;
 	nBytes : DINT;
+	Feedback : I_ErrorLogger;
 END_VAR
 VAR
 	member : SJsonValue;
+	errorFactory : DeserializationErrorFactory;
+	error : I_Error;
 END_VAR]]></Declaration>
       <Implementation>
-        <ST><![CDATA[IF key = '' THEN
-	RETURN;
-END_IF
-
-member := jsonParser.FindMember(root,Key);
-
-IF member = 0 THEN
+        <ST><![CDATA[IF NOT TryGetMember(Key, member, Feedback) THEN
 	RETURN;
 END_IF
 
 IF NOT jsonParser.IsBase64(member) THEN
+	error := errorFactory.CreateIncorrectKeyTypeError('Base64',Key);
+	Feedback.LogError(error);
 	RETURN;
 END_IF
 
@@ -460,12 +549,22 @@ TryGetKeyBase64 := TRUE;]]></ST>
 VAR_INPUT
 	Key : T_MAXSTRING;
 	Destination : REFERENCE TO BOOL;
+	Feedback : I_ErrorLogger;
 END_VAR
 VAR
+	member : SJsonValue;
 	value : BOOL;
+	errorFactory : DeserializationErrorFactory;
+	error : I_Error;
 END_VAR]]></Declaration>
       <Implementation>
-        <ST><![CDATA[IF NOT TryMemberReadBool(key, value) THEN
+        <ST><![CDATA[IF NOT TryGetMember(Key, member, Feedback) THEN
+	RETURN;
+END_IF
+
+IF NOT TryReadBool(member, value) THEN
+	error := errorFactory.CreateIncorrectKeyTypeError('BOOL',Key);
+	Feedback.LogError(error);
 	RETURN;
 END_IF
 
@@ -478,12 +577,22 @@ TryGetKeyBool := TRUE;]]></ST>
 VAR_INPUT
 	Key : T_MAXSTRING;
 	Destination : REFERENCE TO BYTE;
+	Feedback : I_ErrorLogger;
 END_VAR
 VAR
 	value : BYTE;
+	member : SJsonValue;
+	errorFactory : DeserializationErrorFactory;
+	error : I_Error;
 END_VAR]]></Declaration>
       <Implementation>
-        <ST><![CDATA[IF NOT TryMemberReadNumber(key, value) THEN
+        <ST><![CDATA[IF NOT TryGetMember(Key, member, Feedback) THEN
+	RETURN;
+END_IF
+
+IF NOT TryReadNumber(member, value) THEN
+	error := errorFactory.CreateIncorrectKeyTypeError('BYTE',Key);
+	Feedback.LogError(error);
 	RETURN;
 END_IF
 
@@ -496,22 +605,21 @@ TryGetKeyByte := TRUE;]]></ST>
 VAR_INPUT
 	Key : T_MAXSTRING;
 	Destination : REFERENCE TO DATE_AND_TIME;
+	Feedback : I_ErrorLogger;
 END_VAR
 VAR
 	member : SJSonValue;
+	errorFactory : DeserializationErrorFactory;
+	error : I_Error;
 END_VAR]]></Declaration>
       <Implementation>
-        <ST><![CDATA[IF key = '' THEN
-	RETURN;
-END_IF
-
-member := jsonParser.FindMember(root,Key);
-
-IF member = 0 THEN
+        <ST><![CDATA[IF NOT TryGetMember(Key, member, Feedback) THEN
 	RETURN;
 END_IF
 
 IF NOT jsonParser.IsISO8601TimeFormat(member) THEN
+	error := errorFactory.CreateIncorrectKeyTypeError('DATE_AND_TIME',Key);
+	Feedback.LogError(error);
 	RETURN;
 END_IF
 
@@ -524,22 +632,21 @@ TryGetKeyDateTime := TRUE;]]></ST>
 VAR_INPUT
 	Key : T_MAXSTRING;
 	Destination : REFERENCE TO DCTIME;
+	Feedback : I_ErrorLogger;
 END_VAR
 VAR
 	member : SJSonValue;
+	errorFactory : DeserializationErrorFactory;
+	error : I_Error;
 END_VAR]]></Declaration>
       <Implementation>
-        <ST><![CDATA[IF key = '' THEN
-	RETURN;
-END_IF
-
-member := jsonParser.FindMember(root,Key);
-
-IF member = 0 THEN
+        <ST><![CDATA[IF NOT TryGetMember(Key, member, Feedback) THEN
 	RETURN;
 END_IF
 
 IF NOT jsonParser.IsISO8601TimeFormat(member) THEN
+	error := errorFactory.CreateIncorrectKeyTypeError('DCTIME',Key);
+	Feedback.LogError(error);
 	RETURN;
 END_IF
 
@@ -552,12 +659,22 @@ TryGetKeyDcTime := TRUE;]]></ST>
 VAR_INPUT
 	Key : T_MAXSTRING;
 	Destination : REFERENCE TO DINT;
+	Feedback : I_ErrorLogger;
 END_VAR
 VAR
+	member : SJsonValue;
 	value : DINT;
+	errorFactory : DeserializationErrorFactory;
+	error : I_Error;
 END_VAR]]></Declaration>
       <Implementation>
-        <ST><![CDATA[IF NOT TryMemberReadNumber(key, value) THEN
+        <ST><![CDATA[IF NOT TryGetMember(Key, member, Feedback) THEN
+	RETURN;
+END_IF
+
+IF NOT TryReadNumber(member, value) THEN
+	error := errorFactory.CreateIncorrectKeyTypeError('DINT',Key);
+	Feedback.LogError(error);
 	RETURN;
 END_IF
 
@@ -570,12 +687,22 @@ TryGetKeyDint := TRUE;]]></ST>
 VAR_INPUT
 	Key : T_MAXSTRING;
 	Destination : REFERENCE TO DWORD;
+	Feedback : I_ErrorLogger;
 END_VAR
 VAR
+	member : SJsonValue;
 	value : DWORD;
+	errorFactory : DeserializationErrorFactory;
+	error : I_Error;
 END_VAR]]></Declaration>
       <Implementation>
-        <ST><![CDATA[IF NOT TryMemberReadNumber(key, value) THEN
+        <ST><![CDATA[IF NOT TryGetMember(Key, member, Feedback) THEN
+	RETURN;
+END_IF
+
+IF NOT TryReadNumber(member, value) THEN
+	error := errorFactory.CreateIncorrectKeyTypeError('DWORD',Key);
+	Feedback.LogError(error);
 	RETURN;
 END_IF
 
@@ -588,22 +715,21 @@ TryGetKeyDword := TRUE;]]></ST>
 VAR_INPUT
 	Key : T_MAXSTRING;
 	Destination : REFERENCE TO FILETIME;
+	Feedback : I_ErrorLogger;
 END_VAR
 VAR
 	member : SJSonValue;
+	errorFactory : DeserializationErrorFactory;
+	error : I_Error;
 END_VAR]]></Declaration>
       <Implementation>
-        <ST><![CDATA[IF key = '' THEN
-	RETURN;
-END_IF
-
-member := jsonParser.FindMember(root,Key);
-
-IF member = 0 THEN
+        <ST><![CDATA[IF NOT TryGetMember(Key, member, Feedback) THEN
 	RETURN;
 END_IF
 
 IF NOT jsonParser.IsISO8601TimeFormat(member) THEN
+	error := errorFactory.CreateIncorrectKeyTypeError('FILETIME',Key);
+	Feedback.LogError(error);
 	RETURN;
 END_IF
 
@@ -617,22 +743,21 @@ VAR_INPUT
 	Key : T_MAXSTRING;
 	pBytes : POINTER TO BYTE;
 	nBytes : DINT;
+	Feedback : I_ErrorLogger;
 END_VAR
 VAR
 	member : SJsonValue;
+	errorFactory : DeserializationErrorFactory;
+	error : I_Error;
 END_VAR]]></Declaration>
       <Implementation>
-        <ST><![CDATA[IF key = '' THEN
-	RETURN;
-END_IF
-
-member := jsonParser.FindMember(root,Key);
-
-IF member = 0 THEN
+        <ST><![CDATA[IF NOT TryGetMember(Key, member, Feedback) THEN
 	RETURN;
 END_IF
 
 IF NOT jsonParser.IsHexBinary(member) THEN
+	error := errorFactory.CreateIncorrectKeyTypeError('HexBinary',Key);
+	Feedback.LogError(error);
 	RETURN;
 END_IF
 
@@ -645,12 +770,22 @@ TryGetKeyHexAsBytes := TRUE;]]></ST>
 VAR_INPUT
 	Key : T_MAXSTRING;
 	Destination : REFERENCE TO INT;
+	Feedback : I_ErrorLogger;
 END_VAR
 VAR
+	member : SJsonValue;
 	value : INT;
+	errorFactory : DeserializationErrorFactory;
+	error : I_Error;
 END_VAR]]></Declaration>
       <Implementation>
-        <ST><![CDATA[IF NOT TryMemberReadNumber(key, value) THEN
+        <ST><![CDATA[IF NOT TryGetMember(Key, member, Feedback) THEN
+	RETURN;
+END_IF
+
+IF NOT TryReadNumber(member, value) THEN
+	error := errorFactory.CreateIncorrectKeyTypeError('INT',Key);
+	Feedback.LogError(error);
 	RETURN;
 END_IF
 
@@ -663,12 +798,22 @@ TryGetKeyInt := TRUE;]]></ST>
 VAR_INPUT
 	Key : T_MAXSTRING;
 	Destination : REFERENCE TO LINT;
+	Feedback : I_ErrorLogger;
 END_VAR
 VAR
+	member : SJsonValue;
 	value : LINT;
+	errorFactory : DeserializationErrorFactory;
+	error : I_Error;
 END_VAR]]></Declaration>
       <Implementation>
-        <ST><![CDATA[IF NOT TryMemberReadNumber(key, value) THEN
+        <ST><![CDATA[IF NOT TryGetMember(Key, member, Feedback) THEN
+	RETURN;
+END_IF
+
+IF NOT TryReadNumber(member, value) THEN
+	error := errorFactory.CreateIncorrectKeyTypeError('LINT',Key);
+	Feedback.LogError(error);
 	RETURN;
 END_IF
 
@@ -681,12 +826,22 @@ TryGetKeyLint := TRUE;]]></ST>
 VAR_INPUT
 	Key : T_MAXSTRING;
 	Destination : REFERENCE TO LREAL;
+	Feedback : I_ErrorLogger;
 END_VAR
 VAR
+	member : SJsonValue;
 	value : LREAL;
+	errorFactory : DeserializationErrorFactory;
+	error : I_Error;
 END_VAR]]></Declaration>
       <Implementation>
-        <ST><![CDATA[IF NOT TryMemberReadNumber(key, value) THEN
+        <ST><![CDATA[IF NOT TryGetMember(Key, member, Feedback) THEN
+	RETURN;
+END_IF
+
+IF NOT TryReadNumber(member, value) THEN
+	error := errorFactory.CreateIncorrectKeyTypeError('LREAL',Key);
+	Feedback.LogError(error);
 	RETURN;
 END_IF
 
@@ -699,23 +854,22 @@ TryGetKeyLreal := TRUE;]]></ST>
 VAR_INPUT
 	Key : T_MAXSTRING;
 	Destination : REFERENCE TO LTIME;
+	Feedback : I_ErrorLogger;
 END_VAR
 VAR
 	member : SJsonValue;
 	timeAsString : T_MAXSTRING;
+	errorFactory : DeserializationErrorFactory;
+	error : I_Error;
 END_VAR]]></Declaration>
       <Implementation>
-        <ST><![CDATA[IF key = '' THEN
-	RETURN;
-END_IF
-
-member := jsonParser.FindMember(root,Key);
-
-IF member = 0 THEN
+        <ST><![CDATA[IF NOT TryGetMember(Key, member, Feedback) THEN
 	RETURN;
 END_IF
 
 IF NOT jsonParser.IsString(member) THEN
+	error := errorFactory.CreateIncorrectKeyTypeError('LTIME',Key);
+	Feedback.LogError(error);
 	RETURN;
 END_IF
 
@@ -730,12 +884,22 @@ TryGetKeyLtime := TRUE;]]></ST>
 VAR_INPUT
 	Key : T_MAXSTRING;
 	Destination : REFERENCE TO LWORD;
+	Feedback : I_ErrorLogger;
 END_VAR
 VAR
+	member : SJsonValue;
 	value : LWORD;
+	errorFactory : DeserializationErrorFactory;
+	error : I_Error;
 END_VAR]]></Declaration>
       <Implementation>
-        <ST><![CDATA[IF NOT TryMemberReadNumber(key, value) THEN
+        <ST><![CDATA[IF NOT TryGetMember(Key, member, Feedback) THEN
+	RETURN;
+END_IF
+
+IF NOT TryReadNumber(member, value) THEN
+	error := errorFactory.CreateIncorrectKeyTypeError('LWORD',Key);
+	Feedback.LogError(error);
 	RETURN;
 END_IF
 
@@ -743,42 +907,27 @@ Destination := value;
 TryGetKeyLword := TRUE;]]></ST>
       </Implementation>
     </Method>
-    <Method Name="TryGetKeyObject" Id="{296749d0-adc3-4b76-8654-7c017064ade3}">
-      <Declaration><![CDATA[METHOD TryGetKeyObject : BOOL
-VAR_INPUT
-	Key : T_MAXSTRING;
-	Object : I_Deserializable;
-END_VAR
-VAR
-	member : SJsonValue;
-	deserializer : I_Deserializer;
-END_VAR]]></Declaration>
-      <Implementation>
-        <ST><![CDATA[IF key = '' THEN
-	RETURN;
-END_IF
-
-member := jsonParser.FindMember(root,Key);
-
-IF member = 0 THEN
-	RETURN;
-END_IF
-
-deserializer := CreateDeserializer(member);
-TryGetKeyObject := Object.TryDeserializeFrom(deserializer);]]></ST>
-      </Implementation>
-    </Method>
     <Method Name="TryGetKeyReal" Id="{0c2436d3-e926-462d-885d-4776062ab052}">
       <Declaration><![CDATA[METHOD TryGetKeyReal : BOOL
 VAR_INPUT
 	Key : T_MAXSTRING;
 	Destination : REFERENCE TO REAL;
+	Feedback : I_ErrorLogger;
 END_VAR
 VAR
+	member : SJsonValue;
 	value : REAL;
+	errorFactory : DeserializationErrorFactory;
+	error : I_Error;
 END_VAR]]></Declaration>
       <Implementation>
-        <ST><![CDATA[IF NOT TryMemberReadNumber(key, value) THEN
+        <ST><![CDATA[IF NOT TryGetMember(Key, member, Feedback) THEN
+	RETURN;
+END_IF
+
+IF NOT TryReadNumber(member, value) THEN
+	error := errorFactory.CreateIncorrectKeyTypeError('REAL',Key);
+	Feedback.LogError(error);
 	RETURN;
 END_IF
 
@@ -791,12 +940,22 @@ TryGetKeyReal := TRUE;]]></ST>
 VAR_INPUT
 	Key : T_MAXSTRING;
 	Destination : REFERENCE TO SINT;
+	Feedback : I_ErrorLogger;
 END_VAR
 VAR
+	member : SJsonValue;
 	value : SINT;
+	errorFactory : DeserializationErrorFactory;
+	error : I_Error;
 END_VAR]]></Declaration>
       <Implementation>
-        <ST><![CDATA[IF NOT TryMemberReadNumber(key, value) THEN
+        <ST><![CDATA[IF NOT TryGetMember(Key, member, Feedback) THEN
+	RETURN;
+END_IF
+
+IF NOT TryReadNumber(member, value) THEN
+	error := errorFactory.CreateIncorrectKeyTypeError('SINT',Key);
+	Feedback.LogError(error);
 	RETURN;
 END_IF
 
@@ -809,9 +968,21 @@ TryGetKeySint := TRUE;]]></ST>
 VAR_INPUT
 	Key : T_MAXSTRING;
 	Destination : REFERENCE TO STRING;
+	Feedback : I_ErrorLogger;
+END_VAR
+VAR
+	member : SJsonValue;
+	errorFactory : DeserializationErrorFactory;
+	error : I_Error;
 END_VAR]]></Declaration>
       <Implementation>
-        <ST><![CDATA[IF NOT TryMemberReadString(Key, Destination) THEN
+        <ST><![CDATA[IF NOT TryGetMember(Key, member, Feedback) THEN
+	RETURN;
+END_IF
+
+IF NOT TryReadString(member, Destination) THEN
+	error := errorFactory.CreateIncorrectKeyTypeError('STRING',Key);
+	Feedback.LogError(error);
 	RETURN;
 END_IF
 
@@ -823,23 +994,22 @@ TryGetKeyString := TRUE;]]></ST>
 VAR_INPUT
 	Key : T_MAXSTRING;
 	Destination : REFERENCE TO TIME;
+	Feedback : I_ErrorLogger;
 END_VAR
 VAR
 	member : SJsonValue;
 	timeAsString : T_MAXSTRING;
+	errorFactory : DeserializationErrorFactory;
+	error : I_Error;
 END_VAR]]></Declaration>
       <Implementation>
-        <ST><![CDATA[IF key = '' THEN
-	RETURN;
-END_IF
-
-member := jsonParser.FindMember(root,Key);
-
-IF member = 0 THEN
+        <ST><![CDATA[IF NOT TryGetMember(Key, member, Feedback) THEN
 	RETURN;
 END_IF
 
 IF NOT jsonParser.IsString(member) THEN
+	error := errorFactory.CreateIncorrectKeyTypeError('TIME',Key);
+	Feedback.LogError(error);
 	RETURN;
 END_IF
 
@@ -854,23 +1024,22 @@ TryGetKeyTime := TRUE;]]></ST>
 VAR_INPUT
 	Key : T_MAXSTRING;
 	Destination : REFERENCE TO TOD;
+	Feedback : I_ErrorLogger;
 END_VAR
 VAR
 	member : SJsonValue;
 	timeAsString : T_MAXSTRING;
+	errorFactory : DeserializationErrorFactory;
+	error : I_Error;
 END_VAR]]></Declaration>
       <Implementation>
-        <ST><![CDATA[IF key = '' THEN
-	RETURN;
-END_IF
-
-member := jsonParser.FindMember(root,Key);
-
-IF member = 0 THEN
+        <ST><![CDATA[IF NOT TryGetMember(Key, member, Feedback) THEN
 	RETURN;
 END_IF
 
 IF NOT jsonParser.IsString(member) THEN
+	error := errorFactory.CreateIncorrectKeyTypeError('TOD',Key);
+	Feedback.LogError(error);
 	RETURN;
 END_IF
 
@@ -885,12 +1054,22 @@ TryGetKeyTod := TRUE;]]></ST>
 VAR_INPUT
 	Key : T_MAXSTRING;
 	Destination : REFERENCE TO UDINT;
+	Feedback : I_ErrorLogger;
 END_VAR
 VAR
+	member : SJsonValue;
 	value : UDINT;
+	errorFactory : DeserializationErrorFactory;
+	error : I_Error;
 END_VAR]]></Declaration>
       <Implementation>
-        <ST><![CDATA[IF NOT TryMemberReadNumber(key, value) THEN
+        <ST><![CDATA[IF NOT TryGetMember(Key, member, Feedback) THEN
+	RETURN;
+END_IF
+
+IF NOT TryReadNumber(member, value) THEN
+	error := errorFactory.CreateIncorrectKeyTypeError('UDINT',Key);
+	Feedback.LogError(error);
 	RETURN;
 END_IF
 
@@ -903,12 +1082,22 @@ TryGetKeyUdint := TRUE;]]></ST>
 VAR_INPUT
 	Key : T_MAXSTRING;
 	Destination : REFERENCE TO UINT;
+	Feedback : I_ErrorLogger;
 END_VAR
 VAR
+	member : SJsonValue;
 	value : UINT;
+	errorFactory : DeserializationErrorFactory;
+	error : I_Error;
 END_VAR]]></Declaration>
       <Implementation>
-        <ST><![CDATA[IF NOT TryMemberReadNumber(key, value) THEN
+        <ST><![CDATA[IF NOT TryGetMember(Key, member, Feedback) THEN
+	RETURN;
+END_IF
+
+IF NOT TryReadNumber(member, value) THEN
+	error := errorFactory.CreateIncorrectKeyTypeError('UINT',Key);
+	Feedback.LogError(error);
 	RETURN;
 END_IF
 
@@ -921,12 +1110,22 @@ TryGetKeyUint := TRUE;]]></ST>
 VAR_INPUT
 	Key : T_MAXSTRING;
 	Destination : REFERENCE TO ULINT;
+	Feedback : I_ErrorLogger;
 END_VAR
 VAR
+	member : SJsonValue;
 	value : ULINT;
+	errorFactory : DeserializationErrorFactory;
+	error : I_Error;
 END_VAR]]></Declaration>
       <Implementation>
-        <ST><![CDATA[IF NOT TryMemberReadNumber(key, value) THEN
+        <ST><![CDATA[IF NOT TryGetMember(Key, member, Feedback) THEN
+	RETURN;
+END_IF
+
+IF NOT TryReadNumber(member, value) THEN
+	error := errorFactory.CreateIncorrectKeyTypeError('ULINT',Key);
+	Feedback.LogError(error);
 	RETURN;
 END_IF
 
@@ -939,12 +1138,22 @@ TryGetKeyUlint := TRUE;]]></ST>
 VAR_INPUT
 	Key : T_MAXSTRING;
 	Destination : REFERENCE TO USINT;
+	Feedback : I_ErrorLogger;
 END_VAR
 VAR
+	member : SJsonValue;
 	value : USINT;
+	errorFactory : DeserializationErrorFactory;
+	error : I_Error;
 END_VAR]]></Declaration>
       <Implementation>
-        <ST><![CDATA[IF NOT TryMemberReadNumber(key, value) THEN
+        <ST><![CDATA[IF NOT TryGetMember(Key, member, Feedback) THEN
+	RETURN;
+END_IF
+
+IF NOT TryReadNumber(member, value) THEN
+	error := errorFactory.CreateIncorrectKeyTypeError('USINT',Key);
+	Feedback.LogError(error);
 	RETURN;
 END_IF
 
@@ -957,12 +1166,22 @@ TryGetKeyUsint := TRUE;]]></ST>
 VAR_INPUT
 	Key : T_MAXSTRING;
 	Destination : REFERENCE TO WORD;
+	Feedback : I_ErrorLogger;
 END_VAR
 VAR
+	member : SJsonValue;
 	value : WORD;
+	errorFactory : DeserializationErrorFactory;
+	error : I_Error;
 END_VAR]]></Declaration>
       <Implementation>
-        <ST><![CDATA[IF NOT TryMemberReadNumber(key, value) THEN
+        <ST><![CDATA[IF NOT TryGetMember(Key, member, Feedback) THEN
+	RETURN;
+END_IF
+
+IF NOT TryReadNumber(member, value) THEN
+	error := errorFactory.CreateIncorrectKeyTypeError('USINT',Key);
+	Feedback.LogError(error);
 	RETURN;
 END_IF
 
@@ -974,12 +1193,17 @@ TryGetKeyWord := TRUE;]]></ST>
       <Declaration><![CDATA[METHOD TryGetLint : BOOL
 VAR_INPUT
 	Destination : REFERENCE TO LINT;
+	Feedback : I_ErrorLogger;
 END_VAR
 VAR
 	value : LINT;
+	errorFactory : DeserializationErrorFactory;
+	error : I_Error;
 END_VAR]]></Declaration>
       <Implementation>
         <ST><![CDATA[IF NOT TryReadNumber(root, value) THEN
+	error := errorFactory.CreateIncorrectTypeError('LINT');
+	Feedback.LogError(error);
 	RETURN;
 END_IF
 
@@ -991,12 +1215,17 @@ TryGetLint := TRUE;]]></ST>
       <Declaration><![CDATA[METHOD TryGetLreal : BOOL
 VAR_INPUT
 	Destination : REFERENCE TO LREAL;
+	Feedback : I_ErrorLogger;
 END_VAR
 VAR
 	value : LREAL;
+	errorFactory : DeserializationErrorFactory;
+	error : I_Error;
 END_VAR]]></Declaration>
       <Implementation>
         <ST><![CDATA[IF NOT TryReadNumber(root, value) THEN
+	error := errorFactory.CreateIncorrectTypeError('LREAL');
+	Feedback.LogError(error);
 	RETURN;
 END_IF
 
@@ -1008,12 +1237,17 @@ TryGetLreal := TRUE;]]></ST>
       <Declaration><![CDATA[METHOD TryGetLtime : BOOL
 VAR_INPUT
 	Destination : REFERENCE TO LTIME;
+	Feedback : I_ErrorLogger;
 END_VAR
 VAR
 	timeAsString : T_MAXSTRING;
+	errorFactory : DeserializationErrorFactory;
+	error : I_Error;
 END_VAR]]></Declaration>
       <Implementation>
         <ST><![CDATA[IF NOT jsonParser.IsString(root) THEN
+	error := errorFactory.CreateIncorrectTypeError('LTIME');
+	Feedback.LogError(error);
 	RETURN;
 END_IF
 
@@ -1027,12 +1261,17 @@ TryGetLtime := TRUE;]]></ST>
       <Declaration><![CDATA[METHOD TryGetLword : BOOL
 VAR_INPUT
 	Destination : REFERENCE TO LWORD;
+	Feedback : I_ErrorLogger;
 END_VAR
 VAR
 	value : LWORD;
+	errorFactory : DeserializationErrorFactory;
+	error : I_Error;
 END_VAR]]></Declaration>
       <Implementation>
         <ST><![CDATA[IF NOT TryReadNumber(root, value) THEN
+	error := errorFactory.CreateIncorrectTypeError('LWORD');
+	Feedback.LogError(error);
 	RETURN;
 END_IF
 
@@ -1040,25 +1279,52 @@ Destination := value;
 TryGetLword := TRUE;]]></ST>
       </Implementation>
     </Method>
-    <Method Name="TryGetObject" Id="{e78ac69f-ae34-4608-8de7-23629f7fedc7}">
-      <Declaration><![CDATA[METHOD TryGetObject : BOOL
+    <Method Name="TryGetMember" Id="{e817131c-777d-40dd-8ba2-0fa378b22940}" FolderPath="Protected\">
+      <Declaration><![CDATA[METHOD PROTECTED TryGetMember : BOOL
 VAR_INPUT
-	Object : I_Deserializable;
+	MemberName : T_MAXSTRING;
+	Member : REFERENCE TO SJsonValue;
+	Feedback : I_ErrorLogger;
+END_VAR
+VAR
+	localMember : SJsonValue;
+	errorFactory : DeserializationErrorFactory;
+	error : I_Error;
 END_VAR]]></Declaration>
       <Implementation>
-        <ST><![CDATA[TryGetObject := Object.TryDeserializeFrom(this^);]]></ST>
+        <ST><![CDATA[IF MemberName = '' THEN
+	error := errorFactory.CreateInvalidKeyError();
+	Feedback.LogError(error);
+	RETURN;
+END_IF
+
+localMember := jsonParser.FindMember(root, MemberName);
+
+IF localMember = 0 THEN
+	error := errorFactory.CreateMissingKeyError(MemberName);
+	Feedback.LogError(error);
+	RETURN;
+END_IF
+
+Member := localMember;
+TryGetMember := TRUE;]]></ST>
       </Implementation>
     </Method>
     <Method Name="TryGetReal" Id="{bbedb472-8ed5-4c1c-b5a4-0d0afb909a21}">
       <Declaration><![CDATA[METHOD TryGetReal : BOOL
 VAR_INPUT
 	Destination : REFERENCE TO REAL;
+	Feedback : I_ErrorLogger;
 END_VAR
 VAR
 	value : REAL;
+	errorFactory : DeserializationErrorFactory;
+	error : I_Error;
 END_VAR]]></Declaration>
       <Implementation>
         <ST><![CDATA[IF NOT TryReadNumber(root, value) THEN
+	error := errorFactory.CreateIncorrectTypeError('REAL');
+	Feedback.LogError(error);
 	RETURN;
 END_IF
 
@@ -1070,12 +1336,17 @@ TryGetReal := TRUE;]]></ST>
       <Declaration><![CDATA[METHOD TryGetSint : BOOL
 VAR_INPUT
 	Destination : REFERENCE TO SINT;
+	Feedback : I_ErrorLogger;
 END_VAR
 VAR
 	value : SINT;
+	errorFactory : DeserializationErrorFactory;
+	error : I_Error;
 END_VAR]]></Declaration>
       <Implementation>
         <ST><![CDATA[IF NOT TryReadNumber(root, value) THEN
+	error := errorFactory.CreateIncorrectTypeError('SINT');
+	Feedback.LogError(error);
 	RETURN;
 END_IF
 
@@ -1087,9 +1358,16 @@ TryGetSint := TRUE;]]></ST>
       <Declaration><![CDATA[METHOD TryGetString : BOOL
 VAR_INPUT
 	Destination : REFERENCE TO STRING;
+	Feedback : I_ErrorLogger;
+END_VAR
+VAR
+	errorFactory : DeserializationErrorFactory;
+	error : I_Error;
 END_VAR]]></Declaration>
       <Implementation>
         <ST><![CDATA[IF NOT jsonParser.IsString(root) THEN
+	error := errorFactory.CreateIncorrectTypeError('STRING');
+	Feedback.LogError(error);
 	RETURN;
 END_IF
 
@@ -1101,12 +1379,17 @@ TryGetString := TRUE;]]></ST>
       <Declaration><![CDATA[METHOD TryGetTime : BOOL
 VAR_INPUT
 	Destination : REFERENCE TO TIME;
+	Feedback : I_ErrorLogger;
 END_VAR
 VAR
 	timeAsString : T_MAXSTRING;
+	errorFactory : DeserializationErrorFactory;
+	error : I_Error;
 END_VAR]]></Declaration>
       <Implementation>
         <ST><![CDATA[IF NOT jsonParser.IsString(root) THEN
+	error := errorFactory.CreateIncorrectTypeError('TIME');
+	Feedback.LogError(error);
 	RETURN;
 END_IF
 
@@ -1120,12 +1403,17 @@ TryGetTime := TRUE;]]></ST>
       <Declaration><![CDATA[METHOD TryGetTod : BOOL
 VAR_INPUT
 	Destination : REFERENCE TO TOD;
+	Feedback : I_ErrorLogger;
 END_VAR
 VAR
 	timeAsString : T_MAXSTRING;
+	errorFactory : DeserializationErrorFactory;
+	error : I_Error;
 END_VAR]]></Declaration>
       <Implementation>
         <ST><![CDATA[IF NOT jsonParser.IsString(root) THEN
+	error := errorFactory.CreateIncorrectTypeError('TOD');
+	Feedback.LogError(error);
 	RETURN;
 END_IF
 
@@ -1139,12 +1427,17 @@ TryGetTod := TRUE;]]></ST>
       <Declaration><![CDATA[METHOD TryGetUdint : BOOL
 VAR_INPUT
 	Destination : REFERENCE TO UDINT;
+	Feedback : I_ErrorLogger;
 END_VAR
 VAR
 	value : UDINT;
+	errorFactory : DeserializationErrorFactory;
+	error : I_Error;
 END_VAR]]></Declaration>
       <Implementation>
         <ST><![CDATA[IF NOT TryReadNumber(root, value) THEN
+	error := errorFactory.CreateIncorrectTypeError('UDINT');
+	Feedback.LogError(error);
 	RETURN;
 END_IF
 
@@ -1156,12 +1449,17 @@ TryGetUdint := TRUE;]]></ST>
       <Declaration><![CDATA[METHOD TryGetUint : BOOL
 VAR_INPUT
 	Destination : REFERENCE TO UINT;
+	Feedback : I_ErrorLogger;
 END_VAR
 VAR
 	value : UINT;
+	errorFactory : DeserializationErrorFactory;
+	error : I_Error;
 END_VAR]]></Declaration>
       <Implementation>
         <ST><![CDATA[IF NOT TryReadNumber(root, value) THEN
+	error := errorFactory.CreateIncorrectTypeError('UINT');
+	Feedback.LogError(error);
 	RETURN;
 END_IF
 
@@ -1173,12 +1471,17 @@ TryGetUint := TRUE;]]></ST>
       <Declaration><![CDATA[METHOD TryGetUlint : BOOL
 VAR_INPUT
 	Destination : REFERENCE TO ULINT;
+	Feedback : I_ErrorLogger;
 END_VAR
 VAR
 	value : ULINT;
+	errorFactory : DeserializationErrorFactory;
+	error : I_Error;
 END_VAR]]></Declaration>
       <Implementation>
         <ST><![CDATA[IF NOT TryReadNumber(root, value) THEN
+	error := errorFactory.CreateIncorrectTypeError('ULINT');
+	Feedback.LogError(error);
 	RETURN;
 END_IF
 
@@ -1190,12 +1493,17 @@ TryGetUlint := TRUE;]]></ST>
       <Declaration><![CDATA[METHOD TryGetUsint : BOOL
 VAR_INPUT
 	Destination : REFERENCE TO USINT;
+	Feedback : I_ErrorLogger;
 END_VAR
 VAR
 	value : USINT;
+	errorFactory : DeserializationErrorFactory;
+	error : I_Error;
 END_VAR]]></Declaration>
       <Implementation>
         <ST><![CDATA[IF NOT TryReadNumber(root, value) THEN
+	error := errorFactory.CreateIncorrectTypeError('USINT');
+	Feedback.LogError(error);
 	RETURN;
 END_IF
 
@@ -1207,86 +1515,22 @@ TryGetUsint := TRUE;]]></ST>
       <Declaration><![CDATA[METHOD TryGetWord : BOOL
 VAR_INPUT
 	Destination : REFERENCE TO WORD;
+	Feedback : I_ErrorLogger;
 END_VAR
 VAR
 	value : WORD;
+	errorFactory : DeserializationErrorFactory;
+	error : I_Error;
 END_VAR]]></Declaration>
       <Implementation>
         <ST><![CDATA[IF NOT TryReadNumber(root, value) THEN
+	error := errorFactory.CreateIncorrectTypeError('WORD');
+	Feedback.LogError(error);
 	RETURN;
 END_IF
 
 Destination := value;
 TryGetWord := TRUE;]]></ST>
-      </Implementation>
-    </Method>
-    <Method Name="TryMemberReadBool" Id="{3fca3c1b-60aa-4fe3-8244-9475b0ad6574}" FolderPath="Protected\">
-      <Declaration><![CDATA[METHOD PROTECTED TryMemberReadBool : BOOL
-VAR_INPUT
-	MemberName : T_MAXSTRING;
-	Destination : ANY;
-END_VAR
-VAR
-	member : SJsonValue;
-END_VAR]]></Declaration>
-      <Implementation>
-        <ST><![CDATA[IF MemberName = '' THEN
-	RETURN;
-END_IF
-
-member := jsonParser.FindMember(root, MemberName);
-
-IF member = 0 THEN
-	RETURN;
-END_IF
-
-TryMemberReadBool := TryReadBool(member, Destination);]]></ST>
-      </Implementation>
-    </Method>
-    <Method Name="TryMemberReadNumber" Id="{fcbeac93-fa66-4c57-8c93-bb4ce7ea29c4}" FolderPath="Protected\">
-      <Declaration><![CDATA[METHOD PROTECTED TryMemberReadNumber : BOOL
-VAR_INPUT
-	MemberName : T_MAXSTRING;
-	Destination : ANY;
-END_VAR
-VAR
-	member : SJsonValue;
-END_VAR]]></Declaration>
-      <Implementation>
-        <ST><![CDATA[IF MemberName = '' THEN
-	RETURN;
-END_IF
-
-member := jsonParser.FindMember(root, MemberName);
-
-IF member = 0 THEN
-	RETURN;
-END_IF
-
-TryMemberReadNumber := TryReadNumber(member, Destination);]]></ST>
-      </Implementation>
-    </Method>
-    <Method Name="TryMemberReadString" Id="{339c6e8c-1ad5-4d13-81f3-d1852025ad06}" FolderPath="Protected\">
-      <Declaration><![CDATA[METHOD PROTECTED TryMemberReadString : BOOL
-VAR_INPUT
-	MemberName : T_MAXSTRING;
-	Destination : REFERENCE TO STRING;
-END_VAR
-VAR
-	member : SJsonValue;
-END_VAR]]></Declaration>
-      <Implementation>
-        <ST><![CDATA[IF MemberName = '' THEN
-	RETURN;
-END_IF
-
-member := jsonParser.FindMember(root, MemberName);
-
-IF member = 0 THEN
-	RETURN;
-END_IF
-
-TryMemberReadString := TryReadString(member, Destination);]]></ST>
       </Implementation>
     </Method>
     <Method Name="TryReadBool" Id="{54f48498-7f0f-43fa-810d-7b15705c54d0}" FolderPath="Protected\">

@@ -118,488 +118,784 @@ END_VAR]]></Declaration>
         <ST><![CDATA[GetObjectEnumerator := CreateNullObjectEnumerator();]]></ST>
       </Implementation>
     </Method>
-    <Method Name="TryGetBase64" Id="{f75b94cc-09a1-46d1-96bc-828dc273232b}">
+    <Method Name="TryDeserializeKeyToObject" Id="{695f142e-e075-4776-8893-232de584ac13}">
+      <Declaration><![CDATA[METHOD TryDeserializeKeyToObject : BOOL
+VAR_INPUT
+	Key : T_MAXSTRING;
+	Object : I_Deserializable;
+	Feedback : I_ErrorLogger;
+END_VAR
+VAR
+	errorFactory : DeserializationErrorFactory;
+	error : I_Error;
+END_VAR]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[IF Key = '' THEN
+	error := errorFactory.CreateInvalidKeyError();
+	Feedback.LogError(error);
+	RETURN;
+END_IF
+
+TryDeserializeKeyToObject := FALSE;]]></ST>
+      </Implementation>
+    </Method>
+    <Method Name="TryDeserializeToObject" Id="{875341c4-f0f4-4402-8e37-703bc59a9101}">
+      <Declaration><![CDATA[METHOD TryDeserializeToObject : BOOL
+VAR_INPUT
+	Object : I_Deserializable;
+	Feedback : I_ErrorLogger;
+END_VAR]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[TryDeserializeToObject := Object.TryDeserializeFrom(THIS^, Feedback);
+]]></ST>
+      </Implementation>
+    </Method>
+    <Method Name="TryGetBase64" Id="{7621e404-8ebb-4638-8cd5-c1c7e831ee32}">
       <Declaration><![CDATA[METHOD TryGetBase64 : BOOL
 VAR_INPUT
 	pBytes : POINTER TO BYTE;
 	nBytes : DINT;
+	Feedback : I_ErrorLogger;
+END_VAR
+VAR
+	errorFactory : DeserializationErrorFactory;
+	error : I_Error;
 END_VAR]]></Declaration>
       <Implementation>
-        <ST><![CDATA[]]></ST>
+        <ST><![CDATA[error := errorFactory.CreateIncorrectTypeError('Base64');
+Feedback.LogError(error);]]></ST>
       </Implementation>
     </Method>
-    <Method Name="TryGetBool" Id="{1482a02b-44b1-4d00-83d0-bfcbd02aa9e5}">
+    <Method Name="TryGetBool" Id="{762912ed-3b26-4e30-9e40-e20078ac3a75}">
       <Declaration><![CDATA[METHOD TryGetBool : BOOL
 VAR_INPUT
 	Destination : REFERENCE TO BOOL;
+	Feedback : I_ErrorLogger;
+END_VAR
+VAR
+	errorFactory : DeserializationErrorFactory;
+	error : I_Error;
 END_VAR]]></Declaration>
       <Implementation>
-        <ST><![CDATA[]]></ST>
+        <ST><![CDATA[error := errorFactory.CreateIncorrectTypeError('BOOL');
+Feedback.LogError(error);]]></ST>
       </Implementation>
     </Method>
-    <Method Name="TryGetByte" Id="{11cb8760-de5a-4d4a-abb4-721cead140d7}">
+    <Method Name="TryGetByte" Id="{bf55b63e-9102-47ba-bc16-093ad98bd344}">
       <Declaration><![CDATA[METHOD TryGetByte : BOOL
 VAR_INPUT
 	Destination : REFERENCE TO BYTE;
+	Feedback : I_ErrorLogger;
+END_VAR
+VAR
+	errorFactory : DeserializationErrorFactory;
+	error : I_Error;
 END_VAR]]></Declaration>
       <Implementation>
-        <ST><![CDATA[]]></ST>
+        <ST><![CDATA[error := errorFactory.CreateIncorrectTypeError('BYTE');
+Feedback.LogError(error);]]></ST>
       </Implementation>
     </Method>
-    <Method Name="TryGetDateTime" Id="{659f2c53-3753-422e-9477-31d422b9487e}">
+    <Method Name="TryGetDateTime" Id="{75c7d3d1-fb96-4888-ac7a-e4e97442e95c}">
       <Declaration><![CDATA[METHOD TryGetDateTime : BOOL
 VAR_INPUT
 	Destination : REFERENCE TO DATE_AND_TIME;
+	Feedback : I_ErrorLogger;
+END_VAR
+VAR
+	errorFactory : DeserializationErrorFactory;
+	error : I_Error;
 END_VAR]]></Declaration>
       <Implementation>
-        <ST><![CDATA[]]></ST>
+        <ST><![CDATA[error := errorFactory.CreateIncorrectTypeError('DATE_AND_TIME');
+Feedback.LogError(error);]]></ST>
       </Implementation>
     </Method>
-    <Method Name="TryGetDcTime" Id="{19769951-7c91-4379-84fd-7686a89ea8e8}">
+    <Method Name="TryGetDcTime" Id="{955c01d9-c5a5-4a03-8ee2-b7a3e269c27b}">
       <Declaration><![CDATA[METHOD TryGetDcTime : BOOL
 VAR_INPUT
 	Destination : REFERENCE TO DCTIME;
+	Feedback : I_ErrorLogger;
+END_VAR
+VAR
+	errorFactory : DeserializationErrorFactory;
+	error : I_Error;
 END_VAR]]></Declaration>
       <Implementation>
-        <ST><![CDATA[]]></ST>
+        <ST><![CDATA[error := errorFactory.CreateIncorrectTypeError('DCTIME');
+Feedback.LogError(error);]]></ST>
       </Implementation>
     </Method>
-    <Method Name="TryGetDint" Id="{8aa00f02-1abe-4580-99ff-357eec4747da}">
+    <Method Name="TryGetDint" Id="{579f68db-1f60-4dfb-aee8-a7fe386aab30}">
       <Declaration><![CDATA[METHOD TryGetDint : BOOL
 VAR_INPUT
 	Destination : REFERENCE TO DINT;
+	Feedback : I_ErrorLogger;
+END_VAR
+VAR
+	errorFactory : DeserializationErrorFactory;
+	error : I_Error;
 END_VAR]]></Declaration>
       <Implementation>
-        <ST><![CDATA[]]></ST>
+        <ST><![CDATA[error := errorFactory.CreateIncorrectTypeError('DINT');
+Feedback.LogError(error);]]></ST>
       </Implementation>
     </Method>
-    <Method Name="TryGetDword" Id="{fe7aefa0-2ba8-4edf-b2a1-24f237ca79dc}">
+    <Method Name="TryGetDword" Id="{606f6ff9-44db-4079-96ff-01758bdd72ed}">
       <Declaration><![CDATA[METHOD TryGetDword : BOOL
 VAR_INPUT
 	Destination : REFERENCE TO DWORD;
+	Feedback : I_ErrorLogger;
+END_VAR
+VAR
+	errorFactory : DeserializationErrorFactory;
+	error : I_Error;
 END_VAR]]></Declaration>
       <Implementation>
-        <ST><![CDATA[]]></ST>
+        <ST><![CDATA[error := errorFactory.CreateIncorrectTypeError('DWORD');
+Feedback.LogError(error);]]></ST>
       </Implementation>
     </Method>
-    <Method Name="TryGetFileTime" Id="{37fea43a-0d3d-41c5-bca3-a8674c31e111}">
+    <Method Name="TryGetFileTime" Id="{a46d844d-9495-436e-912c-4987930a0278}">
       <Declaration><![CDATA[METHOD TryGetFileTime : BOOL
 VAR_INPUT
 	Destination : REFERENCE TO FILETIME;
+	Feedback : I_ErrorLogger;
+END_VAR
+VAR
+	errorFactory : DeserializationErrorFactory;
+	error : I_Error;
 END_VAR]]></Declaration>
       <Implementation>
-        <ST><![CDATA[]]></ST>
+        <ST><![CDATA[error := errorFactory.CreateIncorrectTypeError('FILETIME');
+Feedback.LogError(error);]]></ST>
       </Implementation>
     </Method>
-    <Method Name="TryGetHexAsBytes" Id="{ff79c0d4-f18a-4054-ba59-43211cefaef3}">
+    <Method Name="TryGetHexAsBytes" Id="{dab55345-5b4c-4df2-a806-0d56130d0e39}">
       <Declaration><![CDATA[METHOD TryGetHexAsBytes : BOOL
 VAR_INPUT
 	pBytes : POINTER TO BYTE;
 	nBytes : DINT;
+	Feedback : I_ErrorLogger;
 END_VAR
-]]></Declaration>
+VAR
+	errorFactory : DeserializationErrorFactory;
+	error : I_Error;
+END_VAR]]></Declaration>
       <Implementation>
-        <ST><![CDATA[]]></ST>
+        <ST><![CDATA[error := errorFactory.CreateIncorrectTypeError('HexBinary');
+Feedback.LogError(error);]]></ST>
       </Implementation>
     </Method>
-    <Method Name="TryGetInt" Id="{c0ac5635-3443-487e-8b70-ca8a8e83ad64}">
+    <Method Name="TryGetInt" Id="{6989f796-257f-4512-9e66-9785ed99b071}">
       <Declaration><![CDATA[METHOD TryGetInt : BOOL
 VAR_INPUT
 	Destination : REFERENCE TO INT;
+	Feedback : I_ErrorLogger;
+END_VAR
+VAR
+	errorFactory : DeserializationErrorFactory;
+	error : I_Error;
 END_VAR]]></Declaration>
       <Implementation>
-        <ST><![CDATA[]]></ST>
+        <ST><![CDATA[error := errorFactory.CreateIncorrectTypeError('INT');
+Feedback.LogError(error);]]></ST>
       </Implementation>
     </Method>
-    <Method Name="TryGetKeyBase64" Id="{d609f69b-8d67-4fed-a81d-2159cdd224d4}">
+    <Method Name="TryGetKeyBase64" Id="{8847df05-d420-4a30-9f66-a91b1273e6cf}">
       <Declaration><![CDATA[METHOD TryGetKeyBase64 : BOOL
 VAR_INPUT
 	Key : T_MAXSTRING;
 	pBytes : POINTER TO BYTE;
 	nBytes : DINT;
+	Feedback : I_ErrorLogger;
+END_VAR
+VAR
+	errorFactory : DeserializationErrorFactory;
+	error : I_Error;
 END_VAR]]></Declaration>
       <Implementation>
-        <ST><![CDATA[]]></ST>
+        <ST><![CDATA[error := errorFactory.CreateIncorrectKeyTypeError('Base64',Key);
+Feedback.LogError(error);]]></ST>
       </Implementation>
     </Method>
-    <Method Name="TryGetKeyBool" Id="{3949d21f-ee79-496e-b495-9d95e7fedfad}">
+    <Method Name="TryGetKeyBool" Id="{4d4a8d5b-f3f1-4de4-a341-2e2bd9a537fb}">
       <Declaration><![CDATA[METHOD TryGetKeyBool : BOOL
 VAR_INPUT
 	Key : T_MAXSTRING;
 	Destination : REFERENCE TO BOOL;
+	Feedback : I_ErrorLogger;
+END_VAR
+VAR
+	errorFactory : DeserializationErrorFactory;
+	error : I_Error;
 END_VAR]]></Declaration>
       <Implementation>
-        <ST><![CDATA[]]></ST>
+        <ST><![CDATA[error := errorFactory.CreateIncorrectKeyTypeError('BOOL',Key);
+Feedback.LogError(error);]]></ST>
       </Implementation>
     </Method>
-    <Method Name="TryGetKeyByte" Id="{f6504235-e1c1-4387-bdbc-9b85ba59e4d1}">
+    <Method Name="TryGetKeyByte" Id="{da3e35e4-9eed-4ae8-830b-58c978f2aa2b}">
       <Declaration><![CDATA[METHOD TryGetKeyByte : BOOL
 VAR_INPUT
 	Key : T_MAXSTRING;
 	Destination : REFERENCE TO BYTE;
+	Feedback : I_ErrorLogger;
+END_VAR
+VAR
+	errorFactory : DeserializationErrorFactory;
+	error : I_Error;
 END_VAR]]></Declaration>
       <Implementation>
-        <ST><![CDATA[]]></ST>
+        <ST><![CDATA[error := errorFactory.CreateIncorrectKeyTypeError('BYTE',Key);
+Feedback.LogError(error);]]></ST>
       </Implementation>
     </Method>
-    <Method Name="TryGetKeyDateTime" Id="{8101862d-5f18-441e-ad08-b13eab9da495}">
+    <Method Name="TryGetKeyDateTime" Id="{c19ba2f2-13fd-4dd5-af8f-facc5e817027}">
       <Declaration><![CDATA[METHOD TryGetKeyDateTime : BOOL
 VAR_INPUT
 	Key : T_MAXSTRING;
 	Destination : REFERENCE TO DATE_AND_TIME;
+	Feedback : I_ErrorLogger;
+END_VAR
+VAR
+	errorFactory : DeserializationErrorFactory;
+	error : I_Error;
 END_VAR]]></Declaration>
       <Implementation>
-        <ST><![CDATA[]]></ST>
+        <ST><![CDATA[error := errorFactory.CreateIncorrectKeyTypeError('DATE_AND_TIME',Key);
+Feedback.LogError(error);]]></ST>
       </Implementation>
     </Method>
-    <Method Name="TryGetKeyDcTime" Id="{27f56608-dbac-438d-a941-c37cc857326e}">
+    <Method Name="TryGetKeyDcTime" Id="{ffbc101f-6d3d-4095-9da2-cf9a8269adcc}">
       <Declaration><![CDATA[METHOD TryGetKeyDcTime : BOOL
 VAR_INPUT
 	Key : T_MAXSTRING;
 	Destination : REFERENCE TO DCTIME;
+	Feedback : I_ErrorLogger;
+END_VAR
+VAR
+	errorFactory : DeserializationErrorFactory;
+	error : I_Error;
 END_VAR]]></Declaration>
       <Implementation>
-        <ST><![CDATA[]]></ST>
+        <ST><![CDATA[error := errorFactory.CreateIncorrectKeyTypeError('DCTIME',Key);
+Feedback.LogError(error);]]></ST>
       </Implementation>
     </Method>
-    <Method Name="TryGetKeyDint" Id="{680ad871-fb84-4e71-9045-204b8b36c8dd}">
+    <Method Name="TryGetKeyDint" Id="{2c6799d6-9595-4765-b39e-03c9dbdc08ea}">
       <Declaration><![CDATA[METHOD TryGetKeyDint : BOOL
 VAR_INPUT
 	Key : T_MAXSTRING;
 	Destination : REFERENCE TO DINT;
+	Feedback : I_ErrorLogger;
+END_VAR
+VAR
+	errorFactory : DeserializationErrorFactory;
+	error : I_Error;
 END_VAR]]></Declaration>
       <Implementation>
-        <ST><![CDATA[]]></ST>
+        <ST><![CDATA[error := errorFactory.CreateIncorrectKeyTypeError('DINT',Key);
+Feedback.LogError(error);]]></ST>
       </Implementation>
     </Method>
-    <Method Name="TryGetKeyDword" Id="{5e9754ab-bf9b-4141-bfc7-dde1a7fa1e53}">
+    <Method Name="TryGetKeyDword" Id="{fa2fb551-dc7f-48d1-9eee-5424f7a77003}">
       <Declaration><![CDATA[METHOD TryGetKeyDword : BOOL
 VAR_INPUT
 	Key : T_MAXSTRING;
 	Destination : REFERENCE TO DWORD;
+	Feedback : I_ErrorLogger;
+END_VAR
+VAR
+	errorFactory : DeserializationErrorFactory;
+	error : I_Error;
 END_VAR]]></Declaration>
       <Implementation>
-        <ST><![CDATA[]]></ST>
+        <ST><![CDATA[error := errorFactory.CreateIncorrectKeyTypeError('DWORD',Key);
+Feedback.LogError(error);]]></ST>
       </Implementation>
     </Method>
-    <Method Name="TryGetKeyFileTime" Id="{01285bcb-0898-4dbf-beab-41ec85c9c99c}">
+    <Method Name="TryGetKeyFileTime" Id="{9020d355-1d14-41b3-a9e0-66f0462d3a3d}">
       <Declaration><![CDATA[METHOD TryGetKeyFileTime : BOOL
 VAR_INPUT
 	Key : T_MAXSTRING;
 	Destination : REFERENCE TO FILETIME;
+	Feedback : I_ErrorLogger;
+END_VAR
+VAR
+	errorFactory : DeserializationErrorFactory;
+	error : I_Error;
 END_VAR]]></Declaration>
       <Implementation>
-        <ST><![CDATA[]]></ST>
+        <ST><![CDATA[error := errorFactory.CreateIncorrectKeyTypeError('FILETIME',Key);
+Feedback.LogError(error);]]></ST>
       </Implementation>
     </Method>
-    <Method Name="TryGetKeyHexAsBytes" Id="{a4ff13b2-bfa9-4641-9ba7-f0ec9882b9ad}">
+    <Method Name="TryGetKeyHexAsBytes" Id="{9b357814-abe8-48b7-8da6-a33a59c19568}">
       <Declaration><![CDATA[METHOD TryGetKeyHexAsBytes : BOOL
 VAR_INPUT
 	Key : T_MAXSTRING;
 	pBytes : POINTER TO BYTE;
 	nBytes : DINT;
+	Feedback : I_ErrorLogger;
+END_VAR
+VAR
+	errorFactory : DeserializationErrorFactory;
+	error : I_Error;
 END_VAR]]></Declaration>
       <Implementation>
-        <ST><![CDATA[]]></ST>
+        <ST><![CDATA[error := errorFactory.CreateIncorrectKeyTypeError('HexBinary',Key);
+Feedback.LogError(error);]]></ST>
       </Implementation>
     </Method>
-    <Method Name="TryGetKeyInt" Id="{ead7d035-34f5-409c-a51c-6e193dcb8920}">
+    <Method Name="TryGetKeyInt" Id="{6cac9205-f1e0-4892-84df-c6d951ec35ec}">
       <Declaration><![CDATA[METHOD TryGetKeyInt : BOOL
 VAR_INPUT
 	Key : T_MAXSTRING;
 	Destination : REFERENCE TO INT;
+	Feedback : I_ErrorLogger;
+END_VAR
+VAR
+	errorFactory : DeserializationErrorFactory;
+	error : I_Error;
 END_VAR]]></Declaration>
       <Implementation>
-        <ST><![CDATA[]]></ST>
+        <ST><![CDATA[error := errorFactory.CreateIncorrectKeyTypeError('INT',Key);
+Feedback.LogError(error);]]></ST>
       </Implementation>
     </Method>
-    <Method Name="TryGetKeyLint" Id="{be3b394b-9380-4dd9-9a90-ae11e7807234}">
+    <Method Name="TryGetKeyLint" Id="{a5c77d45-378a-4e20-a946-23218ef10e28}">
       <Declaration><![CDATA[METHOD TryGetKeyLint : BOOL
 VAR_INPUT
 	Key : T_MAXSTRING;
 	Destination : REFERENCE TO LINT;
+	Feedback : I_ErrorLogger;
+END_VAR
+VAR
+	errorFactory : DeserializationErrorFactory;
+	error : I_Error;
 END_VAR]]></Declaration>
       <Implementation>
-        <ST><![CDATA[]]></ST>
+        <ST><![CDATA[error := errorFactory.CreateIncorrectKeyTypeError('LINT',Key);
+Feedback.LogError(error);]]></ST>
       </Implementation>
     </Method>
-    <Method Name="TryGetKeyLreal" Id="{177564d9-01c8-4f12-b3ad-c87503590719}">
+    <Method Name="TryGetKeyLreal" Id="{e48b10af-193f-43de-bf00-82abb9e4d99f}">
       <Declaration><![CDATA[METHOD TryGetKeyLreal : BOOL
 VAR_INPUT
 	Key : T_MAXSTRING;
 	Destination : REFERENCE TO LREAL;
+	Feedback : I_ErrorLogger;
 END_VAR
-]]></Declaration>
+VAR
+	errorFactory : DeserializationErrorFactory;
+	error : I_Error;
+END_VAR]]></Declaration>
       <Implementation>
-        <ST><![CDATA[]]></ST>
+        <ST><![CDATA[error := errorFactory.CreateIncorrectKeyTypeError('LREAL',Key);
+Feedback.LogError(error);]]></ST>
       </Implementation>
     </Method>
-    <Method Name="TryGetKeyLtime" Id="{d22a41f7-9170-4d5b-aa93-439e3d810188}">
+    <Method Name="TryGetKeyLtime" Id="{c9c15260-6111-4da2-9357-ea7a478ce4e1}">
       <Declaration><![CDATA[METHOD TryGetKeyLtime : BOOL
 VAR_INPUT
 	Key : T_MAXSTRING;
 	Destination : REFERENCE TO LTIME;
+	Feedback : I_ErrorLogger;
 END_VAR
-]]></Declaration>
+VAR
+	errorFactory : DeserializationErrorFactory;
+	error : I_Error;
+END_VAR]]></Declaration>
       <Implementation>
-        <ST><![CDATA[]]></ST>
+        <ST><![CDATA[error := errorFactory.CreateIncorrectKeyTypeError('LTIME',Key);
+Feedback.LogError(error);]]></ST>
       </Implementation>
     </Method>
-    <Method Name="TryGetKeyLword" Id="{fa4c3522-3bfd-41e7-9ba8-aedee884521d}">
+    <Method Name="TryGetKeyLword" Id="{54086de4-df84-45a5-a695-9d5ad52cc403}">
       <Declaration><![CDATA[METHOD TryGetKeyLword : BOOL
 VAR_INPUT
 	Key : T_MAXSTRING;
 	Destination : REFERENCE TO LWORD;
+	Feedback : I_ErrorLogger;
+END_VAR
+VAR
+	errorFactory : DeserializationErrorFactory;
+	error : I_Error;
 END_VAR]]></Declaration>
       <Implementation>
-        <ST><![CDATA[]]></ST>
+        <ST><![CDATA[error := errorFactory.CreateIncorrectKeyTypeError('LWORD',Key);
+Feedback.LogError(error);]]></ST>
       </Implementation>
     </Method>
-    <Method Name="TryGetKeyObject" Id="{695f142e-e075-4776-8893-232de584ac13}">
-      <Declaration><![CDATA[METHOD TryGetKeyObject : BOOL
-VAR_INPUT
-	Key : T_MAXSTRING;
-	Object : I_Deserializable;
-END_VAR]]></Declaration>
-      <Implementation>
-        <ST><![CDATA[]]></ST>
-      </Implementation>
-    </Method>
-    <Method Name="TryGetKeyReal" Id="{3a66a959-2786-4929-b7a9-0744eb355910}">
+    <Method Name="TryGetKeyReal" Id="{3cc30fe4-6257-419c-bfe0-07ee383d7547}">
       <Declaration><![CDATA[METHOD TryGetKeyReal : BOOL
 VAR_INPUT
 	Key : T_MAXSTRING;
 	Destination : REFERENCE TO REAL;
+	Feedback : I_ErrorLogger;
+END_VAR
+VAR
+	errorFactory : DeserializationErrorFactory;
+	error : I_Error;
 END_VAR]]></Declaration>
       <Implementation>
-        <ST><![CDATA[]]></ST>
+        <ST><![CDATA[error := errorFactory.CreateIncorrectKeyTypeError('REAL',Key);
+Feedback.LogError(error);]]></ST>
       </Implementation>
     </Method>
-    <Method Name="TryGetKeySint" Id="{fe7a5584-ccdc-41a2-811b-6bef1a753e08}">
+    <Method Name="TryGetKeySint" Id="{702154fb-994f-4c7f-85ec-3a429fa7a199}">
       <Declaration><![CDATA[METHOD TryGetKeySint : BOOL
 VAR_INPUT
 	Key : T_MAXSTRING;
 	Destination : REFERENCE TO SINT;
+	Feedback : I_ErrorLogger;
+END_VAR
+VAR
+	errorFactory : DeserializationErrorFactory;
+	error : I_Error;
 END_VAR]]></Declaration>
       <Implementation>
-        <ST><![CDATA[]]></ST>
+        <ST><![CDATA[error := errorFactory.CreateIncorrectKeyTypeError('SINT',Key);
+Feedback.LogError(error);]]></ST>
       </Implementation>
     </Method>
-    <Method Name="TryGetKeyString" Id="{5d897420-9d9f-4549-910c-633714336499}">
+    <Method Name="TryGetKeyString" Id="{75af3b45-d030-4061-b1ec-07d455d50604}">
       <Declaration><![CDATA[METHOD TryGetKeyString : BOOL
 VAR_INPUT
 	Key : T_MAXSTRING;
 	Destination : REFERENCE TO STRING;
+	Feedback : I_ErrorLogger;
+END_VAR
+VAR
+	errorFactory : DeserializationErrorFactory;
+	error : I_Error;
 END_VAR]]></Declaration>
       <Implementation>
-        <ST><![CDATA[]]></ST>
+        <ST><![CDATA[error := errorFactory.CreateIncorrectKeyTypeError('STRING',Key);
+Feedback.LogError(error);]]></ST>
       </Implementation>
     </Method>
-    <Method Name="TryGetKeyTime" Id="{daca10e0-ba1f-4329-ba30-e0fa923de2c7}">
+    <Method Name="TryGetKeyTime" Id="{de671a51-0dc6-45f1-b64e-499e60be4464}">
       <Declaration><![CDATA[METHOD TryGetKeyTime : BOOL
 VAR_INPUT
 	Key : T_MAXSTRING;
 	Destination : REFERENCE TO TIME;
+	Feedback : I_ErrorLogger;
+END_VAR
+VAR
+	errorFactory : DeserializationErrorFactory;
+	error : I_Error;
 END_VAR]]></Declaration>
       <Implementation>
-        <ST><![CDATA[]]></ST>
+        <ST><![CDATA[error := errorFactory.CreateIncorrectKeyTypeError('TIME',Key);
+Feedback.LogError(error);]]></ST>
       </Implementation>
     </Method>
-    <Method Name="TryGetKeyTod" Id="{078b2bc5-7fb6-470a-992c-f362fd2eed22}">
+    <Method Name="TryGetKeyTod" Id="{85fdd1c4-8b6b-49b8-aabf-5b56f54b759e}">
       <Declaration><![CDATA[METHOD TryGetKeyTod : BOOL
 VAR_INPUT
 	Key : T_MAXSTRING;
 	Destination : REFERENCE TO TOD;
+	Feedback : I_ErrorLogger;
 END_VAR
-]]></Declaration>
+VAR
+	errorFactory : DeserializationErrorFactory;
+	error : I_Error;
+END_VAR]]></Declaration>
       <Implementation>
-        <ST><![CDATA[]]></ST>
+        <ST><![CDATA[error := errorFactory.CreateIncorrectKeyTypeError('TOD',Key);
+Feedback.LogError(error);]]></ST>
       </Implementation>
     </Method>
-    <Method Name="TryGetKeyUdint" Id="{c0fce314-bb1f-44a3-8a2c-f7234aa13a5c}">
+    <Method Name="TryGetKeyUdint" Id="{f52e8121-dd6f-4993-b7d2-b34996673658}">
       <Declaration><![CDATA[METHOD TryGetKeyUdint : BOOL
 VAR_INPUT
 	Key : T_MAXSTRING;
 	Destination : REFERENCE TO UDINT;
+	Feedback : I_ErrorLogger;
+END_VAR
+VAR
+	errorFactory : DeserializationErrorFactory;
+	error : I_Error;
 END_VAR]]></Declaration>
       <Implementation>
-        <ST><![CDATA[]]></ST>
+        <ST><![CDATA[error := errorFactory.CreateIncorrectKeyTypeError('UDINT',Key);
+Feedback.LogError(error);]]></ST>
       </Implementation>
     </Method>
-    <Method Name="TryGetKeyUint" Id="{df0356db-c14b-43ba-b6dd-d54246c11a5c}">
+    <Method Name="TryGetKeyUint" Id="{3e4960cd-ac90-42d2-b8e2-510dfa050538}">
       <Declaration><![CDATA[METHOD TryGetKeyUint : BOOL
 VAR_INPUT
 	Key : T_MAXSTRING;
 	Destination : REFERENCE TO UINT;
+	Feedback : I_ErrorLogger;
+END_VAR
+VAR
+	errorFactory : DeserializationErrorFactory;
+	error : I_Error;
 END_VAR]]></Declaration>
       <Implementation>
-        <ST><![CDATA[]]></ST>
+        <ST><![CDATA[error := errorFactory.CreateIncorrectKeyTypeError('UINT',Key);
+Feedback.LogError(error);]]></ST>
       </Implementation>
     </Method>
-    <Method Name="TryGetKeyUlint" Id="{d4e69df0-8b22-439e-90db-e0bd326bbc68}">
+    <Method Name="TryGetKeyUlint" Id="{a528eed8-5f70-4cb0-b4f4-c2c8dacb9c6f}">
       <Declaration><![CDATA[METHOD TryGetKeyUlint : BOOL
 VAR_INPUT
 	Key : T_MAXSTRING;
 	Destination : REFERENCE TO ULINT;
+	Feedback : I_ErrorLogger;
+END_VAR
+VAR
+	errorFactory : DeserializationErrorFactory;
+	error : I_Error;
 END_VAR]]></Declaration>
       <Implementation>
-        <ST><![CDATA[]]></ST>
+        <ST><![CDATA[error := errorFactory.CreateIncorrectKeyTypeError('ULINT',Key);
+Feedback.LogError(error);]]></ST>
       </Implementation>
     </Method>
-    <Method Name="TryGetKeyUsint" Id="{d9a54d8d-cf3e-4d8e-9492-2539fbcc1e0b}">
+    <Method Name="TryGetKeyUsint" Id="{4e1327be-22de-4236-b507-971527a6ae4b}">
       <Declaration><![CDATA[METHOD TryGetKeyUsint : BOOL
 VAR_INPUT
 	Key : T_MAXSTRING;
 	Destination : REFERENCE TO USINT;
+	Feedback : I_ErrorLogger;
+END_VAR
+VAR
+	errorFactory : DeserializationErrorFactory;
+	error : I_Error;
 END_VAR]]></Declaration>
       <Implementation>
-        <ST><![CDATA[]]></ST>
+        <ST><![CDATA[error := errorFactory.CreateIncorrectKeyTypeError('USINT',Key);
+Feedback.LogError(error);]]></ST>
       </Implementation>
     </Method>
-    <Method Name="TryGetKeyWord" Id="{49c7544e-be1a-42a3-b879-6c2651e791f2}">
+    <Method Name="TryGetKeyWord" Id="{b8f91d1a-719c-40ff-8c25-4c9cf7859619}">
       <Declaration><![CDATA[METHOD TryGetKeyWord : BOOL
 VAR_INPUT
 	Key : T_MAXSTRING;
 	Destination : REFERENCE TO WORD;
+	Feedback : I_ErrorLogger;
+END_VAR
+VAR
+	errorFactory : DeserializationErrorFactory;
+	error : I_Error;
 END_VAR]]></Declaration>
       <Implementation>
-        <ST><![CDATA[]]></ST>
+        <ST><![CDATA[error := errorFactory.CreateIncorrectKeyTypeError('USINT',Key);
+Feedback.LogError(error);]]></ST>
       </Implementation>
     </Method>
-    <Method Name="TryGetLint" Id="{a2e62477-ec1e-4c8e-8605-b260650cec0e}">
+    <Method Name="TryGetLint" Id="{acd604b6-1b4f-4c2d-afbd-fae2335b6fdf}">
       <Declaration><![CDATA[METHOD TryGetLint : BOOL
 VAR_INPUT
 	Destination : REFERENCE TO LINT;
+	Feedback : I_ErrorLogger;
+END_VAR
+VAR
+	errorFactory : DeserializationErrorFactory;
+	error : I_Error;
 END_VAR]]></Declaration>
       <Implementation>
-        <ST><![CDATA[]]></ST>
+        <ST><![CDATA[error := errorFactory.CreateIncorrectTypeError('LINT');
+Feedback.LogError(error);]]></ST>
       </Implementation>
     </Method>
-    <Method Name="TryGetLreal" Id="{d3c4d08f-578b-4d47-8b61-660aee4b562b}">
+    <Method Name="TryGetLreal" Id="{f94550d6-4f4f-49cd-b8d9-100d957b3d04}">
       <Declaration><![CDATA[METHOD TryGetLreal : BOOL
 VAR_INPUT
 	Destination : REFERENCE TO LREAL;
+	Feedback : I_ErrorLogger;
+END_VAR
+VAR
+	errorFactory : DeserializationErrorFactory;
+	error : I_Error;
 END_VAR]]></Declaration>
       <Implementation>
-        <ST><![CDATA[]]></ST>
+        <ST><![CDATA[error := errorFactory.CreateIncorrectTypeError('LREAL');
+Feedback.LogError(error);]]></ST>
       </Implementation>
     </Method>
-    <Method Name="TryGetLtime" Id="{d9901346-0e98-4947-a628-664e46cb87be}">
+    <Method Name="TryGetLtime" Id="{4ccbded3-982f-4d29-90d9-f06b9a6c0b29}">
       <Declaration><![CDATA[METHOD TryGetLtime : BOOL
 VAR_INPUT
 	Destination : REFERENCE TO LTIME;
+	Feedback : I_ErrorLogger;
+END_VAR
+VAR
+	errorFactory : DeserializationErrorFactory;
+	error : I_Error;
 END_VAR]]></Declaration>
       <Implementation>
-        <ST><![CDATA[]]></ST>
+        <ST><![CDATA[error := errorFactory.CreateIncorrectTypeError('LTIME');
+Feedback.LogError(error);]]></ST>
       </Implementation>
     </Method>
-    <Method Name="TryGetLword" Id="{48a98534-9d79-425c-abf7-b55251dede15}">
+    <Method Name="TryGetLword" Id="{6dceb075-3665-4215-8cb6-a9ddb500bfd1}">
       <Declaration><![CDATA[METHOD TryGetLword : BOOL
 VAR_INPUT
 	Destination : REFERENCE TO LWORD;
+	Feedback : I_ErrorLogger;
 END_VAR
-]]></Declaration>
-      <Implementation>
-        <ST><![CDATA[]]></ST>
-      </Implementation>
-    </Method>
-    <Method Name="TryGetObject" Id="{875341c4-f0f4-4402-8e37-703bc59a9101}">
-      <Declaration><![CDATA[METHOD TryGetObject : BOOL
-VAR_INPUT
-	Object : I_Deserializable;
+VAR
+	errorFactory : DeserializationErrorFactory;
+	error : I_Error;
 END_VAR]]></Declaration>
       <Implementation>
-        <ST><![CDATA[]]></ST>
+        <ST><![CDATA[error := errorFactory.CreateIncorrectTypeError('LWORD');
+Feedback.LogError(error);]]></ST>
       </Implementation>
     </Method>
-    <Method Name="TryGetReal" Id="{15967a65-c0a8-4588-b15a-7ce8296db26e}">
+    <Method Name="TryGetReal" Id="{36f68afb-04ad-47a4-bc3f-8e3bded9f9d9}">
       <Declaration><![CDATA[METHOD TryGetReal : BOOL
 VAR_INPUT
 	Destination : REFERENCE TO REAL;
+	Feedback : I_ErrorLogger;
+END_VAR
+VAR
+	errorFactory : DeserializationErrorFactory;
+	error : I_Error;
 END_VAR]]></Declaration>
       <Implementation>
-        <ST><![CDATA[]]></ST>
+        <ST><![CDATA[error := errorFactory.CreateIncorrectTypeError('REAL');
+Feedback.LogError(error);]]></ST>
       </Implementation>
     </Method>
-    <Method Name="TryGetSint" Id="{00611a3c-0448-48c0-a2d7-87db39f4ba5d}">
+    <Method Name="TryGetSint" Id="{e818b2ec-f978-4591-a7be-970f311acc96}">
       <Declaration><![CDATA[METHOD TryGetSint : BOOL
 VAR_INPUT
 	Destination : REFERENCE TO SINT;
+	Feedback : I_ErrorLogger;
+END_VAR
+VAR
+	errorFactory : DeserializationErrorFactory;
+	error : I_Error;
 END_VAR]]></Declaration>
       <Implementation>
-        <ST><![CDATA[]]></ST>
+        <ST><![CDATA[error := errorFactory.CreateIncorrectTypeError('SINT');
+Feedback.LogError(error);]]></ST>
       </Implementation>
     </Method>
-    <Method Name="TryGetString" Id="{953f735b-7fb0-4fd8-8e11-7a9c8f4ddf7b}">
+    <Method Name="TryGetString" Id="{8cce0f56-2c36-4795-ac2e-91b7c5168331}">
       <Declaration><![CDATA[METHOD TryGetString : BOOL
 VAR_INPUT
 	Destination : REFERENCE TO STRING;
+	Feedback : I_ErrorLogger;
+END_VAR
+VAR
+	errorFactory : DeserializationErrorFactory;
+	error : I_Error;
 END_VAR]]></Declaration>
       <Implementation>
-        <ST><![CDATA[]]></ST>
+        <ST><![CDATA[error := errorFactory.CreateIncorrectTypeError('STRING');
+Feedback.LogError(error);]]></ST>
       </Implementation>
     </Method>
-    <Method Name="TryGetTime" Id="{057bac58-daa6-4023-91ac-dd7165e53c8f}">
+    <Method Name="TryGetTime" Id="{b21df513-b08f-4cab-b7ce-72ae7c50754a}">
       <Declaration><![CDATA[METHOD TryGetTime : BOOL
 VAR_INPUT
 	Destination : REFERENCE TO TIME;
+	Feedback : I_ErrorLogger;
+END_VAR
+VAR
+	errorFactory : DeserializationErrorFactory;
+	error : I_Error;
 END_VAR]]></Declaration>
       <Implementation>
-        <ST><![CDATA[]]></ST>
+        <ST><![CDATA[error := errorFactory.CreateIncorrectTypeError('TIME');
+Feedback.LogError(error);]]></ST>
       </Implementation>
     </Method>
-    <Method Name="TryGetTod" Id="{917ec393-ae8d-490a-a5d4-2f12beab5406}">
+    <Method Name="TryGetTod" Id="{c58a61d0-c919-48e2-8378-7f6399eb1a48}">
       <Declaration><![CDATA[METHOD TryGetTod : BOOL
 VAR_INPUT
 	Destination : REFERENCE TO TOD;
+	Feedback : I_ErrorLogger;
+END_VAR
+VAR
+	errorFactory : DeserializationErrorFactory;
+	error : I_Error;
 END_VAR]]></Declaration>
       <Implementation>
-        <ST><![CDATA[]]></ST>
+        <ST><![CDATA[error := errorFactory.CreateIncorrectTypeError('TOD');
+Feedback.LogError(error);]]></ST>
       </Implementation>
     </Method>
-    <Method Name="TryGetUdint" Id="{c16e53e7-ff8f-46b7-90dd-cf5e00432c65}">
+    <Method Name="TryGetUdint" Id="{caa069e6-f594-4526-8505-eae9961134cc}">
       <Declaration><![CDATA[METHOD TryGetUdint : BOOL
 VAR_INPUT
 	Destination : REFERENCE TO UDINT;
+	Feedback : I_ErrorLogger;
+END_VAR
+VAR
+	errorFactory : DeserializationErrorFactory;
+	error : I_Error;
 END_VAR]]></Declaration>
       <Implementation>
-        <ST><![CDATA[]]></ST>
+        <ST><![CDATA[error := errorFactory.CreateIncorrectTypeError('UDINT');
+Feedback.LogError(error);]]></ST>
       </Implementation>
     </Method>
-    <Method Name="TryGetUint" Id="{dabc74d4-3664-4d7a-ac1d-a1dea7bc5e0e}">
+    <Method Name="TryGetUint" Id="{26bae2ad-a979-4b94-af9e-b3c48a83eb5f}">
       <Declaration><![CDATA[METHOD TryGetUint : BOOL
 VAR_INPUT
 	Destination : REFERENCE TO UINT;
+	Feedback : I_ErrorLogger;
+END_VAR
+VAR
+	errorFactory : DeserializationErrorFactory;
+	error : I_Error;
 END_VAR]]></Declaration>
       <Implementation>
-        <ST><![CDATA[]]></ST>
+        <ST><![CDATA[error := errorFactory.CreateIncorrectTypeError('UINT');
+Feedback.LogError(error);]]></ST>
       </Implementation>
     </Method>
-    <Method Name="TryGetUlint" Id="{c090dd5c-eab4-49e5-ac25-7d01148e5c33}">
+    <Method Name="TryGetUlint" Id="{2fb7cf99-b689-4754-a560-b5622d5c6c05}">
       <Declaration><![CDATA[METHOD TryGetUlint : BOOL
 VAR_INPUT
 	Destination : REFERENCE TO ULINT;
+	Feedback : I_ErrorLogger;
+END_VAR
+VAR
+	errorFactory : DeserializationErrorFactory;
+	error : I_Error;
 END_VAR]]></Declaration>
       <Implementation>
-        <ST><![CDATA[]]></ST>
+        <ST><![CDATA[error := errorFactory.CreateIncorrectTypeError('ULINT');
+Feedback.LogError(error);]]></ST>
       </Implementation>
     </Method>
-    <Method Name="TryGetUsint" Id="{1f92fef4-23a9-43fc-aa7c-cbb835cf680e}">
+    <Method Name="TryGetUsint" Id="{1a1e6e88-a3ba-4abd-85fe-b256ded12572}">
       <Declaration><![CDATA[METHOD TryGetUsint : BOOL
 VAR_INPUT
 	Destination : REFERENCE TO USINT;
+	Feedback : I_ErrorLogger;
+END_VAR
+VAR
+	errorFactory : DeserializationErrorFactory;
+	error : I_Error;
 END_VAR]]></Declaration>
       <Implementation>
-        <ST><![CDATA[]]></ST>
+        <ST><![CDATA[error := errorFactory.CreateIncorrectTypeError('USINT');
+Feedback.LogError(error);]]></ST>
       </Implementation>
     </Method>
-    <Method Name="TryGetWord" Id="{21f5aa0b-e03d-4303-96fe-efdd965c95cf}">
+    <Method Name="TryGetWord" Id="{90b292db-463f-4ea2-9dc5-aa046ee5c586}">
       <Declaration><![CDATA[METHOD TryGetWord : BOOL
 VAR_INPUT
 	Destination : REFERENCE TO WORD;
+	Feedback : I_ErrorLogger;
+END_VAR
+VAR
+	errorFactory : DeserializationErrorFactory;
+	error : I_Error;
 END_VAR]]></Declaration>
       <Implementation>
-        <ST><![CDATA[]]></ST>
+        <ST><![CDATA[error := errorFactory.CreateIncorrectTypeError('WORD');
+Feedback.LogError(error);]]></ST>
       </Implementation>
     </Method>
   </POU>
