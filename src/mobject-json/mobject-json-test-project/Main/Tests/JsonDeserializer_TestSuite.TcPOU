@@ -71,7 +71,7 @@ VAR
 	clone : I_Deserializer;
     json : STRING := '{"data":100}';
     out : BYTE;
-	feedback : ErrorLogger;
+	feedback : DeserializerFeedback;
 	hasDeserializer : BOOL;
     expected : BYTE := 100;
 END_VAR]]></Declaration>
@@ -110,7 +110,7 @@ VAR
 	elementDeserializer : I_Deserializer;
     json : STRING := '[100,200,300]';
     out : BYTE;
-	feedback : ErrorLogger;
+	feedback : DeserializerFeedback;
 	hasArrayDeserializer : BOOL;
 	hasElementDeserializer : BOOL;
     expected : BYTE := 100;
@@ -162,7 +162,7 @@ VAR
 	elementDeserializer : I_Deserializer;
     json : STRING := '{"myArray":[100,200,300]}';
     out : BYTE;
-	feedback : ErrorLogger;
+	feedback : DeserializerFeedback;
 	hasArrayDeserializer : BOOL;
 	hasElementDeserializer : BOOL;
     expected : BYTE := 100;
@@ -213,7 +213,7 @@ VAR
 	objectDeserializer : I_Deserializer;
     json : STRING := '{"data":100}';
     out : BYTE;
-	feedback : ErrorLogger;
+	feedback : DeserializerFeedback;
 	hasObjectDeserializer : BOOL;
     expected : BYTE := 100;
 END_VAR
@@ -252,7 +252,7 @@ VAR
 	objectDeserializer : I_Deserializer;
     json : STRING := '{"data":100}';
     out : BYTE;
-	feedback : ErrorLogger;
+	feedback : DeserializerFeedback;
 	hasObjectDeserializer : BOOL;
     expected : BYTE := 100;
 END_VAR
@@ -290,7 +290,7 @@ VAR
 	jsonDeserializer : JsonDeserializer;
     json : STRING := '100';
     out : BYTE;
-	feedback : ErrorLogger;
+	feedback : DeserializerFeedback;
     expected : BYTE := 0; 
 END_VAR]]></Declaration>
       <Implementation>
@@ -315,7 +315,7 @@ VAR
     jsonDeserializer : JsonDeserializer;
     json : STRING := '{"data":{"Name":"alice","Age":40}}';
     out : MockDeserializableUserObject;
-	feedback : ErrorLogger;
+	feedback : DeserializerFeedback;
     expectedName : STRING := 'alice';
 	expectedAge : INT := 40;
 	actualName : STRING;
@@ -352,7 +352,7 @@ VAR
     jsonDeserializer : JsonDeserializer;
     json : STRING := '{"data":{"Name":"alice","Age":40}}';
     out : MockDeserializableUserObject;
-	feedback : ErrorLogger;
+	feedback : DeserializerFeedback;
 	result : BOOL;
 END_VAR
 ]]></Declaration>
@@ -375,7 +375,7 @@ VAR
     jsonDeserializer : JsonDeserializer;
     json : STRING := '{"data":{"Name":"alice","Age":40}}';
     out : MockDeserializableUserObject;
-	feedback : ErrorLogger;
+	feedback : DeserializerFeedback;
 	result : BOOL;
 END_VAR
 ]]></Declaration>
@@ -398,7 +398,7 @@ VAR
     jsonDeserializer : JsonDeserializer;
     json : STRING := '{"Name":"alice","Age":40}';
     out : MockDeserializableUserObject;
-	feedback : ErrorLogger;
+	feedback : DeserializerFeedback;
     expectedName : STRING := 'alice';
 	expectedAge : INT := 40;
 	actualName : STRING;
@@ -436,7 +436,7 @@ VAR
 	jsonDeserializer : JsonDeserializer;
 	json : STRING := '"aGVsbG8="';
 	out : ARRAY[0..4] OF BYTE;
-	feedback : ErrorLogger;
+	feedback : DeserializerFeedback;
 	expected : ARRAY[0..4] OF BYTE := [104, 101, 108, 108, 111]; 
 END_VAR]]></Declaration>
       <Implementation>
@@ -460,7 +460,7 @@ VAR
 	jsonDeserializer : JsonDeserializer;
 	json : STRING := 'false';
 	out : BOOL;
-	feedback : ErrorLogger;
+	feedback : DeserializerFeedback;
 	expected : BOOL := FALSE;
 END_VAR]]></Declaration>
       <Implementation>
@@ -484,7 +484,7 @@ VAR
     jsonDeserializer : JsonDeserializer;
     json : STRING := 'true';
     out : BOOL;
-	feedback : ErrorLogger;
+	feedback : DeserializerFeedback;
     expected : BOOL := TRUE; 
 END_VAR]]></Declaration>
       <Implementation>
@@ -508,7 +508,7 @@ VAR
     jsonDeserializer : JsonDeserializer;
     json : STRING := '100';
     out : BYTE;
-	feedback : ErrorLogger;
+	feedback : DeserializerFeedback;
     expected : BYTE := 100; 
 END_VAR]]></Declaration>
       <Implementation>
@@ -532,7 +532,7 @@ VAR
     jsonDeserializer : JsonDeserializer;
     json : STRING := '"2023-12-30T15:20:00"';
     out : DATE_AND_TIME;
-	feedback : ErrorLogger;
+	feedback : DeserializerFeedback;
     expected : DATE_AND_TIME := DT#2023-12-30-15:20:00; 
 END_VAR]]></Declaration>
       <Implementation>
@@ -556,7 +556,7 @@ VAR
     jsonDeserializer : JsonDeserializer;
     json : STRING := '"2000-01-01T00:00:00.012345678"';
     out : DCTIME;
-	feedback : ErrorLogger;
+	feedback : DeserializerFeedback;
     expected : DCTIME := 12345678;
 END_VAR
 ]]></Declaration>
@@ -582,7 +582,7 @@ VAR
     jsonDeserializer : JsonDeserializer;
     json : STRING := '12345';
     out : DINT;
-	feedback : ErrorLogger;
+	feedback : DeserializerFeedback;
     expected : DINT := 12345;
 END_VAR
 ]]></Declaration>
@@ -608,7 +608,7 @@ VAR
     jsonDeserializer : JsonDeserializer;
     json : STRING := '12345';
     out : DWORD;
-	feedback : ErrorLogger;
+	feedback : DeserializerFeedback;
     expected : DWORD := 12345;
 END_VAR
 ]]></Declaration>
@@ -634,7 +634,7 @@ VAR
     jsonDeserializer : JsonDeserializer;
     json : STRING := '"1601-01-01T00:00:01.2345678"';
     out : FILETIME;
-	feedback : ErrorLogger;
+	feedback : DeserializerFeedback;
     expected : FILETIME := 12345678; 
 END_VAR]]></Declaration>
       <Implementation>
@@ -658,7 +658,7 @@ VAR
     jsonDeserializer : JsonDeserializer;
     json : STRING := '"baadf00d"';
     out : ARRAY[0..3] OF BYTE;
-	feedback : ErrorLogger;
+	feedback : DeserializerFeedback;
     expected : ARRAY[0..3] OF BYTE := [16#BA, 16#AD, 16#F0, 16#0D];
 END_VAR
 ]]></Declaration>
@@ -684,7 +684,7 @@ VAR
     jsonDeserializer : JsonDeserializer;
     json : STRING := '12345';
     out : INT;
-	feedback : ErrorLogger;
+	feedback : DeserializerFeedback;
     expected : INT := 12345;
 END_VAR
 ]]></Declaration>
@@ -710,7 +710,7 @@ VAR
     jsonDeserializer : JsonDeserializer;
     json : STRING := '{"data":"aGVsbG8="}';
     out : ARRAY[0..4] OF BYTE;
-	feedback : ErrorLogger;
+	feedback : DeserializerFeedback;
     expected : ARRAY[0..4] OF BYTE := [104, 101, 108, 108, 111];
 END_VAR
 ]]></Declaration>
@@ -736,7 +736,7 @@ VAR
     jsonDeserializer : JsonDeserializer;
     json : STRING := '{"data":false}';
     out : BOOL;
-	feedback : ErrorLogger;
+	feedback : DeserializerFeedback;
     expected : BOOL := FALSE;
 END_VAR
 ]]></Declaration>
@@ -762,7 +762,7 @@ VAR
     jsonDeserializer : JsonDeserializer;
     json : STRING := '{"data":true}';
     out : BOOL;
-	feedback : ErrorLogger;
+	feedback : DeserializerFeedback;
     expected : BOOL := TRUE;
 END_VAR
 ]]></Declaration>
@@ -788,7 +788,7 @@ VAR
     jsonDeserializer : JsonDeserializer;
     json : STRING := '{"data":100}';
     out : BYTE;
-	feedback : ErrorLogger;
+	feedback : DeserializerFeedback;
     expected : BYTE := 100;
 END_VAR
 ]]></Declaration>
@@ -814,7 +814,7 @@ VAR
     jsonDeserializer : JsonDeserializer;
     json : STRING := '{"data":"2023-12-30T15:20:00"}';
     out : DATE_AND_TIME;
-	feedback : ErrorLogger;
+	feedback : DeserializerFeedback;
     expected : DATE_AND_TIME := DT#2023-12-30-15:20:00;
 END_VAR
 ]]></Declaration>
@@ -840,7 +840,7 @@ VAR
     jsonDeserializer : JsonDeserializer;
     json : STRING := '{"data":"2000-01-01T00:00:00.012345678"}';
     out : DCTIME;
-	feedback : ErrorLogger;
+	feedback : DeserializerFeedback;
     expected : DCTIME := 12345678;
 END_VAR
 ]]></Declaration>
@@ -866,7 +866,7 @@ VAR
     jsonDeserializer : JsonDeserializer;
     json : STRING := '{"data":12345}';
     out : DINT;
-	feedback : ErrorLogger;
+	feedback : DeserializerFeedback;
     expected : DINT := 12345;
 END_VAR
 ]]></Declaration>
@@ -892,7 +892,7 @@ VAR
     jsonDeserializer : JsonDeserializer;
     json : STRING := '{"data":12345}';
     out : DWORD;
-	feedback : ErrorLogger;
+	feedback : DeserializerFeedback;
     expected : DWORD := 12345;
 END_VAR
 ]]></Declaration>
@@ -918,7 +918,7 @@ VAR
     jsonDeserializer : JsonDeserializer;
     json : STRING := '{"data":"1601-01-01T00:00:01.2345678"}';
     out : FILETIME;
-	feedback : ErrorLogger;
+	feedback : DeserializerFeedback;
     expected : FILETIME := 12345678;
 END_VAR
 ]]></Declaration>
@@ -944,7 +944,7 @@ VAR
     jsonDeserializer : JsonDeserializer;
     json : STRING := '{"data":"baadf00d"}';
     out : ARRAY[0..3] OF BYTE;
-	feedback : ErrorLogger;
+	feedback : DeserializerFeedback;
     expected : ARRAY[0..3] OF BYTE := [16#BA, 16#AD, 16#F0, 16#0D];
 END_VAR
 ]]></Declaration>
@@ -970,7 +970,7 @@ VAR
     jsonDeserializer : JsonDeserializer;
     json : STRING := '{"data":12345}';
     out : INT;
-	feedback : ErrorLogger;
+	feedback : DeserializerFeedback;
     expected : INT := 12345;
 END_VAR
 ]]></Declaration>
@@ -996,7 +996,7 @@ VAR
     jsonDeserializer : JsonDeserializer;
     json : STRING := '{"data":9223372036854775807}';
     out : LINT;
-	feedback : ErrorLogger;
+	feedback : DeserializerFeedback;
     expected : LINT := 9223372036854775807;
 END_VAR
 ]]></Declaration>
@@ -1022,7 +1022,7 @@ VAR
     jsonDeserializer : JsonDeserializer;
     json : STRING := '{"data":123456.789}';
     out : LREAL;
-	feedback : ErrorLogger;
+	feedback : DeserializerFeedback;
     expected : LREAL := 123456.789;
 END_VAR
 ]]></Declaration>
@@ -1048,7 +1048,7 @@ VAR
     jsonDeserializer : JsonDeserializer;
     json : STRING := '{"data":"LTIME#100d2h30m40s500ms600us700ns"}';
     out : LTIME;
-	feedback : ErrorLogger;
+	feedback : DeserializerFeedback;
     expected : LTIME := LTIME#100D2H30M40S500MS600US700NS;
 END_VAR
 ]]></Declaration>
@@ -1074,7 +1074,7 @@ VAR
     jsonDeserializer : JsonDeserializer;
     json : STRING := '{"data":9223372036854775807}';
     out : LWORD;
-	feedback : ErrorLogger;
+	feedback : DeserializerFeedback;
     expected : LWORD := 9223372036854775807;
 END_VAR
 ]]></Declaration>
@@ -1100,7 +1100,7 @@ VAR
     jsonDeserializer : JsonDeserializer;
     json : STRING := '{"data":123.4}';
     out : REAL;
-	feedback : ErrorLogger;
+	feedback : DeserializerFeedback;
     expected : REAL := 123.4;
 END_VAR
 ]]></Declaration>
@@ -1126,7 +1126,7 @@ VAR
     jsonDeserializer : JsonDeserializer;
     json : STRING := '{"data":123}';
     out : SINT;
-	feedback : ErrorLogger;
+	feedback : DeserializerFeedback;
     expected : SINT := 123;
 END_VAR
 ]]></Declaration>
@@ -1152,7 +1152,7 @@ VAR
     jsonDeserializer : JsonDeserializer;
     json : STRING := '{"data":"foobar"}';
     out : STRING;
-	feedback : ErrorLogger;
+	feedback : DeserializerFeedback;
     expected : STRING := 'foobar';
 END_VAR
 ]]></Declaration>
@@ -1178,7 +1178,7 @@ VAR
     jsonDeserializer : JsonDeserializer;
     json : STRING := '{"data":"T#49d17h2m47s295ms"}';
     out : TIME;
-	feedback : ErrorLogger;
+	feedback : DeserializerFeedback;
     expected : TIME := T#49D17H2M47S295MS;
 END_VAR
 ]]></Declaration>
@@ -1204,7 +1204,7 @@ VAR
     jsonDeserializer : JsonDeserializer;
     json : STRING := '{"data":"TOD#23:01:23.456"}';
     out : TOD;
-	feedback : ErrorLogger;
+	feedback : DeserializerFeedback;
     expected : TOD := TOD#23:01:23.456;
 END_VAR
 ]]></Declaration>
@@ -1230,7 +1230,7 @@ VAR
     jsonDeserializer : JsonDeserializer;
     json : STRING := '{"data":123456}';
     out : UDINT;
-	feedback : ErrorLogger;
+	feedback : DeserializerFeedback;
     expected : UDINT := 123456;
 END_VAR
 ]]></Declaration>
@@ -1256,7 +1256,7 @@ VAR
     jsonDeserializer : JsonDeserializer;
     json : STRING := '{"data":12345}';
     out : UINT;
-	feedback : ErrorLogger;
+	feedback : DeserializerFeedback;
     expected : UINT := 12345;
 END_VAR
 ]]></Declaration>
@@ -1282,7 +1282,7 @@ VAR
     jsonDeserializer : JsonDeserializer;
     json : STRING := '{"data":9223372036854775807}';
     out : ULINT;
-	feedback : ErrorLogger;
+	feedback : DeserializerFeedback;
     expected : ULINT := 9223372036854775807;
 END_VAR
 ]]></Declaration>
@@ -1308,7 +1308,7 @@ VAR
     jsonDeserializer : JsonDeserializer;
     json : STRING := '{"data":123}';
     out : USINT;
-	feedback : ErrorLogger;
+	feedback : DeserializerFeedback;
     expected : USINT := 123;
 END_VAR
 ]]></Declaration>
@@ -1334,7 +1334,7 @@ VAR
     jsonDeserializer : JsonDeserializer;
     json : STRING := '{"data":12345}';
     out : WORD;
-	feedback : ErrorLogger;
+	feedback : DeserializerFeedback;
     expected : WORD := 12345;
 END_VAR
 ]]></Declaration>
@@ -1360,7 +1360,7 @@ VAR
     jsonDeserializer : JsonDeserializer;
     json : STRING := '9223372036854775807';
     out : LINT;
-	feedback : ErrorLogger;
+	feedback : DeserializerFeedback;
     expected : LINT := 9223372036854775807;
 END_VAR
 ]]></Declaration>
@@ -1386,7 +1386,7 @@ VAR
     jsonDeserializer : JsonDeserializer;
     json : STRING := '123456.789';
     out : LREAL;
-	feedback : ErrorLogger;
+	feedback : DeserializerFeedback;
     expected : LREAL := 123456.789;
 END_VAR
 ]]></Declaration>
@@ -1412,7 +1412,7 @@ VAR
     jsonDeserializer : JsonDeserializer;
     json : STRING := '"LTIME#100d2h30m40s500ms600us700ns"';
     out : LTIME;
-	feedback : ErrorLogger;
+	feedback : DeserializerFeedback;
     expected : LTIME := LTIME#100D2H30M40S500MS600US700NS;
 END_VAR
 ]]></Declaration>
@@ -1438,7 +1438,7 @@ VAR
     jsonDeserializer : JsonDeserializer;
     json : STRING := '9223372036854775807';
     out : LWORD;
-	feedback : ErrorLogger;
+	feedback : DeserializerFeedback;
     expected : LWORD := 9223372036854775807;
 END_VAR
 ]]></Declaration>
@@ -1464,7 +1464,7 @@ VAR
     jsonDeserializer : JsonDeserializer;
     json : STRING := '123.4';
     out : REAL;
-	feedback : ErrorLogger;
+	feedback : DeserializerFeedback;
     expected : REAL := 123.4;
 END_VAR
 ]]></Declaration>
@@ -1490,7 +1490,7 @@ VAR
     jsonDeserializer : JsonDeserializer;
     json : STRING := '123';
     out : SINT;
-	feedback : ErrorLogger;
+	feedback : DeserializerFeedback;
     expected : SINT := 123;
 END_VAR
 ]]></Declaration>
@@ -1516,7 +1516,7 @@ VAR
     jsonDeserializer : JsonDeserializer;
     json : STRING := '"foobar"';
     out : STRING;
-	feedback : ErrorLogger;
+	feedback : DeserializerFeedback;
     expected : STRING := 'foobar';
 END_VAR
 ]]></Declaration>
@@ -1542,7 +1542,7 @@ VAR
     jsonDeserializer : JsonDeserializer;
     json : STRING := '"T#49d17h2m47s295ms"';
     out : TIME;
-	feedback : ErrorLogger;
+	feedback : DeserializerFeedback;
     expected : TIME := T#49D17H2M47S295MS;
 END_VAR
 ]]></Declaration>
@@ -1568,7 +1568,7 @@ VAR
     jsonDeserializer : JsonDeserializer;
     json : STRING := '"TOD#23:01:23.456"';
     out : TOD;
-	feedback : ErrorLogger;
+	feedback : DeserializerFeedback;
     expected : TOD := TOD#23:01:23.456;
 END_VAR
 ]]></Declaration>
@@ -1594,7 +1594,7 @@ VAR
     jsonDeserializer : JsonDeserializer;
     json : STRING := '123456';
     out : UDINT;
-	feedback : ErrorLogger;
+	feedback : DeserializerFeedback;
     expected : UDINT := 123456;
 END_VAR
 ]]></Declaration>
@@ -1620,7 +1620,7 @@ VAR
     jsonDeserializer : JsonDeserializer;
     json : STRING := '12345';
     out : UINT;
-	feedback : ErrorLogger;
+	feedback : DeserializerFeedback;
     expected : UINT := 12345;
 END_VAR
 ]]></Declaration>
@@ -1646,7 +1646,7 @@ VAR
     jsonDeserializer : JsonDeserializer;
     json : STRING := '9223372036854775807';
     out : ULINT;
-	feedback : ErrorLogger;
+	feedback : DeserializerFeedback;
     expected : ULINT := 9223372036854775807;
 END_VAR
 ]]></Declaration>
@@ -1672,7 +1672,7 @@ VAR
     jsonDeserializer : JsonDeserializer;
     json : STRING := '123';
     out : USINT;
-	feedback : ErrorLogger;
+	feedback : DeserializerFeedback;
     expected : USINT := 123;
 END_VAR
 ]]></Declaration>
@@ -1698,7 +1698,7 @@ VAR
     jsonDeserializer : JsonDeserializer;
     json : STRING := '12345';
     out : WORD;
-	feedback : ErrorLogger;
+	feedback : DeserializerFeedback;
     expected : WORD := 12345;
 END_VAR]]></Declaration>
       <Implementation>

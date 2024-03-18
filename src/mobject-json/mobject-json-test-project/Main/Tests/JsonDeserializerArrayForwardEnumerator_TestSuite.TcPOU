@@ -24,7 +24,7 @@ VAR
 	enumerator : I_DeserializerArrayForwardEnumerator;
     json : STRING := '[1, 2, 3]';
 	out1, out2, out3 : INT;
-	feedback1, feedback2, feedback3 : ErrorLogger;
+	feedback1, feedback2, feedback3 : DeserializerFeedback;
 	expected1 : INT := 1;
 	expected2 : INT := 2;
 	expected3 : INT := 3;
@@ -76,7 +76,7 @@ VAR
 	enumerator : I_DeserializerArrayForwardEnumerator;
     json : STRING := '[{"name":"hello"}, {"name":"world"}, {"name":"foobar"}]';
 	out1, out2, out3 : STRING;
-	feedback1, feedback2, feedback3 : ErrorLogger;
+	feedback1, feedback2, feedback3 : DeserializerFeedback;
 	expected1 : STRING := 'hello';
 	expected2 : STRING := 'world';
 	expected3 : STRING := 'foobar';
@@ -128,7 +128,7 @@ VAR
 	enumerator : I_DeserializerArrayForwardEnumerator;
     json : STRING := '["one", "two", "three"]';
 	out1, out2, out3 : STRING;
-	feedback1, feedback2, feedback3 : ErrorLogger;
+	feedback1, feedback2, feedback3 : DeserializerFeedback;
 	expected1 : STRING := 'one';
 	expected2 : STRING := 'two';
 	expected3 : STRING := 'three';
