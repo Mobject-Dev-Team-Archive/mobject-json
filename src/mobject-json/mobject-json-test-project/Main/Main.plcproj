@@ -29,7 +29,7 @@
     <Compile Include="Tests\JsonDeserializerObjectForwardEnumerator_TestSuite.TcPOU">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="Tests\JsonDomParser_TestSuit.TcPOU">
+    <Compile Include="Tests\JsonDomParser_TestSuite.TcPOU">
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="Tests\JsonSerializer_TestSuite.TcPOU">

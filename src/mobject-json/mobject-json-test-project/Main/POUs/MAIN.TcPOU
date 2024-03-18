@@ -3,7 +3,7 @@
   <POU Name="MAIN" Id="{571dcd2b-7f1a-0119-09ce-d4765fa24bb1}" SpecialFunc="None">
     <Declaration><![CDATA[PROGRAM MAIN
 VAR
-	jsonDomParser_TestSuit : JsonDomParser_TestSuit;
+	jsonDomParser_TestSuite : JsonDomParser_TestSuite;
 	jsonSerializer_TestSuite : JsonSerializer_TestSuite;
 	jsonDeserializer_TestSuite : JsonDeserializer_TestSuite;
 	jsonDeserializerArrayForwardEnumerator_TestSuite : JsonDeserializerArrayForwardEnumerator_TestSuite;
