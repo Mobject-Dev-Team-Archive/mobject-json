@@ -124,6 +124,7 @@ END_VAR]]></Declaration>
 	invalid := TRUE;
 ELSIF __QUERYINTERFACE(Event, disposedEvent) THEN
 	parent := 0;
+	Dispose();
 END_IF]]></ST>
       </Implementation>
     </Method>

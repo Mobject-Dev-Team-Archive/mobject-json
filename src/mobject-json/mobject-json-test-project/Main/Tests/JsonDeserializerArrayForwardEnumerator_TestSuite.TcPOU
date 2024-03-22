@@ -7,7 +7,6 @@ END_VAR
 ]]></Declaration>
     <Implementation>
       <ST><![CDATA[TestIsValidAtStart();
-TestIsNotValidAfterParentDispose();
 TestIsNotValidAfterParentReset();
 TestMoveNextReturnsFalseAtTheEnd();
 TestMoveNextReturnsTrueSingleItem();
@@ -170,33 +169,6 @@ AssertEquals(
 	Message := 'Did not produce the expected result'
 );
 	
-TEST_FINISHED();]]></ST>
-      </Implementation>
-    </Method>
-    <Method Name="TestIsNotValidAfterParentDispose" Id="{fa1ba373-1752-4710-8150-a6802a2999f6}">
-      <Declaration><![CDATA[METHOD PRIVATE TestIsNotValidAfterParentDispose
-VAR
-	pJsonDeserializer : POINTER TO JsonDeserializer;
-	enumerator : I_DeserializerArrayForwardEnumerator;
-	result : BOOL;
-END_VAR
-]]></Declaration>
-      <Implementation>
-        <ST><![CDATA[TEST('TestIsNotValidAfterParentDispose');
-
-pJsonDeserializer := __NEW(JsonDeserializer);
-enumerator := pJsonDeserializer^.GetArrayEnumerator();
-
-pJsonDeserializer^.Dispose();
-result := enumerator.IsValid;
-
-enumerator.Dispose();
-
-AssertFalse(
-	Condition := result,
-	Message := 'IsValid incorrectly returned true after parent was distroyed'
-);
-
 TEST_FINISHED();]]></ST>
       </Implementation>
     </Method>

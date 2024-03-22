@@ -6,6 +6,7 @@
 - Updated to support mobject-deserialization v0.1.0-alpha.
 - Added JsonDeserializerArrayForwardEnumerator
 - Added JsonDeserializerObjectForwardEnumerator
+- Enumerators all auto dispose, same as mobject-collections.
 
 ## v1.2.0-beta
 
