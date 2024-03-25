@@ -51,6 +51,7 @@ TestAddLtime();
 TestAddLword();
 TestAddNull();
 TestAddObject();
+TestAddObjects();
 TestAddRawJson();
 TestAddReal();
 TestAddSint();
@@ -1255,6 +1256,36 @@ END_VAR]]></Declaration>
         <ST><![CDATA[TEST('TestAddObject');
 
 jsonSerializer.AddObject(user);
+jsonSerializer.TryGetSerializedData(ADR(out),SIZEOF(out));
+
+AssertEquals(
+	Expected := expected,
+	Actual := out,
+	Message := 'Did not produce the expected JSON string for the Object value'
+);
+
+TEST_FINISHED();]]></ST>
+      </Implementation>
+    </Method>
+    <Method Name="TestAddObjects" Id="{daa31501-b9df-45e4-966e-08b2c7d01eb8}">
+      <Declaration><![CDATA[METHOD PUBLIC TestAddObjects
+VAR
+	jsonSerializer : JsonSerializer;
+	user1 : MockSerializableUserObject(Name := 'alice', Age := 40);
+    user2 : MockSerializableUserObject(Name := 'bob', Age := 50);
+	out : STRING;
+	expected : STRING := '{"users":[{"Name":"alice","Age":40},{"Name":"bob","Age":50}]}';
+END_VAR]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[TEST('TestAddObjects');
+
+jsonSerializer.StartObject();
+jsonSerializer.AddKey('users');
+jsonSerializer.StartArray();
+jsonSerializer.AddObject(user1);
+jsonSerializer.AddObject(user2);
+jsonSerializer.EndArray();
+jsonSerializer.EndObject();
 jsonSerializer.TryGetSerializedData(ADR(out),SIZEOF(out));
 
 AssertEquals(
