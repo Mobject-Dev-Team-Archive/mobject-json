@@ -10,6 +10,7 @@ END_VAR
     <Implementation>
       <ST><![CDATA[]]></ST>
     </Implementation>
+    <Folder Name="Private" Id="{6495721b-ce71-4c39-9a40-94961abface6}" />
     <Property Name="Age" Id="{bfc899d7-b9b5-43a3-b21c-921d9cb41d78}">
       <Declaration><![CDATA[PROPERTY PUBLIC Age : INT]]></Declaration>
       <Get Name="Get" Id="{8b729a3d-1d76-409c-8a9f-bdac2d562b4f}">
@@ -29,6 +30,15 @@ END_VAR
         </Implementation>
       </Set>
     </Property>
+    <Method Name="CreateMissingKeyError" Id="{f01612f8-a22b-4dca-b643-995d0d438b0b}" FolderPath="Private\">
+      <Declaration><![CDATA[METHOD PRIVATE CreateMissingKeyError : I_Error
+VAR_INPUT
+END_VAR
+]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[]]></ST>
+      </Implementation>
+    </Method>
     <Property Name="Name" Id="{8c5e2a62-b93f-4d2f-bf42-ec984f3a59c9}">
       <Declaration><![CDATA[PROPERTY PUBLIC Name : STRING]]></Declaration>
       <Get Name="Get" Id="{6f1599e5-a554-42cd-8e65-078b3108d65d}">
@@ -52,13 +62,19 @@ END_VAR
       <Declaration><![CDATA[METHOD TryDeserializeFrom : BOOL
 VAR_INPUT
 	Deserializer : I_Deserializer;
+	Feedback : I_DeserializerFeedback;
 END_VAR
 ]]></Declaration>
       <Implementation>
-        <ST><![CDATA[TryDeserializeFrom := 
-	Deserializer.TryGetKeyString('Name',_name) AND
-	Deserializer.TryGetKeyInt('Age',_age);
-]]></ST>
+        <ST><![CDATA[IF NOT Deserializer.TryGetKeyString('Name',_name, Feedback) THEN
+	RETURN;
+END_IF
+
+IF NOT Deserializer.TryGetKeyInt('Age',_age, Feedback) THEN
+	RETURN;
+END_IF
+
+TryDeserializeFrom := TRUE;]]></ST>
       </Implementation>
     </Method>
   </POU>
