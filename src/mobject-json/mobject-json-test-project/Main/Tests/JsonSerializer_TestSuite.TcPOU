@@ -850,7 +850,7 @@ VAR
 	jsonSerializer : JsonSerializer;
 	realValue : REAL := 123.4;
 	out : STRING;
-	expected : STRING := '{"data":123.4}';
+	expected : STRING := '{"data":123.40000152}';
 END_VAR]]></Declaration>
       <Implementation>
         <ST><![CDATA[TEST('TestAddKeyReal');
@@ -1326,7 +1326,7 @@ VAR
 	jsonSerializer : JsonSerializer;
 	realValue : REAL := 123.4;
 	out : STRING;
-	expected : STRING := '123.4';
+	expected : STRING := '123.40000152';
 END_VAR]]></Declaration>
       <Implementation>
         <ST><![CDATA[TEST('TestAddReal');

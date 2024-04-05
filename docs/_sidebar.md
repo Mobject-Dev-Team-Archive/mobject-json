@@ -4,6 +4,7 @@
 
 - mobject-json
 
+  - JsonDeserializer
   - [JsonDomParser](JsonDomParser.md)
   - [JsonSerializer](JsonSerializer.md)
 
