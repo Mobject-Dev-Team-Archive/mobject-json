@@ -539,7 +539,9 @@ VAR_INPUT
 	Value : REAL;
 END_VAR]]></Declaration>
       <Implementation>
-        <ST><![CDATA[jsonSaxWriter.AddReal(Value);
+        <ST><![CDATA[// real to lreal is used to negate an issue with TC4024.55 which prevents max REAL from being serailized.  
+// so a REAL_TO_LREAL conversion is made to ensure this is always possible.  
+jsonSaxWriter.AddLReal(REAL_TO_LREAL(Value));
 AddReal := THIS^;]]></ST>
       </Implementation>
     </Method>
