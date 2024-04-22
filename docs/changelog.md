@@ -1,5 +1,10 @@
 # Changelog
 
+## v1.4.0-beta
+
+- Updated to support mobject-converters v1.0.2-beta.
+- Corrected issue with TwinCAT REAL serialization. JsonSaxWriter did not correctly support MAX value real, so JsonSerializer now converts to LREAL first. Only issue is you now gain more decimal places.
+
 ## v1.3.0-beta
 
 - Updated to support mobject-serialization v0.4.0-alpha.

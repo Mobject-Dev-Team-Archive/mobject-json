@@ -28,6 +28,7 @@ TestAddKeyFileTime();
 TestAddKeyInt();
 TestAddKeyLint();
 TestAddKeyLreal();
+TestAddKeyLreal_Max();
 TestAddKeyLtime();
 TestAddKeyLword();
 TestAddKeyNull();
@@ -35,6 +36,7 @@ TestAddKeyObject();
 TestAddKeyObject_Array();
 TestAddKeyRawJson();
 TestAddKeyReal();
+TestAddKeyReal_Max();
 TestAddKeySint();
 TestAddKeyString();
 TestAddKeyStringByRef();
@@ -689,6 +691,32 @@ AssertEquals(
 TEST_FINISHED();]]></ST>
       </Implementation>
     </Method>
+    <Method Name="TestAddKeyLreal_Max" Id="{d41fd06c-e84f-49ae-971f-3ce695f91dae}">
+      <Declaration><![CDATA[METHOD PUBLIC TestAddKeyLreal_Max
+VAR
+	jsonSerializer : JsonSerializer;
+	lrealValue : LREAL := DatatypeLimits.LREAL_MAX_VALUE;
+	out : STRING;
+	expected : STRING := '{"data":1.7976931348623157e308}';
+END_VAR]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[TEST('TestAddKeyLreal_Max');
+
+jsonSerializer.StartObject();
+jsonSerializer.AddKeyLreal('data',lrealValue);
+jsonSerializer.EndObject();
+
+jsonSerializer.TryGetSerializedData(ADR(out),SIZEOF(out));
+
+AssertEquals(
+	Expected := expected,
+	Actual := out,
+	Message := 'Did not produce the expected JSON string for the LREAL value'
+);
+
+TEST_FINISHED();]]></ST>
+      </Implementation>
+    </Method>
     <Method Name="TestAddKeyLtime" Id="{3f22c5fa-72a1-410f-83c5-cab7d2d268f6}">
       <Declaration><![CDATA[METHOD PUBLIC TestAddKeyLtime
 VAR
@@ -850,10 +878,36 @@ VAR
 	jsonSerializer : JsonSerializer;
 	realValue : REAL := 123.4;
 	out : STRING;
-	expected : STRING := '{"data":123.40000152}';
+	expected : STRING := '{"data":123.4000015258789}'; // this has been adapted to support more decimal places, due to the issue with REAL conversion in TwinCAT 4024.56
 END_VAR]]></Declaration>
       <Implementation>
         <ST><![CDATA[TEST('TestAddKeyReal');
+
+jsonSerializer.StartObject();
+jsonSerializer.AddKeyReal('data',realValue);
+jsonSerializer.EndObject();
+
+jsonSerializer.TryGetSerializedData(ADR(out),SIZEOF(out));
+
+AssertEquals(
+	Expected := expected,
+	Actual := out,
+	Message := 'Did not produce the expected JSON string for the REAL value'
+);
+
+TEST_FINISHED();]]></ST>
+      </Implementation>
+    </Method>
+    <Method Name="TestAddKeyReal_Max" Id="{0fa9ad0e-618d-43c7-949b-7eaa12dd0b9d}">
+      <Declaration><![CDATA[METHOD PUBLIC TestAddKeyReal_Max
+VAR
+	jsonSerializer : JsonSerializer;
+	realValue : REAL := DatatypeLimits.REAL_MAX_VALUE;
+	out : STRING;
+	expected : STRING := '{"data":3.4028230607370967e38}'; // this has been adapted to support more decimal places, due to the issue with REAL conversion in TwinCAT 4024.56
+END_VAR]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[TEST('TestAddKeyReal_Max');
 
 jsonSerializer.StartObject();
 jsonSerializer.AddKeyReal('data',realValue);
@@ -1326,7 +1380,7 @@ VAR
 	jsonSerializer : JsonSerializer;
 	realValue : REAL := 123.4;
 	out : STRING;
-	expected : STRING := '123.40000152';
+	expected : STRING := '123.4000015258789'; // this has been adapted to support more decimal places, due to the issue with REAL conversion in TwinCAT 4024.56
 END_VAR]]></Declaration>
       <Implementation>
         <ST><![CDATA[TEST('TestAddReal');
