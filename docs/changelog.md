@@ -2,7 +2,11 @@
 
 ## v1.6.0-beta
 
-- Updated to support mobject-deserialization v0.3.0-alpha
+- Added support for mobject-deserialization v0.3.0
+- Added support for mobject-disposable v1.1.1
+- Added support for mobject-errors v0.3.0
+- Added support for mobject-events v1.1.0
+- Added support for mobject-serialization v0.5.0
 
 ## v1.5.0-beta
 
