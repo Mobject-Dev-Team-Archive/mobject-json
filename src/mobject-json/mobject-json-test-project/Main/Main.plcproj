@@ -86,16 +86,16 @@
     <LibraryReference Include="mobject-constants-datatype-limits,1.0.0,mobject">
       <Namespace>mobject_constants_datatype_limits</Namespace>
     </LibraryReference>
-    <LibraryReference Include="mobject-deserialization,0.2.0,mobject">
+    <LibraryReference Include="mobject-deserialization,0.3.0,mobject">
       <Namespace>mobject_deserialization</Namespace>
     </LibraryReference>
-    <LibraryReference Include="mobject-errors,0.2.0,mobject">
+    <LibraryReference Include="mobject-errors,0.3.0,mobject">
       <Namespace>mobject_errors</Namespace>
     </LibraryReference>
-    <LibraryReference Include="mobject-json,1.5.0,mobject">
+    <LibraryReference Include="mobject-json,1.6.0,mobject">
       <Namespace>mobject_json</Namespace>
     </LibraryReference>
-    <LibraryReference Include="mobject-serialization,0.4.0,mobject">
+    <LibraryReference Include="mobject-serialization,0.5.0,mobject">
       <Namespace>mobject_serialization</Namespace>
     </LibraryReference>
   </ItemGroup>

@@ -1,5 +1,9 @@
 # Changelog
 
+## v1.6.0-beta
+
+- Updated to support mobject-deserialization v0.3.0-alpha
+
 ## v1.5.0-beta
 
 - Updated to support mobject-deserialization v0.2.0-alpha
